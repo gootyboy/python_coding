@@ -1,4 +1,5 @@
 import pgzrun
+import pygame
 from pgzero.actor import Actor
 from random import randint
 
@@ -10,7 +11,17 @@ game_over = False
 player_speed = 10
 scores = []
 high_score_run = True
-time_left = 60
+time_left = 1
+
+yes_circle_x = 100
+yes_circle_y = 500
+no_circle_x = yes_circle_x + 100
+no_circle_y = yes_circle_y
+radius = 32.4
+yes_width = radius +radius
+yes_height = yes_width
+yes_circle_rect = pygame.Rect (0, 0, 65, 65)
+yes_circle_rect.move_ip(yes_circle_x, yes_circle_y)
 
 fox = Actor("fox")
 fox.pos = 100, 100
@@ -20,7 +31,7 @@ coin = Actor("coin")
 coin.pos = 200, 200
 
 def draw():
-    global game_over, high_score_run
+    global game_over, high_score_run, yes_circle_x, yes_circle_y, radius
 
     if not game_over:
         screen.fill("green")
@@ -38,9 +49,20 @@ def draw():
         screen.draw.text("Hedgehog Score: " + str(hedgehog_score), color= "black", topleft = (10, 30), fontsize = 30)
         if high_score_run == True:
             update_high_scores()
-            # display_high_scores()
         high_score_run = False
         display_high_scores()
+        yes_circle_x = 100
+        yes_circle_y = 500
+        no_circle_x = yes_circle_x + 100
+        no_circle_y = yes_circle_y
+        radius = 32.4
+        screen.draw.filled_circle((yes_circle_x, yes_circle_y), radius, "purple")
+        screen.draw.text("Yes", color="black", center = (yes_circle_x, yes_circle_y), fontsize=45)
+        screen.draw.filled_circle((no_circle_x, no_circle_y), radius, "purple")
+        screen.draw.text("No", color="black", center = (no_circle_x, no_circle_y), fontsize=45)
+        screen.draw.text("Do you want", color="black", center = (((no_circle_x + yes_circle_x) / 2), (yes_circle_y - 100)), fontsize=45)
+        screen.draw.text("to play again?", color="black", center = (((no_circle_x + yes_circle_x) / 2), (yes_circle_y - 50)), fontsize=45)
+        screen.draw.filled_rect(yes_circle_rect, "sky blue")
 
 def place_coin():
     coin.x = randint(20, (WIDTH - 20))
@@ -85,13 +107,19 @@ def display_high_scores():
     all_high_scores = fox_scores+hedgehog_scores
     all_high_scores = list(map(int, all_high_scores))
     all_high_scores.sort(reverse=True)
-    screen.draw.text("High Scores", (350, 150), color="black")
-    y = 175
+    screen.draw.text("High Scores", (600, 25), color="black")
+    y = 50
     position = 1
     for high_score in all_high_scores:
-        screen.draw.text(str(position) + ". " + str(high_score), (350, y), color="black")
+        screen.draw.text(str(position) + ". " + str(high_score), (600, y), color="black")
         y += 25
         position += 1
+
+def on_mouse_down(pos):
+    global game_over
+
+    if pos.collidepoint(yes_circle_x, yes_circle_y):
+        game_over = False
 
 def update():
     global hedgehog_score, fox_score
