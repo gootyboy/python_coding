@@ -12,16 +12,13 @@ player_speed = 10
 scores = []
 high_score_run = True
 time_left = 1
+multiplayer = False
+start_game = False
 
-yes_circle_x = 100
-yes_circle_y = 500
-no_circle_x = yes_circle_x + 100
-no_circle_y = yes_circle_y
-radius = 32.4
-yes_width = radius +radius
-yes_height = yes_width
-yes_circle_rect = pygame.Rect (0, 0, 65, 65)
-yes_circle_rect.move_ip(yes_circle_x, yes_circle_y)
+one_player_box = pygame.Rect(0, 0, 54, 54)
+one_player_box.move_ip(240, 330)
+two_player_box = pygame.Rect(0, 0, 54, 54)
+two_player_box.move_ip(350, 330)
 
 fox = Actor("fox")
 fox.pos = 100, 100
@@ -31,13 +28,21 @@ coin = Actor("coin")
 coin.pos = 200, 200
 
 def draw():
-    global game_over, high_score_run, yes_circle_x, yes_circle_y, radius
+    global game_over, high_score_run, yes_circle_x, yes_circle_y, multiplayer, start_game
 
     if not game_over:
         screen.fill("green")
+        screen.draw.text("Select the amount of players", color= "black", center = (WIDTH / 2, HEIGHT / 2), fontsize = 35)
+        screen.draw.filled_rect(one_player_box, "sky blue")
+        screen.draw.textbox("1", one_player_box, color= "black")
+        screen.draw.filled_rect(two_player_box, "sky blue")
+        screen.draw.textbox("2", two_player_box, color= "black")
+
+    if not game_over and start_game == True:
         fox.draw()
         coin.draw()
-        hedgehog.draw()
+        if multiplayer == True:
+            hedgehog.draw()
         screen.draw.text("Fox score: " + str(fox_score), color="black", topleft =(10, 10))
         screen.draw.text("Hedgehog score: " + str(hedgehog_score), color="black", topleft =(10, 30))
         screen.draw.text(str(time_left), color=("Black"), topright =(700, 0), fontsize= 50)
@@ -62,7 +67,6 @@ def draw():
         screen.draw.text("No", color="black", center = (no_circle_x, no_circle_y), fontsize=45)
         screen.draw.text("Do you want", color="black", center = (((no_circle_x + yes_circle_x) / 2), (yes_circle_y - 100)), fontsize=45)
         screen.draw.text("to play again?", color="black", center = (((no_circle_x + yes_circle_x) / 2), (yes_circle_y - 50)), fontsize=45)
-        screen.draw.filled_rect(yes_circle_rect, "sky blue")
 
 def place_coin():
     coin.x = randint(20, (WIDTH - 20))
@@ -73,16 +77,18 @@ def time_up():
     game_over = True
 
 def update_time_left():
-    global time_left
+    global time_left, start_game
 
-    if time_left:
-        time_left -= 1
-    else:
-        time_up()
+    if start_game == True:
+        if time_left:
+            time_left -= 1
+        else:
+            time_up()
 
 def update_high_scores():
-    global fox_score, hedgehog_score, fox_scores, hedgehog_scores, high_scores
+    global fox_score, hedgehog_score, fox_scores, hedgehog_scores, high_scores, multiplayer
 
+    multiplayer = False
     filename = r"C:\\Users\\igres\\Desktop\boy\\pygame_game\\coin_collector\\fox_high_scores.txt"
     fox_scores = []
     with open(filename, "r") as file:
@@ -93,18 +99,22 @@ def update_high_scores():
         for high_score in fox_scores:
             file.write(str(high_score) + " ")
 
-    filename = r"C:\\Users\\igres\\Desktop\boy\\pygame_game\\coin_collector\\hedgehog_high_scores.txt"
-    hedgehog_scores = []
-    with open(filename, "r") as file:
-        line = file.readline()
-        hedgehog_scores = line.split()
-        hedgehog_scores.append(str(hedgehog_score) + " ")
-    with open(filename, "w") as file:
-        for high_score in hedgehog_scores:
-            file.write(str(high_score) + " ")
+    if multiplayer == True:
+        filename = r"C:\\Users\\igres\\Desktop\boy\\pygame_game\\coin_collector\\hedgehog_high_scores.txt"
+        hedgehog_scores = []
+        with open(filename, "r") as file:
+            line = file.readline()
+            hedgehog_scores = line.split()
+            hedgehog_scores.append(str(hedgehog_score) + " ")
+        with open(filename, "w") as file:
+            for high_score in hedgehog_scores:
+                file.write(str(high_score) + " ")
 
 def display_high_scores():
-    all_high_scores = fox_scores+hedgehog_scores
+    if multiplayer == True:
+        all_high_scores = fox_scores+hedgehog_scores
+    else:
+        all_high_scores = fox_scores
     all_high_scores = list(map(int, all_high_scores))
     all_high_scores.sort(reverse=True)
     screen.draw.text("High Scores", (600, 25), color="black")
@@ -115,11 +125,11 @@ def display_high_scores():
         y += 25
         position += 1
 
-def on_mouse_down(pos):
-    global game_over
+# def on_mouse_down(pos):
+    # global game_over
 
-    if pos.collidepoint(yes_circle_x, yes_circle_y):
-        game_over = False
+    # if pos.collidepoint(yes_circle_x, yes_circle_y):
+    #     game_over = False
 
 def update():
     global hedgehog_score, fox_score
