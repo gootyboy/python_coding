@@ -11,7 +11,7 @@ game_over = False
 player_speed = 10
 scores = []
 high_score_run = True
-time_left = 5
+time_left = 60 # this is the amount of time (in seconds). Feel Free to change it how like
 multiplayer = False
 start_game = False
 
