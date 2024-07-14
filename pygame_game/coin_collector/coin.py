@@ -32,7 +32,7 @@ coin = Actor("coin")
 coin.pos = 200, 200
 
 def on_mouse_down(pos):
-    global start_game, multiplayer, game_over, time_left
+    global start_game, multiplayer, game_over, time_left, high_score_run
 
     if start_game == False:
         if one_player_box.collidepoint(pos):
@@ -46,10 +46,11 @@ def on_mouse_down(pos):
             pygame.quit()
         if play_agian_yes_box.collidepoint(pos):
             game_over = False
-            start_game = False
+            high_score_run = True
             time_left = 5
-
-
+            multiplayer = False
+            start_game = False
+            
 def draw():
     global game_over, high_score_run, yes_circle_x, yes_circle_y, multiplayer, start_game
 
@@ -68,7 +69,8 @@ def draw():
         if multiplayer == True:
             hedgehog.draw()
         screen.draw.text("Fox score: " + str(fox_score), color="black", topleft =(10, 10))
-        screen.draw.text("Hedgehog score: " + str(hedgehog_score), color="black", topleft =(10, 30))
+        if multiplayer == True:
+            screen.draw.text("Hedgehog score: " + str(hedgehog_score), color="black", topleft =(10, 30))
         screen.draw.text(str(time_left), color=("Black"), topright =(700, 0), fontsize= 50)
 
     if game_over:
