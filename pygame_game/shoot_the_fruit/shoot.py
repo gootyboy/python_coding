@@ -17,12 +17,9 @@ def on_mouse_down(pos):
     global amount_of_hits
 
     if apple.collidepoint(pos):
-        print("Good shoot")
         place_actor()
         amount_of_hits += 1
         print(amount_of_hits)
-    else:
-        print("You missed")
 
 place_actor()
 pgzrun.go()
