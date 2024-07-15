@@ -23,6 +23,8 @@ play_agian_no_box = pygame.Rect(0, 0, 54, 54)
 play_agian_no_box.move_ip(200, 500)
 play_agian_yes_box = pygame.Rect(0, 0, 54, 54)
 play_agian_yes_box.move_ip(300, 500)
+end_box = pygame.Rect(0, 0, 60, 20)
+end_box.move_ip(300, 10)
 
 fox = Actor("fox")
 fox.pos = 100, 100
@@ -47,7 +49,7 @@ def on_mouse_down(pos):
         if play_agian_yes_box.collidepoint(pos):
             game_over = False
             high_score_run = True
-            time_left = 5
+            time_left = 60
             multiplayer = False
             start_game = False
             
@@ -66,6 +68,7 @@ def draw():
         screen.fill("green")
         fox.draw()
         coin.draw()
+        screen.draw.filled_rect(end_box, "red")
         if multiplayer == True:
             hedgehog.draw()
         screen.draw.text("Fox score: " + str(fox_score), color="black", topleft =(10, 10))
@@ -147,7 +150,7 @@ def display_high_scores():
         position += 1
 
 def update():
-    global hedgehog_score, fox_score
+    global hedgehog_score, fox_score, multiplayer
 
     if fox.x > 20:
         if keyboard.left:
@@ -161,19 +164,19 @@ def update():
     if fox.y < (HEIGHT -20):
         if keyboard.down:
             fox.y += player_speed
-
-    if hedgehog.x > 20:
-        if keyboard.a:
-            hedgehog.x -= player_speed
-    if hedgehog.x < (WIDTH -20):
-        if keyboard.d:
-            hedgehog.x += player_speed
-    if hedgehog.y > 20:
-        if keyboard.w:
-            hedgehog.y -= player_speed
-    if hedgehog.y < (HEIGHT -20):
-        if keyboard.s:
-            hedgehog.y += player_speed
+    if multiplayer == True:
+        if hedgehog.x > 20:
+            if keyboard.a:
+                hedgehog.x -= player_speed
+        if hedgehog.x < (WIDTH -20):
+            if keyboard.d:
+                hedgehog.x += player_speed
+        if hedgehog.y > 20:
+            if keyboard.w:
+                hedgehog.y -= player_speed
+        if hedgehog.y < (HEIGHT -20):
+            if keyboard.s:
+                hedgehog.y += player_speed
 
 
     fox_coin_collected = fox.colliderect(coin)

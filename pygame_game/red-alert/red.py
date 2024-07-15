@@ -91,14 +91,24 @@ def handle_game_over():
     game_over = True
 
 def on_mouse_down(pos):
-    global stars, current_level
+    global stars, current_level, game_over, game_complete, animations
 
-    for star in stars:
-        if star.collidepoint(pos):
-            if "red" in star.image:
-                red_star_click()
-            else:
-                handle_game_over()
+    if game_complete == False or game_over == False:
+        for star in stars:
+            if star.collidepoint(pos):
+                if "red" in star.image:
+                    red_star_click()
+                else:
+                    handle_game_over()
+    if game_over == True or game_complete == True:
+        if play_agian_yes_box.collidepoint(pos):
+            game_complete = False
+            game_over = False
+            current_level = 1
+            stars = []
+            animations = []
+        elif play_agian_no_box.collidepoint(pos):
+            pygame.quit()
 
 def red_star_click():
     global current_level, stars, animations, game_complete
@@ -127,9 +137,9 @@ def draw_level_number():
 
 def play_agian_q():
     screen.draw.text("Do you want to play agian?", fontsize = 35, center = (((PLAY_AGIAN_NO_X + PLAY_AGIAN_YES_X) / 2), CENTER_Y + 100), color= FONT_COLOR)
-    screen.draw.filled_rect(play_agian_yes_box, FONT_COLOR)
-    screen.draw.textbox("No", play_agian_no_box, color="black")
     screen.draw.filled_rect(play_agian_no_box, FONT_COLOR)
+    screen.draw.textbox("No", play_agian_no_box, color="black")
+    screen.draw.filled_rect(play_agian_yes_box, FONT_COLOR)
     screen.draw.textbox("Yes", play_agian_yes_box, color="black")
 
 pgzrun.go()
