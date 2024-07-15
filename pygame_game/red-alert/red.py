@@ -13,6 +13,7 @@ FINAL_LEVEL = 10
 START_SPEED = 5
 PLAY_AGIAN_NO_X = 350
 PLAY_AGIAN_YES_X = 250
+NUMBER_STARS_ON_ROW = 5
 COLORS = ["green", "blue"]
 
 game_over = False
@@ -69,13 +70,40 @@ def create_stars(color_to_create):
         new_stars.append(star)
     return new_stars
 
+def split_array_to_subarrays(list_to_split, stars_on_each_row):
+    subarrays = []
+    while len(list_to_split) >= stars_on_each_row:
+        subarray = list_to_split[:stars_on_each_row]
+        subarrays.append(subarray)
+        list_to_split = list_to_split[stars_on_each_row:]
+    if list_to_split:
+        subarrays.append(list_to_split)
+
+    return subarrays
+
 def layout_stars(stars_to_layout):
-    number_of_gaps = len(stars_to_layout) + 1
-    gap_size = WIDTH / number_of_gaps
-    random.shuffle(stars_to_layout)
-    for index, star in enumerate(stars_to_layout):
-        new_x_pos = (index + 1) * gap_size
-        star.x = new_x_pos
+    if len(stars_to_layout) > NUMBER_STARS_ON_ROW:
+        star_placment_array = split_array_to_subarrays(stars_to_layout, NUMBER_STARS_ON_ROW)
+        first_row_stars_to_layout = star_placment_array[0]
+        secound_row_stars_to_layout = star_placment_array[1]
+        one_row = True
+    else:
+        first_row_stars_to_layout = stars_to_layout
+        one_row = False
+    first_row_number_of_gaps = len(first_row_stars_to_layout) + 1
+    first_row_gap_size = WIDTH / first_row_number_of_gaps
+    random.shuffle(first_row_stars_to_layout)
+    for index, star in enumerate(first_row_stars_to_layout):
+        first_new_x_pos = (index + 1) * first_row_gap_size
+        star.x = first_new_x_pos
+    if one_row == True:
+        two_row_number_of_gaps = len(secound_row_stars_to_layout)
+        two_row_gap_size = WIDTH / two_row_number_of_gaps
+        for two_row_index, two_row_stars in enumerate(secound_row_stars_to_layout):
+            new_y_pos = 200
+            secound_new_x_pos = (two_row_index + 1) * two_row_gap_size
+            two_row_stars.x = secound_new_x_pos
+            two_row_stars.y = new_y_pos
 
 def animate_stars(stars_to_animate):
     for star in stars_to_animate:
