@@ -195,5 +195,5 @@ def main_game():
     return game_loop_bool
 
 game_running = main_game()
-while main_game == True:
+while game_running == True:
     main_game()

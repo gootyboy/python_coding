@@ -1,0 +1,89 @@
+import pgzrun
+import time
+import pygame
+
+WIDTH = 800
+HEIGHT = 600
+
+screen_clicked = False
+key_pressed = None
+password_digits = ["p", "a", "s", "s", "w", "o", "r", "d"]
+time_ran = 0
+key_is_pressed = False
+run_once = 0
+run_backround = True
+
+def make_boxes():    
+
+    global password_boxes, box_1
+    box_y = 300
+    box_width = 43
+    box_height = box_width
+    box_dist = 60
+    start = box_dist + 100
+    box_1_x = start
+    box_2_x = start + box_dist
+    box_3_x = box_2_x + box_dist
+    box_4_x = box_3_x + box_dist
+    box_5_x = box_4_x + box_dist
+    box_6_x = box_5_x + box_dist
+    box_7_x = box_6_x + box_dist
+    box_8_x = box_7_x + box_dist
+
+    box_1 = pygame.Rect(box_1_x, box_y, box_width, box_height)
+    box_2 = pygame.Rect(box_2_x, box_y, box_width, box_height)
+    box_3 = pygame.Rect(box_3_x, box_y, box_width, box_height)
+    box_4 = pygame.Rect(box_4_x, box_y, box_width, box_height)
+    box_5 = pygame.Rect(box_5_x, box_y, box_width, box_height)
+    box_6 = pygame.Rect(box_6_x, box_y, box_width, box_height)
+    box_7 = pygame.Rect(box_7_x, box_y, box_width, box_height)
+    box_8 = pygame.Rect(box_8_x, box_y, box_width, box_height)
+    password_boxes = [box_1, box_2, box_3, box_4, box_5, box_6, box_7, box_8]
+
+def draw_answer_boxes():
+    global password_digits
+    make_boxes()
+    for box in password_boxes:
+        screen.draw.filled_rect(box, "sky blue")
+    screen.draw.text("Password", color= "black", center = (WIDTH / 2, 250), fontsize = 60)
+
+def draw_password():
+    if screen_clicked == True:
+        if key_is_pressed == True and key_pressed != None:
+            draw_digit = True
+            return draw_digit
+
+def draw():
+    global screen_clicked, key_is_pressed, time_ran, run_once, run_backround
+    time_now = time.localtime()
+    time_minutes = time.strftime("%M", time_now)
+    time_hours = time.strftime("%I", time_now).lstrip("0")
+    
+    screen.blit("garden", (0, 0))
+
+    if screen_clicked == False:
+        screen.draw.text(f"{time_hours}:{time_minutes}", color="black", center=(WIDTH / 2, 50), fontsize=100)
+    elif screen_clicked == True and run_once == 0:
+        draw_answer_boxes()
+
+    draw_digit = draw_password()
+    if draw_digit == True:
+        run_once = 1
+        screen.draw.textbox(key_pressed, box_1, color= "black")
+
+def on_mouse_down(pos):
+    global screen_clicked
+    screen_clicked = True
+
+def get_letter_pressed():
+    if keyboard.q:
+        return "q"
+
+def update():
+    global key_pressed, screen_clicked, key_is_pressed
+    if screen_clicked == True:
+        key_pressed = get_letter_pressed()
+        if key_pressed != None:
+            key_is_pressed = True
+
+pgzrun.go()

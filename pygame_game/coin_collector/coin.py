@@ -5,13 +5,14 @@ from random import randint
 
 WIDTH = 700
 HEIGHT = 600
+SECONDS = 60  # this is the amount of time (in seconds). Feel Free to change it how like
 fox_score = 0
 hedgehog_score = 0
 game_over = False
 player_speed = 10
 scores = []
 high_score_run = True
-time_left = 60 # this is the amount of time (in seconds). Feel Free to change it how like
+time_left = SECONDS
 multiplayer = False
 start_game = False
 
@@ -49,7 +50,7 @@ def on_mouse_down(pos):
         if play_agian_yes_box.collidepoint(pos):
             game_over = False
             high_score_run = True
-            time_left = 60
+            time_left = SECONDS
             multiplayer = False
             start_game = False
             
