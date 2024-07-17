@@ -8,14 +8,12 @@ HEIGHT = 600
 screen_clicked = False
 key_pressed = None
 password_digits = ["p", "a", "s", "s", "w", "o", "r", "d"]
-time_ran = 0
-key_is_pressed = False
-run_once = 0
-run_backround = True
+box_index = 0
+password_done = False
 
 def make_boxes():    
 
-    global password_boxes, box_1
+    global password_boxes, box_1, box_2, box_3, box_4, box_5, box_6, box_7, box_8, box_1_x
     box_y = 300
     box_width = 43
     box_height = box_width
@@ -47,14 +45,8 @@ def draw_answer_boxes():
         screen.draw.filled_rect(box, "sky blue")
     screen.draw.text("Password", color= "black", center = (WIDTH / 2, 250), fontsize = 60)
 
-def draw_password():
-    if screen_clicked == True:
-        if key_is_pressed == True and key_pressed != None:
-            draw_digit = True
-            return draw_digit
-
 def draw():
-    global screen_clicked, key_is_pressed, time_ran, run_once, run_backround
+    global screen_clicked, box_index, key_pressed
     time_now = time.localtime()
     time_minutes = time.strftime("%M", time_now)
     time_hours = time.strftime("%I", time_now).lstrip("0")
@@ -63,27 +55,84 @@ def draw():
 
     if screen_clicked == False:
         screen.draw.text(f"{time_hours}:{time_minutes}", color="black", center=(WIDTH / 2, 50), fontsize=100)
-    elif screen_clicked == True and run_once == 0:
+    
+    else:
         draw_answer_boxes()
-
-    draw_digit = draw_password()
-    if draw_digit == True:
-        run_once = 1
-        screen.draw.textbox(key_pressed, box_1, color= "black")
+    
+    if screen_clicked == True and key_pressed != None and password_done == False:
+        screen.draw.textbox(key_pressed, password_boxes[box_index], color= "black")
+        circle_x = box_1_x + (43/2)
+        circle_y = 300 + (43 / 2)
+        if box_index > 0:
+            screen.draw.filled_circle((circle_x, circle_y), 10, "black")
+        key_pressed = None
+        
+def on_key_up(key):
+    global box_index, key_pressed, password_done, password_digits
+    if box_index < 7:
+        box_index += 1
+    else:
+        password_done = True
 
 def on_mouse_down(pos):
     global screen_clicked
     screen_clicked = True
 
-def get_letter_pressed():
-    if keyboard.q:
-        return "q"
-
 def update():
-    global key_pressed, screen_clicked, key_is_pressed
-    if screen_clicked == True:
-        key_pressed = get_letter_pressed()
-        if key_pressed != None:
-            key_is_pressed = True
-
+    global key_pressed, screen_clicked, password_done
+    if password_done == False:
+        if screen_clicked:
+            if keyboard.q:
+                key_pressed = "q"
+            if keyboard.w:
+                key_pressed = "w"
+            if keyboard.e:
+                key_pressed = "e"
+            if keyboard.r:
+                key_pressed = "r"
+            if keyboard.t:
+                key_pressed = "t"
+            if keyboard.y:
+                key_pressed = "y"
+            if keyboard.u:
+                key_pressed = "u"
+            if keyboard.i:
+                key_pressed = "i"
+            if keyboard.o:
+                key_pressed = "o"
+            if keyboard.p:
+                key_pressed = "p"
+            if keyboard.a:
+                key_pressed = "a"
+            if keyboard.s:
+                key_pressed = "s"
+            if keyboard.d:
+                key_pressed = "d"
+            if keyboard.f:
+                key_pressed = "f"
+            if keyboard.g:
+                key_pressed = "g"
+            if keyboard.h:
+                key_pressed = "h"
+            if keyboard.j:
+                key_pressed = "j"
+            if keyboard.k:
+                key_pressed = "k"
+            if keyboard.l:
+                key_pressed = "l"
+            if keyboard.z:
+                key_pressed = "z"
+            if keyboard.x:
+                key_pressed = "x"
+            if keyboard.c:
+                key_pressed = "c"
+            if keyboard.v:
+                key_pressed = "v"
+            if keyboard.b:
+                key_pressed = "b"
+            if keyboard.n:
+                key_pressed = "n"
+            if keyboard.m:
+                key_pressed = "m"
+        
 pgzrun.go()
