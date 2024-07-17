@@ -10,9 +10,8 @@ key_pressed = None
 password_digits = ["p", "a", "s", "s", "w", "o", "r", "d"]
 box_index = 0
 password_done = False
-digit_1_correct, digit_2_correct, digit_3_correct, digit_4_correct = False, False, False, False
-digit_5_correct, digit_6_correct, digit_7_correct, digit_8_correct = False, False, False, False
-digit_correct_list = [digit_1_correct, digit_2_correct, digit_3_correct, digit_4_correct, digit_5_correct, digit_6_correct, digit_7_correct, digit_8_correct]
+digit_correct_list = [False, False, False, False, False, False, False, False]
+on_home_page = False
 
 def make_boxes():    
 
@@ -43,7 +42,7 @@ def make_boxes():
     password_boxes = [box_1, box_2, box_3, box_4, box_5, box_6, box_7, box_8]
 
 def draw_answer_boxes():
-    global password_digits
+    global password_digits, key_pressed
     make_boxes()
     for box in password_boxes:
         screen.draw.filled_rect(box, "sky blue")
@@ -62,45 +61,25 @@ def get_x_of_circles():
     return circles_x
 
 def draw():
-    global screen_clicked, box_index, key_pressed, password_boxes_x, digit_1_correct, digit_2_correct, digit_3_correct, digit_4_correct, digit_5_correct, digit_6_correct, digit_7_correct, digit_8_correct, digit_correct_list
+    global screen_clicked, box_index, key_pressed, password_boxes_x,digit_correct_list, on_home_page, password_done
+
     time_now = time.localtime()
     time_minutes = time.strftime("%M", time_now)
     time_hours = time.strftime("%I", time_now).lstrip("0")
     
     screen.blit("garden", (0, 0))
 
-    if screen_clicked == False:
+    if screen_clicked == False and on_home_page == False:
         screen.draw.text(f"{time_hours}:{time_minutes}", color="black", center=(WIDTH / 2, 50), fontsize=100)
-    else:
+    if screen_clicked == True and password_done == False:
         draw_answer_boxes()
     
     if screen_clicked == True and key_pressed != None and password_done == False:
         screen.draw.textbox(key_pressed, password_boxes[box_index], color= "black")
-        if box_index == 0 and key_pressed == password_digits[box_index]:
-            digit_1_correct = True
-            print(digit_1_correct, "1")
-        if box_index == 1 and key_pressed == password_digits[box_index]:
-            digit_2_correct = True
-            print(digit_2_correct, "2")
-        if box_index == 2 and key_pressed == password_digits[box_index]:
-            digit_3_correct = True
-            print(digit_3_correct, "3")
-        if box_index == 3 and key_pressed == password_digits[box_index]:
-            digit_4_correct = True
-            print(digit_4_correct, "4")
-        if box_index == 4 and key_pressed == password_digits[box_index]:
-            digit_5_correct = True
-            print(digit_5_correct, "5")
-        if box_index == 5 and key_pressed == password_digits[box_index]:
-            digit_6_correct = True
-            print(digit_6_correct, "6")
-        if box_index == 6 and key_pressed == password_digits[box_index]:
-            digit_7_correct = True
-            print(digit_7_correct, "7")
-        if box_index == 7 and key_pressed == password_digits[box_index]:
-            digit_8_correct = True
-            print(digit_8_correct, "8")
-        digit_correct_list = [digit_1_correct, digit_2_correct, digit_3_correct, digit_4_correct, digit_5_correct, digit_6_correct, digit_7_correct, digit_8_correct]
+
+        if box_index >= 0 and  box_index<=8 and key_pressed == password_digits[box_index]:
+            digit_correct_list[box_index] = True
+
         circles_x = get_x_of_circles()
 
         circle_y = 300 + (43 / 2)
@@ -109,21 +88,33 @@ def draw():
                 screen.draw.filled_circle((circles_x[i], circle_y), 10, "black")
         key_pressed = None
     if password_done == True and all(digit_correct_list):
-        print("correct")
+        screen_clicked = False
+        on_home_page = True
+    elif password_done == True:
+        print("you are wrong")
+        screen_clicked = True
+        password_done = False
+        box_index = 0
+        digit_correct_list = [False, False, False, False, False, False, False, False]
         
 def on_key_up(key):
-    global box_index, key_pressed, password_done, password_digits
+    global box_index, key_pressed, password_done, password_digits,digit_1
+
     if box_index < 7:
         box_index += 1
     else:
         password_done = True
 
 def on_mouse_down(pos):
-    global screen_clicked
-    screen_clicked = True
+    global screen_clicked, on_home_page
+    if on_home_page == False:
+        screen_clicked = True
+
+# def on_ke
 
 def update():
     global key_pressed, screen_clicked, password_done
+
     if password_done == False:
         if screen_clicked:
             if keyboard.q:
