@@ -14,7 +14,6 @@ digit_correct_list = [False, False, False, False, False, False, False, False]
 on_home_page = False
 
 def make_boxes():    
-
     global password_boxes, box_1, box_2, box_3, box_4, box_5, box_6, box_7, box_8, password_boxes_x
     box_y = 300
     box_width = 43
@@ -78,14 +77,7 @@ def draw():
         screen.draw.textbox(key_pressed, password_boxes[box_index], color= "black")
 
         if box_index >= 0 and  box_index<=8 and key_pressed == password_digits[box_index]:
-            digit_correct_list[box_index] = True
-
-        circles_x = get_x_of_circles()
-
-        circle_y = 300 + (43 / 2)
-        for i in range(0, 8):
-            if box_index > i:
-                screen.draw.filled_circle((circles_x[i], circle_y), 10, "black")
+            digit_correct_list[box_index] = True   
         key_pressed = None
     if password_done == True and all(digit_correct_list):
         screen_clicked = False
@@ -96,6 +88,14 @@ def draw():
         password_done = False
         box_index = 0
         digit_correct_list = [False, False, False, False, False, False, False, False]
+    
+    if screen_clicked == True:
+        circles_x = get_x_of_circles()
+
+        circle_y = 300 + (43 / 2)
+        for i in range(0, 8):
+            if box_index > i:
+                screen.draw.filled_circle((circles_x[i], circle_y), 10, "black")
         
 def on_key_up(key):
     global box_index, key_pressed, password_done, password_digits,digit_1
@@ -109,8 +109,6 @@ def on_mouse_down(pos):
     global screen_clicked, on_home_page
     if on_home_page == False:
         screen_clicked = True
-
-# def on_ke
 
 def update():
     global key_pressed, screen_clicked, password_done
