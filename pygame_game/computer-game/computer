@@ -1,6 +1,7 @@
 import pgzrun
 import time
 import pygame
+from pgzero.actor import Actor
 
 WIDTH = 800
 HEIGHT = 600
@@ -12,6 +13,12 @@ box_index = 0
 password_done = False
 digit_correct_list = [False, False, False, False, False, False, False, False]
 on_home_page = False
+setting_rect_open = False
+
+# settings_rect = pygame.Rect()
+
+setting_icon = Actor("setting-icon")
+setting_icon.pos = 400, 570
 
 def make_boxes():    
     global password_boxes, box_1, box_2, box_3, box_4, box_5, box_6, box_7, box_8, password_boxes_x
@@ -59,14 +66,21 @@ def get_x_of_circles():
     circles_x = [circle_1_x, circle_2_x, circle_3_x, circle_4_x, circle_5_x, circle_6_x, circle_7_x, circle_8_x]
     return circles_x
 
+def draw_home_screen():
+    taskbar_color = 236.5
+    screen.draw.filled_rect(pygame.Rect(0, 550, WIDTH, 50), (taskbar_color, taskbar_color, taskbar_color))
+    setting_icon.draw()
+
 def draw():
-    global screen_clicked, box_index, key_pressed, password_boxes_x,digit_correct_list, on_home_page, password_done
+    global screen_clicked, box_index, key_pressed, password_boxes_x,digit_correct_list, on_home_page, password_done, setting_rect_open
 
     time_now = time.localtime()
     time_minutes = time.strftime("%M", time_now)
     time_hours = time.strftime("%I", time_now).lstrip("0")
-    
-    screen.blit("garden", (0, 0))
+    if screen_clicked == False:
+        screen.blit("garden", (0, 0))
+    else:
+        screen.blit("garden-blurred", (0, 0))
 
     if screen_clicked == False and on_home_page == False:
         screen.draw.text(f"{time_hours}:{time_minutes}", color="black", center=(WIDTH / 2, 50), fontsize=100)
@@ -83,7 +97,6 @@ def draw():
         screen_clicked = False
         on_home_page = True
     elif password_done == True:
-        print("you are wrong")
         screen_clicked = True
         password_done = False
         box_index = 0
@@ -96,6 +109,11 @@ def draw():
         for i in range(0, 8):
             if box_index > i:
                 screen.draw.filled_circle((circles_x[i], circle_y), 10, "black")
+    
+    if on_home_page:
+        draw_home_screen()
+        # if setting_rect_open:
+        #     screen.draw.filled_rect()
         
 def on_key_up(key):
     global box_index, key_pressed, password_done, password_digits,digit_1
@@ -105,10 +123,14 @@ def on_key_up(key):
     else:
         password_done = True
 
-def on_mouse_down(pos):
-    global screen_clicked, on_home_page
+def on_mouse_down(pos, button):
+    global screen_clicked, on_home_page, setting_rect_open
     if on_home_page == False:
         screen_clicked = True
+    else:
+        if setting_icon.collidepoint(pos) and button == mouse.LEFT:
+            setting_rect_open = True
+
 
 def update():
     global key_pressed, screen_clicked, password_done
