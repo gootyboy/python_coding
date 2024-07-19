@@ -43,15 +43,6 @@ def draw():
     else:
         display_high_scores()
 
-def on_mouse_down():
-    global up
-    up = True
-    balloon.y -= 50
-
-def on_mouse_up():
-    global up
-    up = False
-
 def flap():
     global bird_up
     if bird_up:
@@ -62,8 +53,13 @@ def flap():
         bird_up = True
 
 def update():
-    global game_over, score, number_of_updates
+    global game_over, score, number_of_updates, up
     if not game_over:
+        if keyboard.SPACE:
+            up = True
+            balloon.y -= 1
+        else:
+            up = False
         if not up:
             balloon.y += 1
         if bird.x > 0:
