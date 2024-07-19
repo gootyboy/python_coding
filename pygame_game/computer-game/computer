@@ -14,11 +14,18 @@ password_done = False
 digit_correct_list = [False, False, False, False, False, False, False, False]
 on_home_page = False
 setting_rect_open = False
+backround_icon_open = False
 
-# settings_rect = pygame.Rect()
+settings_rect = pygame.Rect(70, 76, 451, 451)
 
 setting_icon = Actor("setting-icon")
-setting_icon.pos = 400, 570
+setting_icon.pos = 450, 570
+
+backround_icon = Actor("backround-setting")
+backround_icon.pos = 270, 150
+
+x_button = Actor("x-button")
+x_button.pos = 500, 93
 
 def make_boxes():    
     global password_boxes, box_1, box_2, box_3, box_4, box_5, box_6, box_7, box_8, password_boxes_x
@@ -67,12 +74,11 @@ def get_x_of_circles():
     return circles_x
 
 def draw_home_screen():
-    taskbar_color = 236.5
-    screen.draw.filled_rect(pygame.Rect(0, 550, WIDTH, 50), (taskbar_color, taskbar_color, taskbar_color))
+    screen.draw.filled_rect(pygame.Rect(0, 550, WIDTH, 50), (212,226,249))
     setting_icon.draw()
 
 def draw():
-    global screen_clicked, box_index, key_pressed, password_boxes_x,digit_correct_list, on_home_page, password_done, setting_rect_open
+    global screen_clicked, box_index, key_pressed, password_boxes_x,digit_correct_list, on_home_page, password_done, setting_rect_open, backround_icon_open
 
     time_now = time.localtime()
     time_minutes = time.strftime("%M", time_now)
@@ -112,8 +118,10 @@ def draw():
     
     if on_home_page:
         draw_home_screen()
-        # if setting_rect_open:
-        #     screen.draw.filled_rect()
+        if setting_rect_open:
+            screen.draw.filled_rect(settings_rect, (239,244,249))
+            backround_icon.draw()
+            x_button.draw()
         
 def on_key_up(key):
     global box_index, key_pressed, password_done, password_digits,digit_1
@@ -124,12 +132,16 @@ def on_key_up(key):
         password_done = True
 
 def on_mouse_down(pos, button):
-    global screen_clicked, on_home_page, setting_rect_open
+    global screen_clicked, on_home_page, setting_rect_open, backround_icon_open
     if on_home_page == False:
         screen_clicked = True
     else:
         if setting_icon.collidepoint(pos) and button == mouse.LEFT:
             setting_rect_open = True
+        if x_button.collidepoint(pos) and button == mouse.LEFT:
+            setting_rect_open = False
+        if backround_icon.collidepoint(pos):
+            backround_icon_open = False
 
 def update():
     global key_pressed, screen_clicked, password_done

@@ -147,53 +147,47 @@ def guess_check(player_type: str, player_type_variable, amount_player_type, lowe
         player_type_variable += 1
     return player_names
 
-def main_game():
-    while game_loop:
-        keyboard_interrupt = False
-        player_question = "type the amount of players    "
-        while not keyboard_interrupt:
-            keyboard_interrupt = check_keyboard_interrupt(player_question)
-        if keyboard_interrupt == True:
-            game_loop_bool = play_game_agian(no_answer, game_loop)
+while game_loop:
+    keyboard_interrupt = False
+    player_question = "type the amount of players    "
+    while not keyboard_interrupt:
+        keyboard_interrupt = check_keyboard_interrupt(player_question)
+    if keyboard_interrupt == True:
+        game_loop_bool = play_game_agian(no_answer, game_loop)
 
-        if keyboard_interrupt == False:
-            amount_of_players = input(player_question)
-            if_not_number(amount_of_players, player_question)
+    if keyboard_interrupt == False:
+        amount_of_players = input(player_question)
+        if_not_number(amount_of_players, player_question)
 
-        player_number = int(amount_of_players)
+    player_number = int(amount_of_players)
 
-        computer_mess = "enter the amount of computer players (computer is non-operational at this moment. enter 0)      "
-        amount_computer = input(computer_mess)
-        amount_computer = if_not_number(amount_computer, computer_mess)
-        computer_number = int(amount_computer)
-        
-        if player_number>0:
-            guess_check("player", player_count, player_number, -200, 200)
-        if computer_number>0:
-            guess_check("computer", computer_player, computer_number, 200, -200)
+    computer_mess = "enter the amount of computer players (computer is non-operational at this moment. enter 0)      "
+    amount_computer = input(computer_mess)
+    amount_computer = if_not_number(amount_computer, computer_mess)
+    computer_number = int(amount_computer)
+    
+    if player_number>0:
+        guess_check("player", player_count, player_number, -200, 200)
+    if computer_number>0:
+        guess_check("computer", computer_player, computer_number, 200, -200)
 
-        for i in range(0, player_number + computer_number - 1):
-            print(f"{player_names[i]} ---> {player_guesses[i]}")
+    for i in range(0, player_number + computer_number - 1):
+        print(f"{player_names[i]} ---> {player_guesses[i]}")
 
-        winner = min(player_guesses)
-        counter = 0
-        winner_index = []
+    winner = min(player_guesses)
+    counter = 0
+    winner_index = []
 
-        for i in player_guesses:
-            if winner == i:
-                winner_index.append(counter)
-            counter += 1
+    for i in player_guesses:
+        if winner == i:
+            winner_index.append(counter)
+        counter += 1
 
-        print(" ")
-        print(winner_index)
-        print(player_names)
-        for i in winner_index:
-            print(f"{player_names[i]} WINS THE GAME!!!!!!!!!!!!!!!!!!!!!!!")
+    print(" ")
+    print(winner_index)
+    print(player_names)
+    for i in winner_index:
+        print(f"{player_names[i]} WINS THE GAME!!!!!!!!!!!!!!!!!!!!!!!")
 
-        print(" ")
-        play_game_agian(no_answer, game_loop)
-    return game_loop_bool
-
-game_running = main_game()
-while game_running == True:
-    main_game()
+    print(" ")
+    play_game_agian(no_answer, game_loop)
