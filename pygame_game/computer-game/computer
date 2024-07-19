@@ -131,7 +131,6 @@ def on_mouse_down(pos, button):
         if setting_icon.collidepoint(pos) and button == mouse.LEFT:
             setting_rect_open = True
 
-
 def update():
     global key_pressed, screen_clicked, password_done
 
