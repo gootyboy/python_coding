@@ -64,7 +64,7 @@ def update():
             balloon.y += 1
         if bird.x > 0:
             bird.x -= 4
-            if number_of_updates == 9:
+            if number_of_updates == 30:
                 flap()
                 number_of_updates = 0
             else:

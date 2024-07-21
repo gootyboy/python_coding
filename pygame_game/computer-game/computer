@@ -8,7 +8,7 @@ HEIGHT = 600
 
 screen_clicked = False
 key_pressed = None
-password_digits = ["p", "a", "s", "s", "w", "o", "r", "d"]
+password_digits = ["q", "q", "q", "q", "q", "q", "q", "q"]
 box_index = 0
 password_done = False
 digit_correct_list = [False, False, False, False, False, False, False, False]
@@ -26,6 +26,27 @@ backround_icon.pos = 270, 150
 
 x_button = Actor("x-button")
 x_button.pos = 500, 93
+
+sky_icon = Actor("sky-background-icon")
+sky_icon.pos = 200, 250
+
+garden_icon = Actor("garden-background-icon")
+garden_icon.pos = 400, 250
+
+def get_backround():
+    global backround_image,blurred_backround_image
+    filename = r"C:\Users\igres\Desktop\boy\pygame_game\computer-game\background-setting.txt"
+    with open(filename, "r") as file:
+        line = file.readline()
+        background_images = line.split()
+        backround_image = background_images[0]
+        blurred_backround_image = background_images[1]
+
+def update_background(background):
+    global backround_image,blurred_backround_image
+    filename = r"C:\Users\igres\Desktop\boy\pygame_game\computer-game\background-setting.txt"
+    with open(filename, "w") as file:
+        file.write(background + " " + background + "-blurred")
 
 def make_boxes():    
     global password_boxes, box_1, box_2, box_3, box_4, box_5, box_6, box_7, box_8, password_boxes_x
@@ -80,13 +101,14 @@ def draw_home_screen():
 def draw():
     global screen_clicked, box_index, key_pressed, password_boxes_x,digit_correct_list, on_home_page, password_done, setting_rect_open, backround_icon_open
 
+    get_backround()
     time_now = time.localtime()
     time_minutes = time.strftime("%M", time_now)
     time_hours = time.strftime("%I", time_now).lstrip("0")
     if screen_clicked == False:
-        screen.blit("garden", (0, 0))
+        screen.blit(backround_image, (0, 0))
     else:
-        screen.blit("garden-blurred", (0, 0))
+        screen.blit(blurred_backround_image, (0, 0))
 
     if screen_clicked == False and on_home_page == False:
         screen.draw.text(f"{time_hours}:{time_minutes}", color="black", center=(WIDTH / 2, 50), fontsize=100)
@@ -120,8 +142,13 @@ def draw():
         draw_home_screen()
         if setting_rect_open:
             screen.draw.filled_rect(settings_rect, (239,244,249))
-            backround_icon.draw()
             x_button.draw()
+            if backround_icon_open:
+                backround_icon.draw()
+            else:
+                screen.draw.text("Images", color= "black", center=(270, 170), fontsize = 30)
+                sky_icon.draw()
+                garden_icon.draw()
         
 def on_key_up(key):
     global box_index, key_pressed, password_done, password_digits,digit_1
@@ -132,7 +159,7 @@ def on_key_up(key):
         password_done = True
 
 def on_mouse_down(pos, button):
-    global screen_clicked, on_home_page, setting_rect_open, backround_icon_open
+    global screen_clicked, on_home_page, setting_rect_open, backround_icon_open, backround_image
     if on_home_page == False:
         screen_clicked = True
     else:
@@ -140,12 +167,18 @@ def on_mouse_down(pos, button):
             setting_rect_open = True
         if x_button.collidepoint(pos) and button == mouse.LEFT:
             setting_rect_open = False
-        if backround_icon.collidepoint(pos):
             backround_icon_open = False
+        if backround_icon.collidepoint(pos) and button == mouse.LEFT:
+            backround_icon_open = False
+        else:
+            backround_icon_open = True
+        if sky_icon.collidepoint(pos) and button == mouse.LEFT:
+            update_background("sky")
+        if garden_icon.collidepoint(pos) and button == mouse.LEFT:
+            update_background("garden")
 
 def update():
     global key_pressed, screen_clicked, password_done
-
     if password_done == False:
         if screen_clicked:
             if keyboard.q:
