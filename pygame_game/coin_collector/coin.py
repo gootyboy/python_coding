@@ -46,7 +46,7 @@ def on_mouse_down(pos):
             multiplayer = True
     if game_over == True:
         if play_agian_no_box.collidepoint(pos):
-            pygame.quit()
+            pgzrun.sys.exit()
         if play_agian_yes_box.collidepoint(pos):
             game_over = False
             high_score_run = True
@@ -152,7 +152,6 @@ def display_high_scores():
 
 def update():
     global hedgehog_score, fox_score, multiplayer
-
     if fox.x > 20:
         if keyboard.left:
             fox.x -= player_speed

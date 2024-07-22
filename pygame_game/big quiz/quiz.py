@@ -185,7 +185,6 @@ def on_mouse_down(pos):
                     game_over()
         index += 1
 
-
 def update_time_left():
     global time_left, if_correct_answer
 

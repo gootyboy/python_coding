@@ -8,7 +8,6 @@ HEIGHT = 600
 
 screen_clicked = False
 key_pressed = None
-password_digits = ["q", "q", "q", "q", "q", "q", "q", "q"]
 box_index = 0
 password_done = False
 digit_correct_list = [False, False, False, False, False, False, False, False]
@@ -38,6 +37,19 @@ sky_icon.pos = 200, 250
 garden_icon = Actor("garden-background-icon")
 garden_icon.pos = 400, 250
 
+def get_password_digits():
+    filename = r"C:\Users\igres\Desktop\boy\pygame_game\computer-game\password.txt"
+    with open(filename, "r") as file:
+        line = file.readline()
+        password_digits = line.split()
+        return password_digits
+
+def update_password_digits(new_password_digits):
+    filename = r"C:\Users\igres\Desktop\boy\pygame_game\computer-game\password.txt"
+    with open(filename, "w") as file:
+        for digit in new_password_digits:
+            file.write(digit + " ")
+
 def get_backround():
     global backround_image,blurred_backround_image
     filename = r"C:\Users\igres\Desktop\boy\pygame_game\computer-game\background-setting.txt"
@@ -53,50 +65,32 @@ def update_background(background):
     with open(filename, "w") as file:
         file.write(background + " " + background + "-blurred")
 
-def make_boxes(update_pos):    
-    global password_boxes, box_1, box_2, box_3, box_4, box_5, box_6, box_7, box_8, password_boxes_x
-    
-    if update_pos:
-        box_width = 43
-        box_dist = 60
-        box_y = 300
-        start = box_dist + 100
-    else:
-        box_width = 23
-        box_dist = 30
-        box_y = 250
-        start = 70
-    box_height = box_width
-    box_1_x = start
-    box_2_x = start + box_dist
-    box_3_x = box_2_x + box_dist
-    box_4_x = box_3_x + box_dist
-    box_5_x = box_4_x + box_dist
-    box_6_x = box_5_x + box_dist
-    box_7_x = box_6_x + box_dist
-    box_8_x = box_7_x + box_dist
-    password_boxes_x = [box_1_x, box_2_x, box_3_x, box_4_x, box_5_x, box_6_x, box_7_x, box_8_x]
-
-    box_1 = pygame.Rect(box_1_x, box_y, box_width, box_height)
-    box_2 = pygame.Rect(box_2_x, box_y, box_width, box_height)
-    box_3 = pygame.Rect(box_3_x, box_y, box_width, box_height)
-    box_4 = pygame.Rect(box_4_x, box_y, box_width, box_height)
-    box_5 = pygame.Rect(box_5_x, box_y, box_width, box_height)
-    box_6 = pygame.Rect(box_6_x, box_y, box_width, box_height)
-    box_7 = pygame.Rect(box_7_x, box_y, box_width, box_height)
-    box_8 = pygame.Rect(box_8_x, box_y, box_width, box_height)
-    password_boxes = [box_1, box_2, box_3, box_4, box_5, box_6, box_7, box_8]
-
-def draw_change_password_boxes():
-    for box in password_boxes:
-        screen.draw.filled_rect(box, "sky blue")
+def get_answer_boxes():    
+    global password_boxes_x
+    password_boxes_x = [276, 306, 336, 366, 396, 426, 456, 486]
+    password_boxes_1_to_4 = [pygame.Rect(276, 300, 43, 43), pygame.Rect(306, 300, 43, 43), pygame.Rect(336, 300, 43, 43), pygame.Rect(366, 300, 43, 43)]
+    password_boxes_5_to_8 = [pygame.Rect(396, 300, 43, 43), pygame.Rect(426, 300, 43, 43), pygame.Rect(456, 300, 43, 43), pygame.Rect(486, 300, 43, 43)]
+    password_boxes = password_boxes_1_to_4 + password_boxes_5_to_8
+    return password_boxes
 
 def draw_answer_boxes():
-    global password_digits, key_pressed
-    make_boxes(update_pos=False)
+    global password_digits, password_boxes
+    password_boxes = get_answer_boxes()
     for box in password_boxes:
         screen.draw.filled_rect(box, "sky blue")
     screen.draw.text("Password", color= "black", center = (WIDTH / 2, 250), fontsize = 60)
+
+def get_change_password_boxes():
+    change_password_boxes_1_to_4 = [pygame.Rect(140, 200, 38, 38), pygame.Rect(160, 200, 38, 38), pygame.Rect(180, 200, 38, 38), pygame.Rect(200, 200, 38, 38)]
+    change_password_boxes_5_to_8 = [pygame.Rect(220, 200, 38, 38), pygame.Rect(240, 200, 38, 38), pygame.Rect(260, 200, 38, 38), pygame.Rect(280, 200, 38, 38)]
+    change_password_boxes = change_password_boxes_1_to_4 + change_password_boxes_5_to_8
+    return change_password_boxes
+
+def draw_change_password_boxes():
+    change_password_boxes = get_change_password_boxes()
+    screen.draw.text("Enter new password", center= (270, 150), color = "Black", fontsize = 50)
+    for box in change_password_boxes:
+        screen.draw.filled_rect(box, "sky blue")
 
 def get_x_of_circles():
     circle_1_x = password_boxes_x[0] + (43/2)
@@ -118,22 +112,24 @@ def draw():
     global screen_clicked, box_index, key_pressed, password_boxes_x,digit_correct_list, on_home_page, password_done, setting_rect_open, backround_icon_open
 
     get_backround()
+    password_digits = get_password_digits()
     time_now = time.localtime()
     time_minutes = time.strftime("%M", time_now)
     time_hours = time.strftime("%I", time_now).lstrip("0")
     if screen_clicked == False:
         screen.blit(backround_image, (0, 0))
-    else:
+    if screen_clicked and not password_done:
         screen.blit(blurred_backround_image, (0, 0))
-
+        draw_answer_boxes()
+        circles_x = get_x_of_circles()
+        circle_y = 300 + (43 / 2)
+        for i in range(0, 8):
+            if box_index > i:
+                screen.draw.filled_circle((circles_x[i], circle_y), 10, "black")
     if screen_clicked == False and on_home_page == False:
         screen.draw.text(f"{time_hours}:{time_minutes}", color="black", center=(WIDTH / 2, 50), fontsize=100)
-    if screen_clicked == True and password_done == False:
-        draw_answer_boxes()
-    
     if screen_clicked == True and key_pressed != None and password_done == False:
         screen.draw.textbox(key_pressed, password_boxes[box_index], color= "black")
-
         if box_index >= 0 and  box_index<=8 and key_pressed == password_digits[box_index]:
             digit_correct_list[box_index] = True   
         key_pressed = None
@@ -146,14 +142,6 @@ def draw():
         box_index = 0
         digit_correct_list = [False, False, False, False, False, False, False, False]
     
-    if screen_clicked:
-        circles_x = get_x_of_circles()
-
-        circle_y = 300 + (43 / 2)
-        for i in range(0, 8):
-            if box_index > i:
-                screen.draw.filled_circle((circles_x[i], circle_y), 10, "black")
-    
     if on_home_page:
         draw_home_screen()
         if setting_rect_open:
@@ -162,16 +150,14 @@ def draw():
             if backround_icon_open:
                 backround_icon.draw()
                 change_password_icon.draw()
-            elif backround_icon_open == False and icon_clicked == "background":
+            elif not backround_icon_open and icon_clicked == "background":
                 screen.draw.text("Images", color= "black", center=(270, 170), fontsize = 30)
                 sky_icon.draw()
                 garden_icon.draw()
-            if icon_clicked == "change-password":
-                screen.draw.text("Enter password", center= (270, 150), color = "Black", fontsize = 50)
-                make_boxes(update_pos= True)
+            if not backround_icon_open and icon_clicked == "change-password":
                 draw_change_password_boxes()
                      
-def on_key_up(key):
+def on_key_up():
     global box_index, key_pressed, password_done, password_digits,digit_1
 
     if box_index < 7:
@@ -194,7 +180,7 @@ def on_mouse_down(pos, button):
             icon_clicked = "background"
         else:
             backround_icon_open = True
-        if sky_icon.collidepoint(pos) and backround_icon_open == False:
+        if sky_icon.collidepoint(pos) and icon_clicked == "background":
             update_background("sky")
         if garden_icon.collidepoint(pos):
             update_background("garden")
@@ -202,61 +188,65 @@ def on_mouse_down(pos, button):
             backround_icon_open = False
             icon_clicked = "change-password" 
 
+def get_letter_pressed():
+    if keyboard.q:
+        return "q"
+    if keyboard.w:
+        return "w"
+    if keyboard.e:
+        return "e"
+    if keyboard.r:
+        return "r"
+    if keyboard.t:
+        return "t"
+    if keyboard.y:
+        return "y"
+    if keyboard.u:
+        return "u"
+    if keyboard.i:
+        return "i"
+    if keyboard.o:
+        return "o"
+    if keyboard.p:
+        return "p"
+    if keyboard.a:
+        return "a"
+    if keyboard.s:
+        return "s"
+    if keyboard.d:
+        return "d"
+    if keyboard.f:
+        return "f"
+    if keyboard.g:
+        return "g"
+    if keyboard.h:
+        return "h"
+    if keyboard.j:
+        return "j"
+    if keyboard.k:
+        return "k"
+    if keyboard.l:
+        return "l"
+    if keyboard.z:
+        return "z"
+    if keyboard.x:
+        return "x"
+    if keyboard.c:
+        return "c"
+    if keyboard.v:
+        return "v"
+    if keyboard.b:
+        return "b"
+    if keyboard.n:
+        return "n"
+    if keyboard.m:
+        return "m"
+
 def update():
-    global key_pressed, screen_clicked, password_done
-    if password_done == False:
-        if screen_clicked:
-            if keyboard.q:
-                key_pressed = "q"
-            if keyboard.w:
-                key_pressed = "w"
-            if keyboard.e:
-                key_pressed = "e"
-            if keyboard.r:
-                key_pressed = "r"
-            if keyboard.t:
-                key_pressed = "t"
-            if keyboard.y:
-                key_pressed = "y"
-            if keyboard.u:
-                key_pressed = "u"
-            if keyboard.i:
-                key_pressed = "i"
-            if keyboard.o:
-                key_pressed = "o"
-            if keyboard.p:
-                key_pressed = "p"
-            if keyboard.a:
-                key_pressed = "a"
-            if keyboard.s:
-                key_pressed = "s"
-            if keyboard.d:
-                key_pressed = "d"
-            if keyboard.f:
-                key_pressed = "f"
-            if keyboard.g:
-                key_pressed = "g"
-            if keyboard.h:
-                key_pressed = "h"
-            if keyboard.j:
-                key_pressed = "j"
-            if keyboard.k:
-                key_pressed = "k"
-            if keyboard.l:
-                key_pressed = "l"
-            if keyboard.z:
-                key_pressed = "z"
-            if keyboard.x:
-                key_pressed = "x"
-            if keyboard.c:
-                key_pressed = "c"
-            if keyboard.v:
-                key_pressed = "v"
-            if keyboard.b:
-                key_pressed = "b"
-            if keyboard.n:
-                key_pressed = "n"
-            if keyboard.m:
-                key_pressed = "m"
-        
+    global key_pressed, change_password_key_pressed
+    if not password_done and screen_clicked:
+        key_pressed = get_letter_pressed()
+    if not backround_icon_open and icon_clicked == "change-password":
+        change_password_key_pressed = get_letter_pressed()
+
 pgzrun.go()
