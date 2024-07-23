@@ -13,16 +13,24 @@ password_done = False
 digit_correct_list = [False, False, False, False, False, False, False, False]
 on_home_page = False
 setting_rect_open = False
+windows_rect_open = False
 backround_icon_open = False
 icon_clicked = None
 
 settings_rect = pygame.Rect(70, 76, 451, 451)
+windows_rect = pygame.Rect(70, 200, 351, 312)
 
 setting_icon = Actor("setting-icon", pos=(450, 570))
 
+windows_icon = Actor("windows-icon", pos=(400, 572))
+
+power_off = Actor("power-button", pos=(405, 500))
+
 backround_icon = Actor("backround-setting", pos=(270, 150))
 
-x_button = Actor("x-button", pos=(500, 93))
+x_button_1 = Actor("x-button", pos=(500, 93))
+
+x_button_2 = Actor("x-button", pos=(405, 210))
 
 garden_icon = Actor("garden-background-icon", pos=(400, 250))
 
@@ -90,12 +98,13 @@ def get_x_of_circles():
 def draw_home_screen():
     screen.draw.filled_rect(pygame.Rect(0, 550, WIDTH, 50), (212,226,249))
     setting_icon.draw()
+    windows_icon.draw()
 
 def start_home_page():
     draw_home_screen()
     if setting_rect_open:
         screen.draw.filled_rect(settings_rect, (239,244,249))
-        x_button.draw()
+        x_button_1.draw()
         if backround_icon_open:
             backround_icon.draw()
         elif not backround_icon_open and icon_clicked == "background":
@@ -104,6 +113,10 @@ def start_home_page():
             garden_icon.draw()
             dungeon_icon.draw()
             stage_icon.draw()
+    if windows_rect_open:
+        screen.draw.filled_rect(windows_rect, "gray")
+        x_button_2.draw()
+        power_off.draw()
 
 def draw():
     global screen_clicked, box_index, key_pressed, password_boxes_x,digit_correct_list, on_home_page, password_done, setting_rect_open, backround_icon_open
@@ -169,13 +182,13 @@ def check_for_background_pressed(pos):
         icon_clicked = None
 
 def on_mouse_down(pos, button):
-    global screen_clicked, on_home_page, setting_rect_open, backround_icon_open, backround_image, icon_clicked
+    global screen_clicked, on_home_page, setting_rect_open, backround_icon_open, backround_image, icon_clicked, windows_rect_open
     if on_home_page == False:
         screen_clicked = True
     elif on_home_page and button == mouse.LEFT:
         if setting_icon.collidepoint(pos):
             setting_rect_open = True
-        if x_button.collidepoint(pos):
+        if x_button_1.collidepoint(pos):
             setting_rect_open = False
             backround_icon_open = False
         if backround_icon.collidepoint(pos) and backround_icon_open:
@@ -184,6 +197,12 @@ def on_mouse_down(pos, button):
         else:
             backround_icon_open = True
         check_for_background_pressed(pos)
+        if windows_icon.collidepoint(pos):
+            windows_rect_open = True
+        if x_button_2.collidepoint(pos):
+            windows_rect_open = False
+        if power_off.collidepoint(pos) and windows_rect_open:
+            pgzrun.sys.exit()
 
 def get_letter_pressed():
     if keyboard.q:
