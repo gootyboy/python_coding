@@ -1,1 +1,1 @@
-garden garden-blurred
+stage stage-blurred

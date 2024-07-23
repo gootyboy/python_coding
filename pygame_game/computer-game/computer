@@ -6,9 +6,9 @@ from pgzero.actor import Actor
 WIDTH = 800
 HEIGHT = 600
 
+box_index = 0
 screen_clicked = False
 key_pressed = None
-box_index = 0
 password_done = False
 digit_correct_list = [False, False, False, False, False, False, False, False]
 on_home_page = False
@@ -17,25 +17,20 @@ backround_icon_open = False
 icon_clicked = None
 
 settings_rect = pygame.Rect(70, 76, 451, 451)
-change_password_rect = pygame.Rect(270, 150, 100, 20)
 
-setting_icon = Actor("setting-icon")
-setting_icon.pos = 450, 570
+setting_icon = Actor("setting-icon", pos=(450, 570))
 
-backround_icon = Actor("backround-setting")
-backround_icon.pos = 270, 150
+backround_icon = Actor("backround-setting", pos=(270, 150))
 
-change_password_icon = Actor("change-password-icon")
-change_password_icon.pos = 270, 200
+x_button = Actor("x-button", pos=(500, 93))
 
-x_button = Actor("x-button")
-x_button.pos = 500, 93
+garden_icon = Actor("garden-background-icon", pos=(400, 250))
 
-sky_icon = Actor("sky-background-icon")
-sky_icon.pos = 200, 250
+sky_icon = Actor("sky-background-icon", pos=(200, 250))
 
-garden_icon = Actor("garden-background-icon")
-garden_icon.pos = 400, 250
+dungeon_icon = Actor("dungeon-background-icon", pos=(200, 400))
+
+stage_icon = Actor("stage-background-icon", pos=(400, 400))
 
 def get_password_digits():
     filename = r"C:\Users\igres\Desktop\boy\pygame_game\computer-game\password.txt"
@@ -80,18 +75,6 @@ def draw_answer_boxes():
         screen.draw.filled_rect(box, "sky blue")
     screen.draw.text("Password", color= "black", center = (WIDTH / 2, 250), fontsize = 60)
 
-def get_change_password_boxes():
-    change_password_boxes_1_to_4 = [pygame.Rect(140, 200, 38, 38), pygame.Rect(160, 200, 38, 38), pygame.Rect(180, 200, 38, 38), pygame.Rect(200, 200, 38, 38)]
-    change_password_boxes_5_to_8 = [pygame.Rect(220, 200, 38, 38), pygame.Rect(240, 200, 38, 38), pygame.Rect(260, 200, 38, 38), pygame.Rect(280, 200, 38, 38)]
-    change_password_boxes = change_password_boxes_1_to_4 + change_password_boxes_5_to_8
-    return change_password_boxes
-
-def draw_change_password_boxes():
-    change_password_boxes = get_change_password_boxes()
-    screen.draw.text("Enter new password", center= (270, 150), color = "Black", fontsize = 50)
-    for box in change_password_boxes:
-        screen.draw.filled_rect(box, "sky blue")
-
 def get_x_of_circles():
     circle_1_x = password_boxes_x[0] + (43/2)
     circle_2_x = password_boxes_x[1] + (43/2)
@@ -107,6 +90,20 @@ def get_x_of_circles():
 def draw_home_screen():
     screen.draw.filled_rect(pygame.Rect(0, 550, WIDTH, 50), (212,226,249))
     setting_icon.draw()
+
+def start_home_page():
+    draw_home_screen()
+    if setting_rect_open:
+        screen.draw.filled_rect(settings_rect, (239,244,249))
+        x_button.draw()
+        if backround_icon_open:
+            backround_icon.draw()
+        elif not backround_icon_open and icon_clicked == "background":
+            screen.draw.text("Images", color= "black", center=(270, 170), fontsize = 30)
+            sky_icon.draw()
+            garden_icon.draw()
+            dungeon_icon.draw()
+            stage_icon.draw()
 
 def draw():
     global screen_clicked, box_index, key_pressed, password_boxes_x,digit_correct_list, on_home_page, password_done, setting_rect_open, backround_icon_open
@@ -127,7 +124,10 @@ def draw():
             if box_index > i:
                 screen.draw.filled_circle((circles_x[i], circle_y), 10, "black")
     if screen_clicked == False and on_home_page == False:
-        screen.draw.text(f"{time_hours}:{time_minutes}", color="black", center=(WIDTH / 2, 50), fontsize=100)
+        if backround_image == "stage":
+            screen.draw.text(f"{time_hours}:{time_minutes}", color="dark gray", center=(WIDTH / 2, 50), fontsize=100)
+        else:
+            screen.draw.text(f"{time_hours}:{time_minutes}", color="black", center=(WIDTH / 2, 50), fontsize=100)
     if screen_clicked == True and key_pressed != None and password_done == False:
         screen.draw.textbox(key_pressed, password_boxes[box_index], color= "black")
         if box_index >= 0 and  box_index<=8 and key_pressed == password_digits[box_index]:
@@ -143,20 +143,8 @@ def draw():
         digit_correct_list = [False, False, False, False, False, False, False, False]
     
     if on_home_page:
-        draw_home_screen()
-        if setting_rect_open:
-            screen.draw.filled_rect(settings_rect, (239,244,249))
-            x_button.draw()
-            if backround_icon_open:
-                backround_icon.draw()
-                change_password_icon.draw()
-            elif not backround_icon_open and icon_clicked == "background":
-                screen.draw.text("Images", color= "black", center=(270, 170), fontsize = 30)
-                sky_icon.draw()
-                garden_icon.draw()
-            if not backround_icon_open and icon_clicked == "change-password":
-                draw_change_password_boxes()
-                     
+        start_home_page()
+                                
 def on_key_up():
     global box_index, key_pressed, password_done, password_digits,digit_1
 
@@ -164,6 +152,21 @@ def on_key_up():
         box_index += 1
     else:
         password_done = True
+
+def check_for_background_pressed(pos):
+    global icon_clicked
+    if sky_icon.collidepoint(pos) and icon_clicked == "background":
+        update_background("sky")
+        icon_clicked = None
+    if garden_icon.collidepoint(pos) and icon_clicked == "background":
+        update_background("garden")
+        icon_clicked = None
+    if dungeon_icon.collidepoint(pos) and icon_clicked == "background":
+        update_background("dungeon")
+        icon_clicked = None
+    if stage_icon.collidepoint(pos) and icon_clicked == "background":
+        update_background("stage")
+        icon_clicked = None
 
 def on_mouse_down(pos, button):
     global screen_clicked, on_home_page, setting_rect_open, backround_icon_open, backround_image, icon_clicked
@@ -180,13 +183,7 @@ def on_mouse_down(pos, button):
             icon_clicked = "background"
         else:
             backround_icon_open = True
-        if sky_icon.collidepoint(pos) and icon_clicked == "background":
-            update_background("sky")
-        if garden_icon.collidepoint(pos):
-            update_background("garden")
-        if change_password_icon.collidepoint(pos) and backround_icon_open == True:
-            backround_icon_open = False
-            icon_clicked = "change-password" 
+        check_for_background_pressed(pos)
 
 def get_letter_pressed():
     if keyboard.q:
@@ -246,7 +243,5 @@ def update():
     global key_pressed, change_password_key_pressed
     if not password_done and screen_clicked:
         key_pressed = get_letter_pressed()
-    if not backround_icon_open and icon_clicked == "change-password":
-        change_password_key_pressed = get_letter_pressed()
 
 pgzrun.go()

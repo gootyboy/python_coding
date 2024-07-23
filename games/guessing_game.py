@@ -14,20 +14,6 @@ game_replay_mess_1 = "do you want to play this game agian? Type \"no\" if you do
 game_replay_mess_2 = "you didn't type \"yes\" or \"no\". please type \"yes\" or \"no\" if you want to play agian     "
 player_question = "type the amount of players    "
 
-def check_keyboard_interrupt(input_message):
-    try:
-        if input_message == player_question:
-            amount_of_players = input(input_message)
-            return amount_of_players
-        if input_message == game_replay_mess_1:
-            game_replay = input(game_replay_mess_1)
-            return game_replay
-        if input_message == input_message == game_replay_mess_2:
-            game_replay = input(game_replay_mess_2)
-    except KeyboardInterrupt:
-        print("Game over!")
-        return True
-
 def play_game_agian(no_answer, game_loop):
     keyboard_interrupt = False
     game_replay_mess_1 = "do you want to play this game agian? Type \"no\" if you don't want to play agian. Type \"yes\" if you want to."
@@ -83,9 +69,7 @@ def if_not_number(player_input, mess):
     return player_input
 
 def guess_check(player_type: str, player_type_variable, amount_player_type, lower_limit: int, higher_limit: int):
-    computer_guess = 0
-    if player_type == "computer":
-        guess = 0.1
+    global player_names
     while player_type_variable<amount_player_type+1:
         number_to_guess = random.randint(-200, 200)
         if player_type == "player":
@@ -94,16 +78,7 @@ def guess_check(player_type: str, player_type_variable, amount_player_type, lowe
             guess_mess = f"guess a number from {lower_limit} to {higher_limit}:"
             guess = input (guess_mess)
             if_not_number(guess, guess_mess)
-        else:
-            player_name = f"computer player {player_type_variable}"
-            print(player_name)
-            player_names.append(player_name)
-            guess = random.randint(-200, 200)
-            computer_guess = guess
-            guess_mess = f"guess a number from {lower_limit} to {higher_limit}: {guess}"
-            print(guess_mess)
-
-                
+  
         print(" ")
         guess_loop = True
         amount_guesses = 0
@@ -127,51 +102,26 @@ def guess_check(player_type: str, player_type_variable, amount_player_type, lowe
                     if player_type == "player":
                         guessed_number = input(guess_mess)
                         guessed_number = int(if_not_number(guessed_number, guess_mess))
-                    else:
-                        print(guess_mess)
-                        if computer_guess_close == "close":
-                            guessed_number = random.randint(computer_guess, computer_guess + 15)
-                        else:
-                            guessed_number = random.randint(computer_guess, higher_limit)
-
                 elif guessed_number>number_to_guess:
                     how_close(guess_diff, "wrong, try lower", amount_guesses)
                     if player_type == "player":
                         guessed_number = input(guess_mess)
                         guessed_number = int(if_not_number(guessed_number, guess_mess))
-                    else:
-                        print(guess_mess)
-                        if computer_guess_close == "close":
-                            guessed_number = random.randint(computer_guess - 15, computer_guess)
-                        guessed_number = random.randint(lower_limit, computer_guess)
         player_type_variable += 1
-    return player_names
 
 while game_loop:
     keyboard_interrupt = False
     player_question = "type the amount of players    "
-    while not keyboard_interrupt:
-        keyboard_interrupt = check_keyboard_interrupt(player_question)
     if keyboard_interrupt == True:
         game_loop_bool = play_game_agian(no_answer, game_loop)
-
-    if keyboard_interrupt == False:
+    else:
         amount_of_players = input(player_question)
         if_not_number(amount_of_players, player_question)
 
     player_number = int(amount_of_players)
-
-    computer_mess = "enter the amount of computer players (computer is non-operational at this moment. enter 0)      "
-    amount_computer = input(computer_mess)
-    amount_computer = if_not_number(amount_computer, computer_mess)
-    computer_number = int(amount_computer)
-    
     if player_number>0:
         guess_check("player", player_count, player_number, -200, 200)
-    if computer_number>0:
-        guess_check("computer", computer_player, computer_number, 200, -200)
-
-    for i in range(0, player_number + computer_number - 1):
+    for i in range(0, player_number - 1):
         print(f"{player_names[i]} ---> {player_guesses[i]}")
 
     winner = min(player_guesses)
@@ -184,8 +134,6 @@ while game_loop:
         counter += 1
 
     print(" ")
-    print(winner_index)
-    print(player_names)
     for i in winner_index:
         print(f"{player_names[i]} WINS THE GAME!!!!!!!!!!!!!!!!!!!!!!!")
 
