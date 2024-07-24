@@ -41,21 +41,15 @@ dungeon_icon = Actor("dungeon-background-icon", pos=(200, 400))
 stage_icon = Actor("stage-background-icon", pos=(400, 400))
 
 def get_password_digits():
-    filename = r"C:\Users\igres\Desktop\boy\pygame_game\computer-game\password.txt"
+    filename = r"C:\Projects\boy\pygame_game\computer-game\password.txt"
     with open(filename, "r") as file:
         line = file.readline()
         password_digits = line.split()
         return password_digits
 
-def update_password_digits(new_password_digits):
-    filename = r"C:\Users\igres\Desktop\boy\pygame_game\computer-game\password.txt"
-    with open(filename, "w") as file:
-        for digit in new_password_digits:
-            file.write(digit + " ")
-
 def get_backround():
     global backround_image,blurred_backround_image
-    filename = r"C:\Users\igres\Desktop\boy\pygame_game\computer-game\background-setting.txt"
+    filename = r"C:\Projects\boy\pygame_game\computer-game\background-setting.txt"
     with open(filename, "r") as file:
         line = file.readline()
         background_images = line.split()
@@ -64,7 +58,7 @@ def get_backround():
 
 def update_background(background):
     global backround_image,blurred_backround_image
-    filename = r"C:\Users\igres\Desktop\boy\pygame_game\computer-game\background-setting.txt"
+    filename = r"C:\Projects\boy\pygame_game\computer-game\background-setting.txt"
     with open(filename, "w") as file:
         file.write(background + " " + background + "-blurred")
 
