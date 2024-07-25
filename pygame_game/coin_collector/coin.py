@@ -112,7 +112,7 @@ def update_time_left():
 def update_high_scores():
     global fox_score, hedgehog_score, fox_scores, hedgehog_scores, high_scores, multiplayer
 
-    filename = r"C:\\Users\\igres\\Desktop\boy\\pygame_game\\coin_collector\\fox_high_scores.txt"
+    filename = r"C:\Projects\boy\pygame_game\coin_collector\fox_high_scores.txt"
     fox_scores = []
     with open(filename, "r") as file:
         line = file.readline()
@@ -124,7 +124,7 @@ def update_high_scores():
     fox_score = 0
 
     if multiplayer == True:
-        filename = r"C:\\Users\\igres\\Desktop\boy\\pygame_game\\coin_collector\\hedgehog_high_scores.txt"
+        filename = r"C:\Projects\boy\pygame_game\coin_collector\hedgehog_high_scores.txt"
         hedgehog_scores = []
         with open(filename, "r") as file:
             line = file.readline()
