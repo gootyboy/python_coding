@@ -5,6 +5,9 @@ from random import randint
 
 WIDTH = 800
 HEIGHT = 600
+speed_1 = 1
+speed_2 = 1
+speed_3 = 2
 
 balloon = Actor("balloon")
 balloon.pos = 400, 300
@@ -53,17 +56,33 @@ def flap():
         bird_up = True
 
 def update():
-    global game_over, score, number_of_updates, up
+    global game_over, score, number_of_updates, up, speed_1, speed_2, speed_3
     if not game_over:
         if keyboard.SPACE:
             up = True
-            balloon.y -= 1
+            balloon.y -= speed_1
         else:
             up = False
+        if keyboard.up:
+            speed_1 = 3
+        else:
+            speed_1 = 1
+        if keyboard.right:                                                                                                        
+            speed_3 = 10
+        else:
+            speed_3 = 2
+        if keyboard.left:
+            speed_3 = 1
+        else:
+            speed_3 = 3
+        if keyboard.down:
+            speed_2 = 3
+        else:
+            speed_2 = 1
         if not up:
-            balloon.y += 1
+            balloon.y += speed_2
         if bird.x > 0:
-            bird.x -= 4
+            bird.x -= speed_3 * 2
             if number_of_updates == 30:
                 flap()
                 number_of_updates = 0
@@ -75,12 +94,12 @@ def update():
             score += 1
             number_of_updates = 0
         if house.right > 0:
-            house.x -= 2
+            house.x -= speed_3
         else:
             house.x = randint(800, 1600)
             score += 1
         if tree.right > 0:
-            tree.x -= 2
+            tree.x -= speed_3
         else:
             tree.x = randint(800, 1600)
             score += 1

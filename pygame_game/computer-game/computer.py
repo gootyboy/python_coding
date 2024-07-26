@@ -85,15 +85,23 @@ def get_letter_from_number(digits, index_of_item):
             return letter
 
 def decode_password(digits):
-    digit_1 = get_letter_from_number(digits, 0)
-    digit_2 = get_letter_from_number(digits, 1)
-    digit_3 = get_letter_from_number(digits, 2)
-    digit_4 = get_letter_from_number(digits, 3)
-    digit_5 = get_letter_from_number(digits, 4)
-    digit_6 = get_letter_from_number(digits, 5)
-    digit_7 = get_letter_from_number(digits, 6)
-    digit_8 = get_letter_from_number(digits, 7)
-    return [digit_1, digit_2, digit_3, digit_4, digit_5, digit_6, digit_7, digit_8]
+    one_to_4 = [get_letter_from_number(digits, 0), get_letter_from_number(digits, 1), get_letter_from_number(digits, 2), get_letter_from_number(digits, 3)]
+    return one_to_4 + [get_letter_from_number(digits, 4), get_letter_from_number(digits, 5), get_letter_from_number(digits, 6), get_letter_from_number(digits, 7)]
+
+def check_if_digits_are_letters(digits):
+    digits_is_letter_list = [False, False, False, False, False, False, False, False]
+    for i in range(0, 8):
+        if digits[i].isalpha():
+            digits_is_letter_list[i] = True
+    return digits_is_letter_list
+
+def check_if_numbers_are_in_range(digits):
+    for digit in digits:
+        if int(digit) > 26:
+            return False
+        if int(digit) < 1:
+            return False
+    return True
 
 def check_if_digits_are_coded(digits):
     try:
@@ -112,6 +120,20 @@ def make_password_coded(digits):
         for coded_digit in coded_digits:
             file.write(str(coded_digit) + " ")
 
+def get_error_places(digits):
+    error_places = []
+    for index, value in enumerate(digits):
+        if value == False:
+            if index == 1:
+                error_places.append(str(index + 1) + "st")
+            elif index == 2:
+                error_places.append(str(index + 1) + "nd")
+            elif index == 3:
+                error_places.append(str(index + 1) + "rd")
+            else:
+                error_places.append(str(index + 1) + "th")
+    return error_places
+
 def get_password_digits():
     filename = r"C:\Projects\boy\pygame_game\computer-game\password.txt"
     with open(filename, "r") as file:
@@ -119,12 +141,26 @@ def get_password_digits():
         password_digits_coded = line.split()
         coded = check_if_digits_are_coded(password_digits_coded)
         if coded:
-            password_digits = decode_password(password_digits_coded)
-            return password_digits
+            numbers_in_range = check_if_numbers_are_in_range(password_digits_coded)
+            if numbers_in_range:
+                password_digits = decode_password(password_digits_coded)
+                return password_digits
+            else:
+                print("TypeError in the password.txt file")
+                print("Numbers provided for coded password is out of range. Please type numbers in the range (1 to 26) or type letters")
+                pgzrun.sys.exit()
         else:
-            password_digits = password_digits_coded
-            make_password_coded(password_digits)
-            return password_digits
+            digits_are_letters = check_if_digits_are_letters(password_digits_coded)
+            if all(digits_are_letters):
+                password_digits = password_digits_coded
+                make_password_coded(password_digits)
+                return password_digits
+            else:
+                error_places = get_error_places(digits_are_letters)
+                print("TypeError in the password.txt file")
+                print(f"digits provided for password digits are not all letters. The error is in the {error_places} digit")
+                print("Please type letters or type the coded password with numbers")
+                pgzrun.sys.exit()
 
 def get_backround():
     global backround_image,blurred_backround_image
@@ -157,16 +193,7 @@ def draw_answer_boxes():
     screen.draw.text("Password", color= "black", center = (WIDTH / 2, 250), fontsize = 60)
 
 def get_x_of_circles():
-    circle_1_x = password_boxes_x[0] + (43/2)
-    circle_2_x = password_boxes_x[1] + (43/2)
-    circle_3_x = password_boxes_x[2] + (43/2)
-    circle_4_x = password_boxes_x[3] + (43/2)
-    circle_5_x = password_boxes_x[4] + (43/2)
-    circle_6_x = password_boxes_x[5] + (43/2)
-    circle_7_x = password_boxes_x[6] + (43/2)
-    circle_8_x = password_boxes_x[7] + (43/2)
-    circles_x = [circle_1_x, circle_2_x, circle_3_x, circle_4_x, circle_5_x, circle_6_x, circle_7_x, circle_8_x]
-    return circles_x
+    return [297.5, 327.5, 357.5, 387.5, 417.5, 447.5, 477.5, 507.5]
 
 def draw_home_screen():
     screen.draw.filled_rect(pygame.Rect(0, 550, WIDTH, 50), (212,226,249))
@@ -299,58 +326,37 @@ def on_mouse_down(pos, button):
         check_for_other_icons_pressed(pos)
 
 def get_letter_pressed():
-    if keyboard.q:
-        return "q"
-    if keyboard.w:
-        return "w"
-    if keyboard.e:
-        return "e"
-    if keyboard.r:
-        return "r"
-    if keyboard.t:
-        return "t"
-    if keyboard.y:
-        return "y"
-    if keyboard.u:
-        return "u"
-    if keyboard.i:
-        return "i"
-    if keyboard.o:
-        return "o"
-    if keyboard.p:
-        return "p"
-    if keyboard.a:
-        return "a"
-    if keyboard.s:
-        return "s"
-    if keyboard.d:
-        return "d"
-    if keyboard.f:
-        return "f"
-    if keyboard.g:
-        return "g"
-    if keyboard.h:
-        return "h"
-    if keyboard.j:
-        return "j"
-    if keyboard.k:
-        return "k"
-    if keyboard.l:
-        return "l"
-    if keyboard.z:
-        return "z"
-    if keyboard.x:
-        return "x"
-    if keyboard.c:
-        return "c"
-    if keyboard.v:
-        return "v"
-    if keyboard.b:
-        return "b"
-    if keyboard.n:
-        return "n"
-    if keyboard.m:
-        return "m"
+    keys = {
+    keyboard.q: "q",
+    keyboard.w: "w",
+    keyboard.e: "e",
+    keyboard.r: "r",
+    keyboard.t: "t",
+    keyboard.y: "y",
+    keyboard.u: "u",
+    keyboard.i: "i",
+    keyboard.o: "o",
+    keyboard.p: "p",
+    keyboard.a: "a",
+    keyboard.s: "s",
+    keyboard.d: "d",
+    keyboard.f: "f",
+    keyboard.g: "g",
+    keyboard.h: "h",
+    keyboard.j: "j",
+    keyboard.k: "k",
+    keyboard.l: "l",
+    keyboard.z: "z",
+    keyboard.x: "x",
+    keyboard.c: "c",
+    keyboard.v: "v",
+    keyboard.b: "b",
+    keyboard.n: "n",
+    keyboard.m: "m"
+}
+    for key, letter in keys.items():
+        if key:
+            return letter
 
 def update():
     global key_pressed, change_password_key_pressed
