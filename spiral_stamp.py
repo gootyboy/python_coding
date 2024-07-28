@@ -7,7 +7,8 @@ stamp = turtle.Turtle()
 stamp.shape("circle")
 stamp.penup()
 turtle.colormode(255)
-stamp.speed(10)
+stamp.speed(0)
+stamp.shapesize(100, 100, 100)
 
 paces = 20
 random_red = 50
@@ -23,5 +24,4 @@ for i in range(1, 500):
     stamp.stamp()
                 
     paces += 1
-    stamp.forward(paces)
-    stamp.right(25)
+    stamp.left(0.001)

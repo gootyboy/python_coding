@@ -2,6 +2,7 @@ import pgzrun
 import time
 import pygame
 from pgzero.actor import Actor
+import random
 
 WIDTH = 800
 HEIGHT = 600
@@ -50,33 +51,64 @@ dungeon_icon = Actor("dungeon-background-icon", pos=(200, 400))
 
 stage_icon = Actor("stage-background-icon", pos=(400, 400))
 
+def create_password_coding_digits():
+    global a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, q, w, x, y, z
+    a = random.randint(random.randint(-50, 50), random.randint(50, 150))
+    b = random.randint(random.randint(-50, 50), random.randint(50, 150))
+    c = random.randint(random.randint(-50, 50), random.randint(50, 150))
+    d = random.randint(random.randint(-50, 50), random.randint(50, 150))
+    e = random.randint(random.randint(-50, 50), random.randint(50, 150))
+    f = random.randint(random.randint(-50, 50), random.randint(50, 150))
+    g = random.randint(random.randint(-50, 50), random.randint(50, 150))
+    h = random.randint(random.randint(-50, 50), random.randint(50, 150))
+    i = random.randint(random.randint(-50, 50), random.randint(50, 150))
+    j = random.randint(random.randint(-50, 50), random.randint(50, 150))
+    k = random.randint(random.randint(-50, 50), random.randint(50, 150))
+    l = random.randint(random.randint(-50, 50), random.randint(50, 150))
+    m = random.randint(random.randint(-50, 50), random.randint(50, 150))
+    n = random.randint(random.randint(-50, 50), random.randint(50, 150))
+    o = random.randint(random.randint(-50, 50), random.randint(50, 150))
+    p = random.randint(random.randint(-50, 50), random.randint(50, 150))
+    q = random.randint(random.randint(-50, 50), random.randint(50, 150))
+    r = random.randint(random.randint(-50, 50), random.randint(50, 150))
+    s = random.randint(random.randint(-50, 50), random.randint(50, 150))
+    t = random.randint(random.randint(-50, 50), random.randint(50, 150))
+    u = random.randint(random.randint(-50, 50), random.randint(50, 150))
+    v = random.randint(random.randint(-50, 50), random.randint(50, 150))
+    w = random.randint(random.randint(-50, 50), random.randint(50, 150))
+    x = random.randint(random.randint(-50, 50), random.randint(50, 150))
+    y = random.randint(random.randint(-50, 50), random.randint(50, 150))
+    z = random.randint(random.randint(-50, 50), random.randint(50, 150))
+
+create_password_coding_digits()
+
 password_coding = {
-    "a": 1,
-    "b": 2,
-    "c": 3,
-    "d": 4,
-    "e": 5,
-    "f": 6,
-    "g": 7,
-    "h": 8,
-    "i": 9,
-    "j": 10,
-    "k": 11,
-    "l": 12,
-    "m": 13,
-    "n": 14,
-    "o": 15,
-    "p": 16,
-    "q": 17,
-    "r": 18,
-    "s": 19,
-    "t": 20,
-    "u": 21,
-    "v": 22,
-    "w": 23,
-    "x": 24,
-    "y": 25,
-    "z": 26
+    "a": a,
+    "b": b,
+    "c": c,
+    "d": d,
+    "e": e,
+    "f": f,
+    "g": g,
+    "h": h,
+    "i": i,
+    "j": j,
+    "k": k,
+    "l": l,
+    "m": m,
+    "n": n,
+    "o": o,
+    "p": p,
+    "q": q,
+    "r": r,
+    "s": s,
+    "t": t,
+    "u": u,
+    "v": v,
+    "w": w,
+    "x": x,
+    "y": y,
+    "z": z
 }
 
 def get_letter_from_number(digits, index_of_item):
@@ -86,6 +118,7 @@ def get_letter_from_number(digits, index_of_item):
 
 def decode_password(digits):
     one_to_4 = [get_letter_from_number(digits, 0), get_letter_from_number(digits, 1), get_letter_from_number(digits, 2), get_letter_from_number(digits, 3)]
+    print(one_to_4 + [get_letter_from_number(digits, 4), get_letter_from_number(digits, 5), get_letter_from_number(digits, 6), get_letter_from_number(digits, 7)])
     return one_to_4 + [get_letter_from_number(digits, 4), get_letter_from_number(digits, 5), get_letter_from_number(digits, 6), get_letter_from_number(digits, 7)]
 
 def check_if_digits_are_letters(digits):
@@ -97,9 +130,9 @@ def check_if_digits_are_letters(digits):
 
 def check_if_numbers_are_in_range(digits):
     for digit in digits:
-        if int(digit) > 26:
+        if int(digit) > 150:
             return False
-        if int(digit) < 1:
+        if int(digit) < -50:
             return False
     return True
 
