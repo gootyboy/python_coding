@@ -273,7 +273,7 @@ def draw():
     time_minutes = time.strftime("%M", time_now)
     time_hours = time.strftime("%I", time_now).lstrip("0")
     if screen_clicked == False:
-        screen.blit(backround_image, (0, 0))
+        screen.blit(backround_image, (0, 0)) 
     if screen_clicked and not password_done:
         screen.blit(blurred_backround_image, (0, 0))
         draw_answer_boxes()
