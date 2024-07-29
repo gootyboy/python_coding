@@ -5,7 +5,7 @@ import pygame
 
 WIDTH = 800
 HEIGHT = 600
-SPEED_OF_ANIMATION = 50
+SPEED_OF_ANIMATION = 10
 
 x = 50
 draw_text = 0
@@ -76,10 +76,7 @@ def update_draw_text():
     if draw_text < 11:
         draw_text += 1
 
-def update():
-    pass
-
-for i in range(0, SPEED_OF_ANIMATION): 
+for i in range(0, SPEED_OF_ANIMATION):
     clock.schedule_interval(draw_graphs, 0.01)
 
 clock.schedule_interval(update_draw_text, 1)

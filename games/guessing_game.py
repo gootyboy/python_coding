@@ -15,37 +15,33 @@ game_replay_mess_2 = "you didn't type \"yes\" or \"no\". please type \"yes\" or 
 player_question = "type the amount of players    "
 
 def play_game_agian(no_answer, game_loop):
-    keyboard_interrupt = False
-    game_replay_mess_1 = "do you want to play this game agian? Type \"no\" if you don't want to play agian. Type \"yes\" if you want to."
-    game_replay_mess_2 = "you didn't type \"yes\" or \"no\". please type \"yes\" or \"no\" if you want to play agian     "
-
-    while not keyboard_interrupt:
-        check_keyboard_interrupt(game_replay_mess_1)
-        if keyboard_interrupt == True:
-            break
-    if keyboard_interrupt == False:
+    global player_names, player_guesses
+    try:
+        game_replay_mess_1 = "do you want to play this game agian? Type \"no\" if you don't want to play agian. Type \"yes\" if you want to."
+        game_replay_mess_2 = "you didn't type \"yes\" or \"no\". please type \"yes\" or \"no\" if you want to play agian     "
         game_replay = input(game_replay_mess_1)
         print(" ")
-    keyboard_interrupt = False
 
-    while no_answer == True:
-        if game_replay == "yes": 
-            game_loop = True
-            player_names = []
-            player_guesses = []
-            no_answer = False
-        if game_replay == "no":
-            game_loop = False
-            no_answer = False
-        if game_replay != "no" and game_replay != "yes":
-            no_answer = True
-            while not keyboard_interrupt:
-                check_keyboard_interrupt(game_replay_mess_2)
-            if keyboard_interrupt == False:
-                game_replay = input(game_replay_mess_2)
+        while no_answer == True:
+            if game_replay == "yes": 
+                game_loop = True
+                player_names = []
+                player_guesses = []
+                no_answer = False
+            if game_replay == "no":
+                game_loop = False
+                no_answer = False
+            if game_replay != "no" and game_replay != "yes":
+                no_answer = True
+    except KeyboardInterrupt:
+        print(" ")
+        print("Keyboard Interupt")
+        print(" ")
+        play_game_agian(no_answer, game_loop)
     return game_loop
 
 def how_close(diff, mess, guessing_times):
+    global computer_guess_close
     if diff<5:
         print(f"{mess} and you are super super close! you have already tried {guessing_times} times")
         computer_guess_close = "super super close"
@@ -110,32 +106,38 @@ def guess_check(player_type: str, player_type_variable, amount_player_type, lowe
         player_type_variable += 1
 
 while game_loop:
-    keyboard_interrupt = False
-    player_question = "type the amount of players    "
-    if keyboard_interrupt == True:
-        game_loop_bool = play_game_agian(no_answer, game_loop)
-    else:
-        amount_of_players = input(player_question)
-        if_not_number(amount_of_players, player_question)
+    try:
+        keyboard_interrupt = False
+        player_question = "type the amount of players    "
+        if keyboard_interrupt == True:
+            game_loop_bool = play_game_agian(no_answer, game_loop)
+        else:
+            amount_of_players = input(player_question)
+            if_not_number(amount_of_players, player_question)
 
-    player_number = int(amount_of_players)
-    if player_number>0:
-        guess_check("player", player_count, player_number, -200, 200)
-    for i in range(0, player_number - 1):
-        print(f"{player_names[i]} ---> {player_guesses[i]}")
+        player_number = int(amount_of_players)
+        if player_number>0:
+            guess_check("player", player_count, player_number, -200, 200)
+        for i in range(0, player_number - 1):
+            print(f"{player_names[i]} ---> {player_guesses[i]}")
 
-    winner = min(player_guesses)
-    counter = 0
-    winner_index = []
+        winner = min(player_guesses)
+        counter = 0
+        winner_index = []
 
-    for i in player_guesses:
-        if winner == i:
-            winner_index.append(counter)
-        counter += 1
+        for i in player_guesses:
+            if winner == i:
+                winner_index.append(counter)
+            counter += 1
 
-    print(" ")
-    for i in winner_index:
-        print(f"{player_names[i]} WINS THE GAME!!!!!!!!!!!!!!!!!!!!!!!")
+        print(" ")
+        for i in winner_index:
+            print(f"{player_names[i]} WINS THE GAME!!!!!!!!!!!!!!!!!!!!!!!")
 
-    print(" ")
-    play_game_agian(no_answer, game_loop)
+        print(" ")
+        play_game_agian(no_answer, game_loop)
+    except KeyboardInterrupt:
+        print(" ")
+        print("Keyboard Interupt")
+        print(" ")
+        play_game_agian(no_answer, game_loop)

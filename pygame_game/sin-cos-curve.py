@@ -6,8 +6,9 @@ HEIGHT = 600
 def draw():
     screen.fill("white")
     for i in range(0, WIDTH, 1):
+        screen.draw.circle((i, HEIGHT / 2 + (math.cos(math.radians(i))) * 100), 1, (0, 0, 100))
+        screen.draw.circle((i, HEIGHT / 2 + (math.sin(math.radians(i))) * 100), 1, (0, 0, 100))
         if i % 90 != 0:
-            screen.draw.circle((i, HEIGHT / 2 + (10 / math.tan(math.radians(i))) * 100), 1, (0, 0, 100))
             screen.draw.circle((i, HEIGHT / 2 + (math.tan(math.radians(i))) * 100), 1, (0, 0, 100))
 
     screen.draw.line((0, HEIGHT / 2), (WIDTH, HEIGHT / 2), (0, 0, 0))
