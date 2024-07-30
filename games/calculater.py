@@ -5,6 +5,9 @@ symbol_correct = False
 while equation_correct == "no":
     try:
         trig = input("Would you like to do trigonometry? Enter \"no\" or \"yes\"")
+        if trig != "yes" and trig != "no":
+            print("You didn't enter \"yes\" or \"no\"")
+            continue
         first_number = input("Enter first number")
         try:
             first_number_int = int(first_number)

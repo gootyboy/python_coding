@@ -30,7 +30,7 @@ start_timer.write("loading...", font= ("Comic Sans MS", 30, "bold"))
 platform = turtle.Turtle()
 platform.hideturtle()
 platform.shape("square")
-platform_stretch_len = 3
+platform_stretch_len = 100
 platform.shapesize(stretch_wid=1, stretch_len=platform_stretch_len)
 platform_len = platform_stretch_len * 20
 platform.color("green")
@@ -45,6 +45,12 @@ ball.shape("circle")
 ball.color("black")
 ball.penup()
 ball.goto(platform.xcor(), platform.ycor() +30)
+ball_2 = turtle.Turtle()
+ball_2.hideturtle()
+ball_2.shape("circle")
+ball_2.color("black")
+ball_2.penup()
+ball_2.goto(platform.xcor(), platform.ycor() +30)
 
 pen = turtle.Turtle()
 pen.hideturtle()
@@ -53,9 +59,11 @@ pen.speed(10)
 pen.goto(275, 350)
 pen.color("black")
 
-ball_dx = 1
-ball_dy = 1
-points = -1
+ball_dx = 100
+ball_dy = 100
+ball_2_dx = 100
+ball_2_dy = 100
+points = 100
 mf_x = 1
 mf_y = 1
 
@@ -68,6 +76,7 @@ def move_right():
         platform.setx(platform.xcor() + 10)
 
 ball.showturtle()
+ball_2.showturtle()
 platform.showturtle()
 start_timer.color("black")
 start_timer.clear()
@@ -87,7 +96,8 @@ for i in reversed(range(1, 4)):
 start_timer.write("Go!", font = ("Comic Sans MS", 75, "normal"))
 time.sleep(0.2)
 start_timer.clear()
-ball_faster_stop = 0
+ball_dy *= -1
+ball_2_dy *= -1
 while True:
     wn.onkeypress(key='Right', fun= move_right)
     wn.onkeypress(key='Left', fun= move_left)
@@ -96,9 +106,11 @@ while True:
     
     pen.write(f"score: {points}", font=("Comic Sans MS", 30, "normal"))
     # ball_faster_timer.clear()
-    ball_new_x = (ball.xcor() - (ball_dx+ mf_x*10) )
-    ball_new_y = (ball.ycor() - (ball_dy + mf_y*10) )
-    ball.goto(ball_new_x, ball_new_y)
+    ball_new_x = (ball_2.xcor() - (ball_2_dy+ mf_x*10) )
+    ball_new_y = (ball_2.ycor() - (ball_2_dy + mf_y*10) )
+    ball_2_new_x = (ball_2.xcor() - (ball_2_dx+ mf_x*10) )
+    ball_2_new_y = (ball_2.ycor() - (ball_2_dx + mf_y*10) )
+    ball_2.goto(ball_new_x, ball_new_y)
 
     plat_x = platform.xcor()
     plat_y = platform.ycor()
@@ -128,7 +140,7 @@ while True:
         mf_y *= -1
         ball_dy *= -1
         pen.clear()
-        points += 1
+        points *= 2
     elif abs(ball_x) > wn.window_width() / 2:
         ball_dx *= -1
         mf_x *= -1
