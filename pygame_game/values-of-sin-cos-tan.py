@@ -4,8 +4,6 @@ import math
 WIDTH = 800
 HEIGHT = 600
 
-radians_on = False
-
 def draw():
     screen.fill("white")
     for i in range(0, WIDTH, 75):
