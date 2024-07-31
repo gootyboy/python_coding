@@ -2,6 +2,7 @@ import pgzrun
 import pygame
 from pgzero.actor import Actor
 from random import randint
+import balloon
 
 WIDTH = 800
 HEIGHT = 600

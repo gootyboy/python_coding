@@ -51,19 +51,20 @@ ball_2.shape("circle")
 ball_2.color("black")
 ball_2.penup()
 ball_2.goto(platform.xcor(), platform.ycor() +30)
+ball.speed(0)
 
 pen = turtle.Turtle()
 pen.hideturtle()
 pen.penup()
 pen.speed(10)
-pen.goto(275, 350)
+pen.goto(wn.window_width, 350)
 pen.color("black")
 
 ball_dx = 100
 ball_dy = 100
 ball_2_dx = 100
 ball_2_dy = 100
-points = 100
+points = 2 * 200
 mf_x = 1
 mf_y = 1
 
