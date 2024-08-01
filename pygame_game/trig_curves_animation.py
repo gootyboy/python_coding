@@ -6,9 +6,9 @@ import pygame
 WIDTH = 800
 HEIGHT = 600
 SPEED_OF_ANIMATION = 30
-X_VALUE_STEP = 50 # degrees
-Y_VALUE_STEP = 0.5
-MULTIPLING_FACTOR = 100
+MULTIPLYING_FACTOR = 150
+X_VALUE_STEP = MULTIPLYING_FACTOR / 2
+Y_VALUE_STEP = X_VALUE_STEP / MULTIPLYING_FACTOR
 
 x = 0.1
 
@@ -25,20 +25,20 @@ def append_x_y_cor_for_graphs():
         sec_val = 1 / cos_val
         csc_val = 1 / sin_val
 
-        points[0].append((50 + x, HEIGHT / 2 - sin_val * MULTIPLING_FACTOR))
-        points[1].append((50 + x, HEIGHT / 2 + cos_val * MULTIPLING_FACTOR))
-        points[2].append((50 + x, HEIGHT / 2 - sin_2_cos_2_val * MULTIPLING_FACTOR))
-        points[2].append((50 + x, HEIGHT / 2 + sin_2_cos_2_val * MULTIPLING_FACTOR))
+        points[0].append((X_VALUE_STEP + x, HEIGHT / 2 - sin_val * MULTIPLYING_FACTOR))
+        points[1].append((X_VALUE_STEP + x, HEIGHT / 2 + cos_val * MULTIPLYING_FACTOR))
+        points[2].append((X_VALUE_STEP + x, HEIGHT / 2 - sin_2_cos_2_val * MULTIPLYING_FACTOR))
+        points[2].append((X_VALUE_STEP + x, HEIGHT / 2 + sin_2_cos_2_val * MULTIPLYING_FACTOR))
 
         if cos_val != 0:
-            sec_y = HEIGHT / 2 + sec_val * MULTIPLING_FACTOR
+            sec_y = HEIGHT / 2 + sec_val * MULTIPLYING_FACTOR
             if -HEIGHT < sec_y < HEIGHT * 2:
-                points[3].append((50 + x, sec_y))
+                points[3].append((X_VALUE_STEP + x, sec_y))
 
         if sin_val != 0:
-            csc_y = HEIGHT / 2 + csc_val * MULTIPLING_FACTOR
+            csc_y = HEIGHT / 2 + csc_val * MULTIPLYING_FACTOR
             if -HEIGHT < csc_y < HEIGHT * 2:
-                points[4].append((50 + x, csc_y))
+                points[4].append((X_VALUE_STEP + x, csc_y))
         x += 0.1
 
 def draw_grid_and_values():
@@ -47,26 +47,24 @@ def draw_grid_and_values():
     screen.draw.line((0, HEIGHT / 2 + 1), (WIDTH, HEIGHT / 2 + 1), (0, 0, 0))
     
     # Vertical y-axis line
-    screen.draw.line((50, 0), (50, HEIGHT), (0, 0, 0))
-    screen.draw.line((50, 1), (50, HEIGHT + 1), (0, 0, 0))
-    screen.draw.line((50, -1), (50, HEIGHT - 1), (0, 0, 0))
+    screen.draw.line((X_VALUE_STEP + 1, 0), (X_VALUE_STEP + 1, HEIGHT), (0, 0, 0))
 
     x_step_with_mf = int(X_VALUE_STEP)
-    y_step_with_mf = int(Y_VALUE_STEP * MULTIPLING_FACTOR)
+    y_step_with_mf = int(Y_VALUE_STEP * MULTIPLYING_FACTOR)
     for i in range(0, WIDTH + 1, x_step_with_mf):
-        screen.draw.text(str(i), color="black", bottomleft=(i + 50, HEIGHT / 2), fontsize=20)
+        screen.draw.text(str(i), color="black", bottomleft=(i + X_VALUE_STEP, HEIGHT / 2), fontsize=20)
         screen.draw.line((i, HEIGHT), (i, 0), (150, 150, 150))
     for i in range(0, HEIGHT // 2 + 1, y_step_with_mf):
         if i != 0:
-            screen.draw.text(str(-(i / MULTIPLING_FACTOR)), color="black", bottomright=(50, i + HEIGHT / 2), fontsize=30)
-            screen.draw.text(str(i / MULTIPLING_FACTOR), color="black", bottomright=(50, HEIGHT / 2 - i), fontsize=30)
+            screen.draw.text(str(-(i / MULTIPLYING_FACTOR)), color="black", bottomright=(X_VALUE_STEP, i + HEIGHT / 2), fontsize=30)
+            screen.draw.text(str(i / MULTIPLYING_FACTOR), color="black", bottomright=(X_VALUE_STEP, HEIGHT / 2 - i), fontsize=30)
             screen.draw.line((WIDTH, HEIGHT - i), (0, HEIGHT - i), (150, 150, 150))
             screen.draw.line((WIDTH, i), (0, i), (150, 150, 150))
 
 def draw_legend_and_options_rect():
     global points, resart_animation_1, resart_animation_2, options_open, options_rect
 
-    screen.draw.text("Degrees", color="black", center = ((WIDTH - 50) / 2, HEIGHT / 2 + 10), fontsize=30)
+    screen.draw.text("Degrees", color="black", center = ((WIDTH - X_VALUE_STEP) / 2, HEIGHT / 2 + 10), fontsize=30)
     for i in range(0, len(points)):
         if i != 2:
             if i < 2:

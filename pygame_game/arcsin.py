@@ -7,11 +7,10 @@ WIDTH = 800
 HEIGHT = 600
 SPEED_OF_ANIMATION = 20
 MULTIPLYING_FACTOR = 100
-X_VALUE_STEP = 50 # Degrees
-Y_VALUE_STEP = 0.5
+X_VALUE_STEP = MULTIPLYING_FACTOR / 2
+Y_VALUE_STEP = X_VALUE_STEP / MULTIPLYING_FACTOR
 
 points = [[(0, 0, 255)], [(255, 0, 0)]]
-
 x = -1
 
 def append_points_for_graphs():
@@ -34,8 +33,11 @@ def draw_grid_and_values():
     for i in range(0, WIDTH // 2 + 1, x_step_with_mf):
         screen.draw.text(str(i), color="black", bottomleft=(i + WIDTH / 2, HEIGHT / 2), fontsize=20)
         screen.draw.text(str(-i), color="black", bottomleft=(WIDTH / 2 - i, HEIGHT / 2), fontsize=20)
-        screen.draw.line((i, HEIGHT), (i, 0), (150, 150, 150))
+    for i in range(0, WIDTH + 1, x_step_with_mf):
         screen.draw.line((i + WIDTH / 2, HEIGHT), (i + WIDTH / 2, 0), (150, 150, 150))
+    for i in reversed(range(0, WIDTH + 1, x_step_with_mf)):
+            screen.draw.line((i + WIDTH / 2, HEIGHT), (i + WIDTH / 2, 0), (150, 150, 150))
+            # screen.draw.line((i, HEIGHT), (i, 0), (150, 150, 150))
     
     for i in range(0, HEIGHT // 2 + 1, y_step_with_mf):
         if i != 0:
