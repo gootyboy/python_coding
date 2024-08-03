@@ -7,8 +7,8 @@ import balloon
 WIDTH = 800
 HEIGHT = 600
 speed_1 = 1
-speed_2 = 1
-speed_3 = 2
+speed_2 = 3
+speed_3 = 7            
 
 balloon = Actor("balloon")
 balloon.pos = 400, 300

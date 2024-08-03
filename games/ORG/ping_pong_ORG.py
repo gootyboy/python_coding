@@ -43,6 +43,7 @@ platform.shapesize(stretch_wid=1, stretch_len=3)
 platform.color("green")
 platform.penup()
 platform.goto(0, -350) 
+ball.goto(platform.xcor(), platform.ycor())
 
 while True:
     pen.write(f"score: {points}", font=("Comic Sans MS", 30, "normal"))
@@ -66,5 +67,12 @@ while True:
         ball_dx *= -1
     elif abs(ball_y) > wn.window_height() / 2:
         ball_dy *= -1
+    if ball_y < -400:
+        platform.hideturtle()
+        ball.hideturtle()
+        pen.clear()
+        pen.home()
+        pen.write("Game Over.ERRRRRRRRRORRRRRRRRRRRRRRRRRRRRR", font= ("Comic Sans MS", 50, "bold"))
+        break
 
 wn.mainloop()

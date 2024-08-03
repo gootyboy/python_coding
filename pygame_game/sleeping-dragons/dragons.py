@@ -5,17 +5,17 @@ from pgzero import clock
 from pgzero.animation import animate
 from pgzero.actor import Actor
 
-WIDTH = 800
+WIDTH = 2400
 HEIGHT = 600
 CENTER_X = WIDTH / 2
 CENTER_Y = HEIGHT / 2
 CENTER = (CENTER_X, CENTER_Y)
 FONT_COLOR = (0, 0, 0)
-EGG_TARGET = 20
+EGG_TARGET = 200
 HERO_START = (200, 300)
 ATTACK_DISTANCE = 200
-DRAGON_AWAKE_TIME = 2
-EGG_HIDE_TIME = 2
+DRAGON_AWAKE_TIME = 10
+EGG_HIDE_TIME = 5
 MOVE_DISTANCE = 5
 
 lives = 3
@@ -57,12 +57,137 @@ hard_lair = {
     "wake_counter": 0
 }
 
-lairs = [easy_lair, medium_lair, hard_lair]
+easy_lair_2 = {
+    "dragon": Actor("dragon-asleep", pos=(600, 160)),
+    "eggs": Actor("one-egg", pos=(450, 200)),
+    "egg_count": 1,
+    "egg_hidden": False,
+    "egg_hide_counter": 0,
+    "sleep_length": random.randint(7, 10),
+    "sleep_counter": 0,
+    "wake_counter": 0
+}
+
+medium_lair_2 = {
+    "dragon": Actor("dragon-asleep", pos=(600, 360)),
+    "eggs": Actor("two-eggs", pos=(450, 400)),
+    "egg_count": 2,
+    "egg_hidden": False,
+    "egg_hide_counter": 0,
+    "sleep_length": random.randint(4, 7),
+    "sleep_counter": 0,
+    "wake_counter": 0
+}
+
+hard_lair_2 = {
+    "dragon": Actor("dragon-asleep", pos=(1100, 60)),
+    "eggs": Actor("three-eggs", pos=(450, 700)),
+    "egg_count": 0,
+    "egg_hidden": False,
+    "egg_hide_counter": 0,
+    "sleep_length": random.randint(1, 4),
+    "sleep_counter": 0,
+    "wake_counter": 0
+}
+
+hard_lair_3 = {
+    "dragon": Actor("dragon-asleep", pos=(1100, 160)),
+    "eggs": Actor("three-eggs", pos=(450, 700)),
+    "egg_count": 0,
+    "egg_hidden": False,
+    "egg_hide_counter": 0,
+    "sleep_length": random.randint(1, 4),
+    "sleep_counter": 0,
+    "wake_counter": 0
+}
+
+hard_lair_4 = {
+    "dragon": Actor("dragon-asleep", pos=(1000, 260)),
+    "eggs": Actor("three-eggs", pos=(450, 700)),
+    "egg_count": 0,
+    "egg_hidden": False,
+    "egg_hide_counter": 0,
+    "sleep_length": random.randint(1, 4),
+    "sleep_counter": 0,
+    "wake_counter": 0
+}
+
+hard_lair_5 = {
+    "dragon": Actor("dragon-asleep", pos=(1000, 360)),
+    "eggs": Actor("three-eggs", pos=(450, 700)),
+    "egg_count": 0,
+    "egg_hidden": False,
+    "egg_hide_counter": 0,
+    "sleep_length": random.randint(1, 4),
+    "sleep_counter": 0,
+    "wake_counter": 0
+}
+
+hard_lair_6 = {
+    "dragon": Actor("dragon-asleep", pos=(1100, 460)),
+    "eggs": Actor("three-eggs", pos=(450, 700)),
+    "egg_count": 0,
+    "egg_hidden": False,
+    "egg_hide_counter": 0,
+    "sleep_length": random.randint(1, 4),
+    "sleep_counter": 0,
+    "wake_counter": 0
+}
+
+hard_lair_7 = {
+    "dragon": Actor("dragon-asleep", pos=(1000, 360)),
+    "eggs": Actor("three-eggs", pos=(450, 700)),
+    "egg_count": 0,
+    "egg_hidden": False,
+    "egg_hide_counter": 0,
+    "sleep_length": random.randint(1, 4),
+    "sleep_counter": 0,
+    "wake_counter": 0
+}
+
+hard_lair_8 = {
+    "dragon": Actor("dragon-asleep", pos=(1000, 270)),
+    "eggs": Actor("three-eggs", pos=(450, 700)),
+    "egg_count": 0,
+    "egg_hidden": False,
+    "egg_hide_counter": 0,
+    "sleep_length": random.randint(1, 4),
+    "sleep_counter": 0,
+    "wake_counter": 0
+}
+
+hard_lair_9 = {
+    "dragon": Actor("dragon-asleep", pos=(1000, 60)),
+    "eggs": Actor("three-eggs", pos=(450, 700)),
+    "egg_count": 0,
+    "egg_hidden": False,
+    "egg_hide_counter": 0,
+    "sleep_length": random.randint(1, 4),
+    "sleep_counter": 0,
+    "wake_counter": 0
+}
+
+hard_lair_10 = {
+    "dragon": Actor("dragon-asleep", pos=(1000, 160)),
+    "eggs": Actor("three-eggs", pos=(450, 700)),
+    "egg_count": 0,
+    "egg_hidden": False,
+    "egg_hide_counter": 0,
+    "sleep_length": random.randint(1, 4),
+    "sleep_counter": 0,
+    "wake_counter": 0
+}
+
+lairs = [easy_lair, medium_lair, hard_lair, medium_lair_2, easy_lair_2, hard_lair_2, hard_lair_3, hard_lair_4, hard_lair_5, hard_lair_6, hard_lair_7, hard_lair_8, hard_lair_9, hard_lair_10, hard_lair_10, hard_lair_10, hard_lair_10, hard_lair_10]
 hero = Actor("hero", pos= HERO_START)
+# golden_egg = Actor("one-egg", pos= (1400, 360))
+golden_egg_collided = False
 
 def draw():
-    global lairs, eggs_collected, lives, game_complete
+    global lairs, eggs_collected, lives, game_complete, golden_egg_collided
     screen.blit("dungeon", (0, 0))
+    screen.blit("dungeon", (800, 0))
+    screen.blit("dungeon", (1600, 0))
     if game_over:
         screen.draw.text("GAME OVER", fontsize= 60, center= CENTER, color= FONT_COLOR)
     elif game_complete:
@@ -71,6 +196,8 @@ def draw():
         hero.draw()
         draw_lairs(lairs)
         draw_counters(eggs_collected, lives)
+        # if not golden_egg_collided:
+        #     golden_egg.draw()
 
 def draw_lairs(lairs_to_draw):
     for lair in lairs_to_draw:
@@ -85,6 +212,7 @@ def draw_counters(eggs_collected, lives):
     screen.draw.text(str(lives), fontsize = 40, pos=(90, HEIGHT - 50), color= FONT_COLOR)
 
 def update():
+    global lives
     if keyboard.right:
         hero.x += MOVE_DISTANCE
         if hero.x > WIDTH:
@@ -101,6 +229,10 @@ def update():
         hero.y -= MOVE_DISTANCE
         if hero.y < 0:
             hero.y = 0
+    if keyboard.a:
+        lives += 1
+    elif keyboard.d:
+        lives -= 1
     check_for_collisions()
 
 def check_for_collisions():
@@ -131,12 +263,17 @@ def subtract_life():
     reset_required = False
 
 def check_for_egg_collision(lair):
-    global eggs_collected, game_complete
+    global eggs_collected, game_complete, golden_egg_collided
     if hero.colliderect(lair["eggs"]):
         lair["egg_hidden"] = True
         eggs_collected += lair["egg_count"]
         if eggs_collected >= EGG_TARGET:
             game_complete = True
+    # if hero.colliderect(golden_egg):
+    #     golden_egg_collided = True
+    #     eggs_collected += 100
+    #     if eggs_collected >= EGG_TARGET:
+    #         game_complete = True
 
 def update_lairs():
     global lairs, hero, lives

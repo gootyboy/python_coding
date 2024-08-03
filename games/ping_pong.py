@@ -34,9 +34,8 @@ ball.goto(platform.xcor(), platform.ycor() +30)
 
 pen = turtle.Turtle()
 pen.hideturtle()
-pen.penup()
 pen.speed(10)
-pen.goto(-950, 350)
+pen.goto(-350, 350)
 pen.color("black")
 
 ball_dx = 100

@@ -8,7 +8,7 @@ WIDTH = 800
 HEIGHT = 600
 CENTER_X = WIDTH / 2
 CENTER_Y = HEIGHT / 2
-TIME_TO_WATER = 5
+TIME_TO_WATER = 1
 
 game_over = False
 finalized = False
@@ -16,7 +16,7 @@ garden_happy = True
 fangflower_collision = False
 raining = False
 water_time = 0
-time_to_rain = randint(1, 10)
+time_to_rain = randint(1, 1)
 not_raining_time = 0
 
 time_elapsed = 0
@@ -63,7 +63,7 @@ def update_raining_time():
         not_raining_time += 1
     else:
         raining = True
-
+ 
 def new_flower():
     global flower_list, wilted_list
     flower_new = Actor("flower", (randint(50, WIDTH - 50), randint(150, HEIGHT - 100)))
@@ -74,7 +74,7 @@ def add_flower():
     global game_over
     if not game_over:
         new_flower()
-        clock.schedule(add_flower, 10)
+        clock.schedule(add_flower, 1                                                                                                                )
 
 def check_wilt_times():
     global wilted_list, game_over, garden_happy

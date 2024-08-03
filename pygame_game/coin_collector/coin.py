@@ -3,13 +3,15 @@ import pygame
 from pgzero.actor import Actor
 from random import randint
 
-WIDTH = 700
-HEIGHT = 600
+WIDTH = 100000
+HEIGHT = 1000
 SECONDS = 60  # this is the amount of time (in seconds). Feel Free to change it how like
+NUM_OF_COINS = 2
+
 fox_score = 0
 hedgehog_score = 0
 game_over = False
-player_speed = 10
+player_speed = 5
 scores = []
 high_score_run = True
 time_left = SECONDS
@@ -29,13 +31,12 @@ end_box.move_ip(300, 10)
 
 fox = Actor("fox")
 fox.pos = 100, 100
-hedgehog = Actor("hedgehog")
+hedgehog = Actor("pineapple")
 hedgehog.pos = 400, 400
-coin = Actor("coin")
-coin.pos = 200, 200
+coins = [Actor("coin", (200, 200)) for i in range(0, NUM_OF_COINS)]
 
 def on_mouse_down(pos):
-    global start_game, multiplayer, game_over, time_left, high_score_run
+    global start_game, multiplayer, game_over, time_left, high_score_run, coins
 
     if start_game == False:
         if one_player_box.collidepoint(pos):
@@ -68,7 +69,8 @@ def draw():
     if not game_over and start_game == True:
         screen.fill("green")
         fox.draw()
-        coin.draw()
+        for coin in coins:
+            coin.draw()
         screen.draw.filled_rect(end_box, "red")
         if multiplayer == True:
             hedgehog.draw()
@@ -92,7 +94,7 @@ def draw():
         screen.draw.text("Do you want", color="black", center = (250, 400), fontsize = 50)
         screen.draw.text("to play again?", color="black", center = (250, 450), fontsize = 50)
 
-def place_coin():
+def place_coin(coin):
     coin.x = randint(20, (WIDTH - 20))
     coin.y = randint(20, (HEIGHT - 20))
 
@@ -114,6 +116,11 @@ def update_high_scores():
 
     filename = r"C:\Projects\boy\pygame_game\coin_collector\fox_high_scores.txt"
     fox_scores = []
+    if fox_score > hedgehog_score:
+        print("Fox wins")
+    else:
+        print("Hedgehog wins")
+
     with open(filename, "r") as file:
         line = file.readline()
         fox_scores = line.split()
@@ -153,44 +160,62 @@ def display_high_scores():
 def update():
     global hedgehog_score, fox_score, multiplayer
     if fox.x > 20:
-        if keyboard.left:
-            fox.x -= player_speed
+        if keyboard.a:
+            for i in range(0, player_speed):
+                if i < player_speed:
+                    fox.x -= i
     if fox.x < (WIDTH -20):
-        if keyboard.right:
-            fox.x += player_speed
+        if keyboard.d:
+            for i in range(0, player_speed):
+                if i < player_speed:
+                    fox.x += i
     if fox.y > 20:
-        if keyboard.up:
-            fox.y -= player_speed
+        if keyboard.w:
+           for i in range(0, player_speed):
+                if i < player_speed:
+                    fox.y -= i
     if fox.y < (HEIGHT -20):
-        if keyboard.down:
-            fox.y += player_speed
+        if keyboard.s:
+            for i in range(0, player_speed):
+                if i < player_speed:
+                    fox.y += i
     if multiplayer == True:
         if hedgehog.x > 20:
-            if keyboard.a:
-                hedgehog.x -= player_speed
+            if keyboard.left:
+                for i in range(0, player_speed):
+                    if i < player_speed:
+                        hedgehog.x -= i
         if hedgehog.x < (WIDTH -20):
-            if keyboard.d:
-                hedgehog.x += player_speed
+            if keyboard.right:
+                for i in range(0, player_speed):
+                    if i < player_speed:
+                        hedgehog.x += i
         if hedgehog.y > 20:
-            if keyboard.w:
-                hedgehog.y -= player_speed
+            if keyboard.up:
+                for i in range(0, player_speed):
+                    if i < player_speed:
+                        hedgehog.y -= i
         if hedgehog.y < (HEIGHT -20):
-            if keyboard.s:
-                hedgehog.y += player_speed
+            if keyboard.down:
+                for i in range(0, player_speed):
+                    if i < player_speed:
+                        hedgehog.y += i
 
+    for i in range(0, len(coins)):
+        if i < len(coins):
+            if fox.colliderect(coins[i]):
+                fox_score += 1000000
+                # place_coin(coins[i])
+                del coins[i]
 
-    fox_coin_collected = fox.colliderect(coin)
-    hedgehog_coin_collected = hedgehog.colliderect(coin)
-
-    if fox_coin_collected:
-        fox_score += 10
-        place_coin()
-    
-    if hedgehog_coin_collected:
-        hedgehog_score += 10
-        place_coin()
+        if i < len(coins):
+            if hedgehog.colliderect(coins[i]):
+                fox_score += 1000000
+                # place_coin(coins[i])
+                del coins[i]
 
 clock.schedule_interval(update_time_left, 1.0)
-place_coin()
+for coin in coins:
+    place_coin(coin)
 
 pgzrun.go()
