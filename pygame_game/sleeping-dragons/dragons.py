@@ -4,6 +4,7 @@ import random
 from pgzero import clock
 from pgzero.animation import animate
 from pgzero.actor import Actor
+from pgzero.keyboard import keyboard
 
 WIDTH = 2400
 HEIGHT = 600
@@ -11,7 +12,7 @@ CENTER_X = WIDTH / 2
 CENTER_Y = HEIGHT / 2
 CENTER = (CENTER_X, CENTER_Y)
 FONT_COLOR = (0, 0, 0)
-EGG_TARGET = 100
+EGG_TARGET = 1000
 HERO_START = (200, 300)
 ATTACK_DISTANCE = 200
 DRAGON_AWAKE_TIME = 10
@@ -28,35 +29,24 @@ reset_required = False
 
 def create_lair(difficulty, dragon_pos, eggs_pos, egg_count, sleep_range):
     if difficulty == "hard-2":
-        return {
-            "dragon": Actor("dragon-asleep", pos=dragon_pos),
-            "eggs": Actor(f"{egg_count}-eggs", pos=eggs_pos),
-            "egg_count": egg_count,
-            "egg_hidden": False,
-            "egg_hide_counter": 0,
-            "sleep_length": random.randint(sleep_range[0], sleep_range[1]),
-            "sleep_counter": 0,
-            "wake_counter": 0
-        }
+        amount_of_eggs = 0
+        egg_hidden = True
+        sleep_length = random.randint(sleep_range[0], sleep_range[1])
     elif difficulty == "hard-3":
-        return {
-            "dragon": Actor("dragon-asleep", pos=dragon_pos),
-            "eggs": Actor(f"{egg_count}-eggs", pos=eggs_pos),
-            "egg_count": egg_count,
-            "egg_hidden": False,
-            "egg_hide_counter": 0,
-            "sleep_length": random.choice([0.1, 0.2, 0.3, 0.4, 0.5]),
-            "sleep_counter": 0,
-            "wake_counter": 0
-        }
+        amount_of_eggs = 0
+        egg_hidden = True
+        sleep_length = random.choice([0.1, 0.2, 0.3, 0.4, 0.5])
     else:
-        return {
+        amount_of_eggs = egg_count
+        egg_hidden = False
+        sleep_length = random.randint(sleep_range[0], sleep_range[1])
+    return {
             "dragon": Actor("dragon-asleep", pos=dragon_pos),
             "eggs": Actor(f"{egg_count}-eggs", pos=eggs_pos),
-            "egg_count": 0,
-            "egg_hidden": True,
+            "egg_count": amount_of_eggs,
+            "egg_hidden": egg_hidden,
             "egg_hide_counter": 0,
-            "sleep_length": random.randint(sleep_range[0], sleep_range[1]),
+            "sleep_length": sleep_length,
             "sleep_counter": 0,
             "wake_counter": 0
         }
@@ -94,7 +84,6 @@ medium_lair_2 = {
     "wake_counter": 0
 }
 
-# secound 6 dragon lairs 
 hard_lair_2 = {
     "dragon": Actor("dragon-asleep", pos=(1000, 60)),
     "eggs": Actor("3-eggs", pos=(450, 700)),
@@ -161,7 +150,6 @@ hard_lair_7 = {
     "wake_counter": 0
 }
 
-# third 6 dragon lairs
 hard_lair_8 = {
     "dragon": Actor("dragon-asleep", pos=(1400, 60)),
     "eggs": Actor("3-eggs", pos=(450, 700)),
@@ -206,6 +194,7 @@ lairs = [
 hero = Actor("hero", pos= HERO_START)
 golden_egg = Actor("golden-egg", pos= (WIDTH - 100, HEIGHT / 2))
 golden_egg_collided = False
+golden_egg_hidden = False
 freeze = 0
 freeze_stop = False
 
@@ -222,12 +211,12 @@ def draw():
         hero.draw()
         draw_lairs(lairs)
         draw_counters(eggs_collected, lives)
-        if not golden_egg_collided:
+        if not golden_egg_hidden:
             golden_egg.draw()
         if freeze > FREEZE_TIME:
-            screen.draw.text(f"DRAGONS FROZEN for {FREEZE_TIME - freeze + 1}. GO!", fontsize= 60, center= (CENTER_X - 300, CENTER_Y), color= FONT_COLOR)
-            screen.draw.text(f"DRAGONS FROZEN for {FREEZE_TIME - freeze + 1}. GO!", fontsize= 60, center= (CENTER_X + 300, CENTER_Y), color= FONT_COLOR)
-        if freeze == 1 + FREEZE_TIME:
+            screen.draw.text(f"DRAGONS FROZEN for {FREEZE_TIME - freeze + 12}. GO!", fontsize= 60, center= (CENTER_X - 400, CENTER_Y), color= FONT_COLOR)
+            screen.draw.text(f"DRAGONS FROZEN for {FREEZE_TIME - freeze + 12}. GO!", fontsize= 60, center= (CENTER_X + 400, CENTER_Y), color= FONT_COLOR)
+        if freeze == FREEZE_TIME * 2 + 1:
             freeze = 0
 
 def draw_lairs(lairs_to_draw):
@@ -273,6 +262,8 @@ def check_for_collisions():
             check_for_egg_collision(lair)
         if lair["dragon"].image == "dragon-awake" and reset_required is False:
             check_for_dragon_collision(lair)
+        if not golden_egg_hidden:
+            check_for_golden_egg_collision()
 
 def check_for_dragon_collision(lair):
     x_distance = hero.x - lair["dragon"].x
@@ -294,15 +285,19 @@ def subtract_life():
     reset_required = False
 
 def check_for_egg_collision(lair):
-    global eggs_collected, game_complete, golden_egg_collided
+    global eggs_collected, game_complete, lives
     if hero.colliderect(lair["eggs"]):
         lair["egg_hidden"] = True
         eggs_collected += lair["egg_count"]
         if eggs_collected >= EGG_TARGET:
             game_complete = True
+
+def check_for_golden_egg_collision():
+    global golden_egg_collided, game_complete, golden_egg_hidden, eggs_collected, lives
     if hero.colliderect(golden_egg):
         golden_egg_collided = True
-        eggs_collected += 100
+        animate(hero, pos= HERO_START, duration= 0.01)
+        golden_egg_hidden =  True
         if eggs_collected >= EGG_TARGET:
             game_complete = True
 

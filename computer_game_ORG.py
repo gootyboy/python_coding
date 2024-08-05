@@ -1,10 +1,8 @@
 import pgzrun
 import time
 import pygame
-import random
 from pgzero.actor import Actor
-from pgzero.keyboard import keyboard
-from pgzero.builtins import mouse
+import random
 
 WIDTH = 800
 HEIGHT = 600
@@ -180,7 +178,6 @@ def get_password_digits():
                 print("Numbers provided for coded password is out of range. Please type numbers in the range (1 to 26) or type letters")
                 pgzrun.sys.exit()
         else:
-            create_password_coding_digits()
             digits_are_letters = check_if_digits_are_letters(password_digits_coded)
             if all(digits_are_letters):
                 password_digits = password_digits_coded

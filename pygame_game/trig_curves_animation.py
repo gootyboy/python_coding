@@ -43,59 +43,59 @@ def append_x_y_cor_for_graphs():
 
 def draw_grid_and_values():
     # Horz x-axis line
-    screen.draw.line((0, HEIGHT / 2), (WIDTH, HEIGHT / 2), (0, 0, 0))
-    screen.draw.line((0, HEIGHT / 2 + 1), (WIDTH, HEIGHT / 2 + 1), (0, 0, 0))
+    screen.draw.line((0, HEIGHT / 2), (WIDTH, HEIGHT / 2), (0, 0, 0))# type: ignore
+    screen.draw.line((0, HEIGHT / 2 + 1), (WIDTH, HEIGHT / 2 + 1), (0, 0, 0))# type: ignore
     
     # Vertical y-axis line
-    screen.draw.line((X_VALUE_STEP + 1, 0), (X_VALUE_STEP + 1, HEIGHT), (0, 0, 0))
+    screen.draw.line((X_VALUE_STEP + 1, 0), (X_VALUE_STEP + 1, HEIGHT), (0, 0, 0))# type: ignore
 
     x_step_with_mf = int(X_VALUE_STEP)
     y_step_with_mf = int(Y_VALUE_STEP * MULTIPLYING_FACTOR)
     for i in range(0, WIDTH + 1, x_step_with_mf):
-        screen.draw.text(str(i), color="black", bottomleft=(i + X_VALUE_STEP, HEIGHT / 2), fontsize=20)
-        screen.draw.line((i, HEIGHT), (i, 0), (150, 150, 150))
+        screen.draw.text(str(i), color="black", bottomleft=(i + X_VALUE_STEP, HEIGHT / 2), fontsize=20)# type: ignore
+        screen.draw.line((i, HEIGHT), (i, 0), (150, 150, 150))# type: ignore
     for i in range(0, HEIGHT // 2 + 1, y_step_with_mf):
         if i != 0:
-            screen.draw.text(str(-(i / MULTIPLYING_FACTOR)), color="black", bottomright=(X_VALUE_STEP, i + HEIGHT / 2), fontsize=30)
-            screen.draw.text(str(i / MULTIPLYING_FACTOR), color="black", bottomright=(X_VALUE_STEP, HEIGHT / 2 - i), fontsize=30)
-            screen.draw.line((WIDTH, HEIGHT - i), (0, HEIGHT - i), (150, 150, 150))
-            screen.draw.line((WIDTH, i), (0, i), (150, 150, 150))
+            screen.draw.text(str(-(i / MULTIPLYING_FACTOR)), color="black", bottomright=(X_VALUE_STEP, i + HEIGHT / 2), fontsize=30)# type: ignore
+            screen.draw.text(str(i / MULTIPLYING_FACTOR), color="black", bottomright=(X_VALUE_STEP, HEIGHT / 2 - i), fontsize=30)# type: ignore
+            screen.draw.line((WIDTH, HEIGHT - i), (0, HEIGHT - i), (150, 150, 150))# type: ignore
+            screen.draw.line((WIDTH, i), (0, i), (150, 150, 150))# type: ignore
 
 def draw_legend_and_options_rect():
     global points, resart_animation_1, resart_animation_2, options_open, options_rect
 
-    screen.draw.text("Degrees", color="black", center = ((WIDTH - X_VALUE_STEP) / 2, HEIGHT / 2 + 10), fontsize=30)
+    screen.draw.text("Degrees", color="black", center = ((WIDTH - X_VALUE_STEP) / 2, HEIGHT / 2 + 10), fontsize=30)# type: ignore
     for i in range(0, len(points)):
         if i != 2:
             if i < 2:
-                screen.draw.filled_rect(pygame.Rect(WIDTH - 120, (i + 1) * 20, 30, 5), points[i][0])
-                screen.draw.text("= " + points[i][1], color="black", topleft = (WIDTH - 80, ((i + 1) * 20) - 10), fontsize=30)
+                screen.draw.filled_rect(pygame.Rect(WIDTH - 120, (i + 1) * 20, 30, 5), points[i][0])# type: ignore
+                screen.draw.text("= " + points[i][1], color="black", topleft = (WIDTH - 80, ((i + 1) * 20) - 10), fontsize=30)# type: ignore
             else:
-                screen.draw.filled_rect(pygame.Rect(WIDTH - 120, (i) * 20, 30, 5), points[i][0])
-                screen.draw.text("= " + points[i][1], color="black", topleft = (WIDTH - 80, (i * 20) - 10), fontsize=30)
+                screen.draw.filled_rect(pygame.Rect(WIDTH - 120, (i) * 20, 30, 5), points[i][0])# type: ignore
+                screen.draw.text("= " + points[i][1], color="black", topleft = (WIDTH - 80, (i * 20) - 10), fontsize=30)# type: ignore
 
     resart_animation_1 = pygame.Rect(WIDTH / 2, 40, 75, 20)
     resart_animation_2 = pygame.Rect(WIDTH / 2 - 10, 60, 95, 20)
     options_rect = pygame.Rect(WIDTH / 2, 0, 75, 20)
-    screen.draw.filled_rect(options_rect, (130, 130, 130))
+    screen.draw.filled_rect(options_rect, (130, 130, 130))# type: ignore
 
-    screen.draw.textbox("Options", options_rect, color=(255, 255, 255))
+    screen.draw.textbox("Options", options_rect, color=(255, 255, 255))# type: ignore
 
     if options_open:
-        screen.draw.filled_rect(resart_animation_1, (130, 130, 130))
-        screen.draw.filled_rect(resart_animation_2, (130, 130, 130))
-        screen.draw.textbox("Restart", resart_animation_1, color=(255, 255, 255))
-        screen.draw.textbox("animation", resart_animation_2, color=(255, 255, 255))
+        screen.draw.filled_rect(resart_animation_1, (130, 130, 130))# type: ignore
+        screen.draw.filled_rect(resart_animation_2, (130, 130, 130))# type: ignore
+        screen.draw.textbox("Restart", resart_animation_1, color=(255, 255, 255))# type: ignore
+        screen.draw.textbox("animation", resart_animation_2, color=(255, 255, 255))# type: ignore
 
 def draw():
     global x, resart_animation_1, resart_animation_2, options_open, options_rect
-    screen.fill("white")
+    screen.fill("white")# type: ignore
     draw_grid_and_values()
     draw_legend_and_options_rect()
     for graph_points in points:
         for index, point in enumerate(graph_points):
             if index != 0 and index != 1:
-                screen.draw.circle(point, 1, graph_points[0])
+                screen.draw.circle(point, 1, graph_points[0]) # type: ignore
 
 def on_mouse_down(pos):
     global resart_animation_1, resart_animation_2, x, points, options_open
