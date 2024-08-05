@@ -21,8 +21,5 @@ def draw():
             screen.draw.text(str(round(math.tan(math.radians(i)), 2)), color="black", center=((75 / 2) + 75 * ((i / 10) + 1), (75 / 2) + 75 * 3 ), fontsize=30)
         else:
             screen.draw.text("*", color="black", center=((75 / 2) + 75 * ((i / 10) + 1), (75 / 2) + 75 * 3), fontsize=70)
-    
-def update():
-    pass
 
 pgzrun.go()

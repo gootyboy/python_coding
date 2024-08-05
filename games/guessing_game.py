@@ -11,14 +11,13 @@ player_guesses = []
 computer_guess_close = 0
 no_answer = True
 game_replay_mess_1 = "do you want to play this game agian? Type \"no\" if you don't want to play agian. Type \"yes\" if you want to."
-game_replay_mess_2 = "you didn't type \"yes\" or \"no\". please type \"yes\" or \"no\" if you want to play agian     "
+game_replay_mess_2 = "you didn't type \"yes\" or \"no\". please type \"yes\" or \"no\" if you want to play agian    "
 player_question = "type the amount of players    "
 
 def play_game_agian(no_answer, game_loop):
     global player_names, player_guesses
     try:
         game_replay_mess_1 = "do you want to play this game agian? Type \"no\" if you don't want to play agian. Type \"yes\" if you want to."
-        game_replay_mess_2 = "you didn't type \"yes\" or \"no\". please type \"yes\" or \"no\" if you want to play agian     "
         game_replay = input(game_replay_mess_1)
         print(" ")
 

@@ -53,66 +53,69 @@ stage_icon = Actor("stage-background-icon", pos=(400, 400))
 
 def create_password_coding_digits():
     global a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, q, w, x, y, z
-    a = random.randint(random.randint(-50, 50), random.randint(50, 150))
-    b = random.randint(random.randint(-50, 50), random.randint(50, 150))
-    c = random.randint(random.randint(-50, 50), random.randint(50, 150))
-    d = random.randint(random.randint(-50, 50), random.randint(50, 150))
-    e = random.randint(random.randint(-50, 50), random.randint(50, 150))
-    f = random.randint(random.randint(-50, 50), random.randint(50, 150))
-    g = random.randint(random.randint(-50, 50), random.randint(50, 150))
-    h = random.randint(random.randint(-50, 50), random.randint(50, 150))
-    i = random.randint(random.randint(-50, 50), random.randint(50, 150))
-    j = random.randint(random.randint(-50, 50), random.randint(50, 150))
-    k = random.randint(random.randint(-50, 50), random.randint(50, 150))
-    l = random.randint(random.randint(-50, 50), random.randint(50, 150))
-    m = random.randint(random.randint(-50, 50), random.randint(50, 150))
-    n = random.randint(random.randint(-50, 50), random.randint(50, 150))
-    o = random.randint(random.randint(-50, 50), random.randint(50, 150))
-    p = random.randint(random.randint(-50, 50), random.randint(50, 150))
-    q = random.randint(random.randint(-50, 50), random.randint(50, 150))
-    r = random.randint(random.randint(-50, 50), random.randint(50, 150))
-    s = random.randint(random.randint(-50, 50), random.randint(50, 150))
-    t = random.randint(random.randint(-50, 50), random.randint(50, 150))
-    u = random.randint(random.randint(-50, 50), random.randint(50, 150))
-    v = random.randint(random.randint(-50, 50), random.randint(50, 150))
-    w = random.randint(random.randint(-50, 50), random.randint(50, 150))
-    x = random.randint(random.randint(-50, 50), random.randint(50, 150))
-    y = random.randint(random.randint(-50, 50), random.randint(50, 150))
-    z = random.randint(random.randint(-50, 50), random.randint(50, 150))
+    a = random.randint(random.randint(0, 50), random.randint(50, 150))
+    b = random.randint(random.randint(0, 50), random.randint(50, 150))
+    c = random.randint(random.randint(0, 50), random.randint(50, 150))
+    d = random.randint(random.randint(0, 50), random.randint(50, 150))
+    e = random.randint(random.randint(0, 50), random.randint(50, 150))
+    f = random.randint(random.randint(0, 50), random.randint(50, 150))
+    g = random.randint(random.randint(0, 50), random.randint(50, 150))
+    h = random.randint(random.randint(0, 50), random.randint(50, 150))
+    i = random.randint(random.randint(0, 50), random.randint(50, 150))
+    j = random.randint(random.randint(0, 50), random.randint(50, 150))
+    k = random.randint(random.randint(0, 50), random.randint(50, 150))
+    l = random.randint(random.randint(0, 50), random.randint(50, 150))
+    m = random.randint(random.randint(0, 50), random.randint(50, 150))
+    n = random.randint(random.randint(0, 50), random.randint(50, 150))
+    o = random.randint(random.randint(0, 50), random.randint(50, 150))
+    p = random.randint(random.randint(0, 50), random.randint(50, 150))
+    q = random.randint(random.randint(0, 50), random.randint(50, 150))
+    r = random.randint(random.randint(0, 50), random.randint(50, 150))
+    s = random.randint(random.randint(0, 50), random.randint(50, 150))
+    t = random.randint(random.randint(0, 50), random.randint(50, 150))
+    u = random.randint(random.randint(0, 50), random.randint(50, 150))
+    v = random.randint(random.randint(0, 50), random.randint(50, 150))
+    w = random.randint(random.randint(0, 50), random.randint(50, 150))
+    x = random.randint(random.randint(0, 50), random.randint(50, 150))
+    y = random.randint(random.randint(0, 50), random.randint(50, 150))
+    z = random.randint(random.randint(0, 50), random.randint(50, 150))
 
 create_password_coding_digits()
 
 password_coding = {
-    "a": a,
-    "b": b,
-    "c": c,
-    "d": d,
-    "e": e,
-    "f": f,
-    "g": g,
-    "h": h,
-    "i": i,
-    "j": j,
-    "k": k,
-    "l": l,
-    "m": m,
-    "n": n,
-    "o": o,
-    "p": p,
-    "q": q,
-    "r": r,
-    "s": s,
-    "t": t,
-    "u": u,
-    "v": v,
-    "w": w,
-    "x": x,
-    "y": y,
-    "z": z
+    "a": bin(a)[2:],
+    "b": bin(b)[2:],
+    "c": bin(c)[2:],
+    "d": bin(d)[2:],
+    "e": bin(e)[2:],
+    "f": bin(f)[2:],
+    "g": bin(g)[2:],
+    "h": bin(h)[2:],
+    "i": bin(i)[2:],
+    "j": bin(j)[2:],
+    "k": bin(k)[2:],
+    "l": bin(l)[2:],
+    "m": bin(m)[2:],
+    "n": bin(n)[2:],
+    "o": bin(o)[2:],
+    "p": bin(p)[2:],
+    "q": bin(q)[2:],
+    "r": bin(r)[2:],
+    "s": bin(s)[2:],
+    "t": bin(t)[2:],
+    "u": bin(u)[2:],
+    "v": bin(v)[2:],
+    "w": bin(w)[2:],
+    "x": bin(x)[2:],
+    "y": bin(y)[2:],
+    "z": bin(z)[2:],
 }
 
 def get_letter_from_number(digits, index_of_item):
+    for digit in digits:
+        digit = int(digit, 2)
     for letter, number in password_coding.items():
+        number = int(number, 2)
         if str(number) == digits[index_of_item]:
             return letter
 
@@ -129,11 +132,6 @@ def check_if_digits_are_letters(digits):
     return digits_is_letter_list
 
 def check_if_numbers_are_in_range(digits):
-    for digit in digits:
-        if int(digit) > 150:
-            return False
-        if int(digit) < -50:
-            return False
     return True
 
 def check_if_digits_are_coded(digits):
