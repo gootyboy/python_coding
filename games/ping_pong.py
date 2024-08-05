@@ -16,7 +16,7 @@ start_timer.write("loading...", font= ("Comic Sans MS", 30, "bold"))
 platform = turtle.Turtle()
 platform.hideturtle()
 platform.shape("square")
-platform_stretch_len = 100000000
+platform_stretch_len = 3
 platform.shapesize(stretch_wid=1, stretch_len=platform_stretch_len)
 platform_len = platform_stretch_len * 20
 platform.color("green")

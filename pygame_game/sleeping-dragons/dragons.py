@@ -25,43 +25,45 @@ game_over = False
 game_complete = False
 reset_required = False
 
-# first 6 dragon lairs
-easy_lair = {
-    "dragon": Actor("dragon-asleep", pos=(600, 60)),
-    "eggs": Actor("one-egg", pos=(450, 100)),
-    "egg_count": 1,
-    "egg_hidden": False,
-    "egg_hide_counter": 0,
-    "sleep_length": random.randint(7, 10),
-    "sleep_counter": 0,
-    "wake_counter": 0
-}
 
-medium_lair = {
-    "dragon": Actor("dragon-asleep", pos=(600, 260)),
-    "eggs": Actor("two-eggs", pos=(450, 300)),
-    "egg_count": 2,
-    "egg_hidden": False,
-    "egg_hide_counter": 0,
-    "sleep_length": random.randint(4, 7),
-    "sleep_counter": 0,
-    "wake_counter": 0
-}
-
-hard_lair = {
-    "dragon": Actor("dragon-asleep", pos=(600, 460)),
-    "eggs": Actor("three-eggs", pos=(450, 500)),
-    "egg_count": 3,
-    "egg_hidden": False,
-    "egg_hide_counter": 0,
-    "sleep_length": random.randint(1, 4),
-    "sleep_counter": 0,
-    "wake_counter": 0
-}
+def create_lair(difficulty, dragon_pos, eggs_pos, egg_count, sleep_range):
+    if difficulty == "hard-2":
+        return {
+            "dragon": Actor("dragon-asleep", pos=dragon_pos),
+            "eggs": Actor(f"{egg_count}-eggs", pos=eggs_pos),
+            "egg_count": egg_count,
+            "egg_hidden": False,
+            "egg_hide_counter": 0,
+            "sleep_length": random.randint(sleep_range[0], sleep_range[1]),
+            "sleep_counter": 0,
+            "wake_counter": 0
+        }
+    elif difficulty == "hard-3":
+        return {
+            "dragon": Actor("dragon-asleep", pos=dragon_pos),
+            "eggs": Actor(f"{egg_count}-eggs", pos=eggs_pos),
+            "egg_count": egg_count,
+            "egg_hidden": False,
+            "egg_hide_counter": 0,
+            "sleep_length": random.choice([0.1, 0.2, 0.3, 0.4, 0.5]),
+            "sleep_counter": 0,
+            "wake_counter": 0
+        }
+    else:
+        return {
+            "dragon": Actor("dragon-asleep", pos=dragon_pos),
+            "eggs": Actor(f"{egg_count}-eggs", pos=eggs_pos),
+            "egg_count": 0,
+            "egg_hidden": True,
+            "egg_hide_counter": 0,
+            "sleep_length": random.randint(sleep_range[0], sleep_range[1]),
+            "sleep_counter": 0,
+            "wake_counter": 0
+        }
 
 easy_lair_2 = {
     "dragon": Actor("dragon-asleep", pos=(600, 160)),
-    "eggs": Actor("one-egg", pos=(450, 200)),
+    "eggs": Actor("1-eggs", pos=(450, 200)),
     "egg_count": 1,
     "egg_hidden": False,
     "egg_hide_counter": 0,
@@ -72,7 +74,7 @@ easy_lair_2 = {
 
 easy_lair_3 = {
     "dragon": Actor("dragon-asleep", pos=(600, 560)),
-    "eggs": Actor("one-egg", pos=(450, 100)),
+    "eggs": Actor("1-eggs", pos=(450, 100)),
     "egg_count": 1,
     "egg_hidden": False,
     "egg_hide_counter": 0,
@@ -83,7 +85,7 @@ easy_lair_3 = {
 
 medium_lair_2 = {
     "dragon": Actor("dragon-asleep", pos=(600, 360)),
-    "eggs": Actor("two-eggs", pos=(450, 400)),
+    "eggs": Actor("2-eggs", pos=(450, 400)),
     "egg_count": 2,
     "egg_hidden": False,
     "egg_hide_counter": 0,
@@ -95,7 +97,7 @@ medium_lair_2 = {
 # secound 6 dragon lairs 
 hard_lair_2 = {
     "dragon": Actor("dragon-asleep", pos=(1000, 60)),
-    "eggs": Actor("three-eggs", pos=(450, 700)),
+    "eggs": Actor("3-eggs", pos=(450, 700)),
     "egg_count": 0,
     "egg_hidden": False,
     "egg_hide_counter": 0,
@@ -106,7 +108,7 @@ hard_lair_2 = {
 
 hard_lair_3 = {
     "dragon": Actor("dragon-asleep", pos=(1000, 160)),
-    "eggs": Actor("three-eggs", pos=(450, 700)),
+    "eggs": Actor("3-eggs", pos=(450, 700)),
     "egg_count": 0,
     "egg_hidden": False,
     "egg_hide_counter": 0,
@@ -117,7 +119,7 @@ hard_lair_3 = {
 
 hard_lair_4 = {
     "dragon": Actor("dragon-asleep", pos=(1000, 260)),
-    "eggs": Actor("three-eggs", pos=(450, 700)),
+    "eggs": Actor("3-eggs", pos=(450, 700)),
     "egg_count": 0,
     "egg_hidden": False,
     "egg_hide_counter": 0,
@@ -128,7 +130,7 @@ hard_lair_4 = {
 
 hard_lair_5 = {
     "dragon": Actor("dragon-asleep", pos=(1000, 360)),
-    "eggs": Actor("three-eggs", pos=(450, 700)),
+    "eggs": Actor("3-eggs", pos=(450, 700)),
     "egg_count": 0,
     "egg_hidden": False,
     "egg_hide_counter": 0,
@@ -139,7 +141,7 @@ hard_lair_5 = {
 
 hard_lair_6 = {
     "dragon": Actor("dragon-asleep", pos=(1000, 460)),
-    "eggs": Actor("three-eggs", pos=(450, 700)),
+    "eggs": Actor("3-eggs", pos=(450, 700)),
     "egg_count": 0,
     "egg_hidden": False,
     "egg_hide_counter": 0,
@@ -150,7 +152,7 @@ hard_lair_6 = {
 
 hard_lair_7 = {
     "dragon": Actor("dragon-asleep", pos=(1000, 560)),
-    "eggs": Actor("three-eggs", pos=(450, 700)),
+    "eggs": Actor("3-eggs", pos=(450, 700)),
     "egg_count": 0,
     "egg_hidden": False,
     "egg_hide_counter": 0,
@@ -162,7 +164,7 @@ hard_lair_7 = {
 # third 6 dragon lairs
 hard_lair_8 = {
     "dragon": Actor("dragon-asleep", pos=(1400, 60)),
-    "eggs": Actor("three-eggs", pos=(450, 700)),
+    "eggs": Actor("3-eggs", pos=(450, 700)),
     "egg_count": 0,
     "egg_hidden": False,
     "egg_hide_counter": 0,
@@ -173,197 +175,33 @@ hard_lair_8 = {
 
 hard_lair_9 = {
     "dragon": Actor("dragon-asleep", pos=(1400, 160)),
-    "eggs": Actor("three-eggs", pos=(450, 700)),
+    "eggs": Actor("3-eggs", pos=(450, 700)),
     "egg_count": 0,
     "egg_hidden": False,
     "egg_hide_counter": 0,
     "sleep_length": random.randint(1, 2),
-    "sleep_counter": 0,
-    "wake_counter": 0
-}
-
-hard_lair_10 = {
-    "dragon": Actor("dragon-asleep", pos=(1400, 260)),
-    "eggs": Actor("three-eggs", pos=(450, 700)),
-    "egg_count": 0,
-    "egg_hidden": False,
-    "egg_hide_counter": 0,
-    "sleep_length": random.randint(1, 2),
-    "sleep_counter": 0,
-    "wake_counter": 0
-}
-
-hard_lair_11 = {
-    "dragon": Actor("dragon-asleep", pos=(1400, 360)),
-    "eggs": Actor("three-eggs", pos=(450, 700)),
-    "egg_count": 0,
-    "egg_hidden": False,
-    "egg_hide_counter": 0,
-    "sleep_length": random.randint(1, 2),
-    "sleep_counter": 0,
-    "wake_counter": 0
-}
-
-hard_lair_12 = {
-    "dragon": Actor("dragon-asleep", pos=(1400, 460)),
-    "eggs": Actor("three-eggs", pos=(450, 700)),
-    "egg_count": 0,
-    "egg_hidden": False,
-    "egg_hide_counter": 0,
-    "sleep_length": random.randint(1, 2),
-    "sleep_counter": 0,
-    "wake_counter": 0
-}
-
-hard_lair_13 = {
-    "dragon": Actor("dragon-asleep", pos=(1400, 560)),
-    "eggs": Actor("three-eggs", pos=(450, 700)),
-    "egg_count": 0,
-    "egg_hidden": False,
-    "egg_hide_counter": 0,
-    "sleep_length": random.randint(1, 2),
-    "sleep_counter": 0,
-    "wake_counter": 0
-}
-
-# fourth 6 dragon lairs
-hard_lair_14 = {
-    "dragon": Actor("dragon-asleep", pos=(1700, 60)),
-    "eggs": Actor("three-eggs", pos=(450, 700)),
-    "egg_count": 0,
-    "egg_hidden": False,
-    "egg_hide_counter": 0,
-    "sleep_length": random.randint(1, 1),
-    "sleep_counter": 0,
-    "wake_counter": 0
-}
-
-hard_lair_15 = {
-    "dragon": Actor("dragon-asleep", pos=(1700, 160)),
-    "eggs": Actor("three-eggs", pos=(450, 700)),
-    "egg_count": 0,
-    "egg_hidden": False,
-    "egg_hide_counter": 0,
-    "sleep_length": random.randint(1, 1),
-    "sleep_counter": 0,
-    "wake_counter": 0
-}
-
-hard_lair_16 = {
-    "dragon": Actor("dragon-asleep", pos=(1700, 260)),
-    "eggs": Actor("three-eggs", pos=(450, 700)),
-    "egg_count": 0,
-    "egg_hidden": False,
-    "egg_hide_counter": 0,
-    "sleep_length": random.randint(1, 1),
-    "sleep_counter": 0,
-    "wake_counter": 0
-}
-
-hard_lair_17 = {
-    "dragon": Actor("dragon-asleep", pos=(1700, 360)),
-    "eggs": Actor("three-eggs", pos=(450, 700)),
-    "egg_count": 0,
-    "egg_hidden": False,
-    "egg_hide_counter": 0,
-    "sleep_length": random.randint(1, 1),
-    "sleep_counter": 0,
-    "wake_counter": 0
-}
-
-hard_lair_18 = {
-    "dragon": Actor("dragon-asleep", pos=(1700, 460)),
-    "eggs": Actor("three-eggs", pos=(450, 700)),
-    "egg_count": 0,
-    "egg_hidden": False,
-    "egg_hide_counter": 0,
-    "sleep_length": random.randint(1, 1),
-    "sleep_counter": 0,
-    "wake_counter": 0
-}
-
-hard_lair_19 = {
-    "dragon": Actor("dragon-asleep", pos=(1700, 560)),
-    "eggs": Actor("three-eggs", pos=(450, 700)),
-    "egg_count": 0,
-    "egg_hidden": False,
-    "egg_hide_counter": 0,
-    "sleep_length": random.randint(1, 1),
-    "sleep_counter": 0,
-    "wake_counter": 0
-}
-
-# last 6 dragon lairs
-hard_lair_20 = {
-    "dragon": Actor("dragon-asleep", pos=(2000, 60)),
-    "eggs": Actor("three-eggs", pos=(450, 700)),
-    "egg_count": 0,
-    "egg_hidden": False,
-    "egg_hide_counter": 0,
-    "sleep_length": random.choice([0.1, 0.2, 0.3, 0.4, 0.5]),
-    "sleep_counter": 0,
-    "wake_counter": 0
-}
-
-hard_lair_21 = {
-    "dragon": Actor("dragon-asleep", pos=(2000, 160)),
-    "eggs": Actor("three-eggs", pos=(450, 700)),
-    "egg_count": 0,
-    "egg_hidden": False,
-    "egg_hide_counter": 0,
-    "sleep_length": random.choice([0.1, 0.2, 0.3, 0.4, 0.5]),
-    "sleep_counter": 0,
-    "wake_counter": 0
-}
-
-hard_lair_22 = {
-    "dragon": Actor("dragon-asleep", pos=(2000, 260)),
-    "eggs": Actor("three-eggs", pos=(450, 700)),
-    "egg_count": 0,
-    "egg_hidden": False,
-    "egg_hide_counter": 0,
-    "sleep_length": random.choice([0.1, 0.2, 0.3, 0.4, 0.5]),
-    "sleep_counter": 0,
-    "wake_counter": 0
-}
-
-hard_lair_23 = {
-    "dragon": Actor("dragon-asleep", pos=(2000, 360)),
-    "eggs": Actor("three-eggs", pos=(450, 700)),
-    "egg_count": 0,
-    "egg_hidden": False,
-    "egg_hide_counter": 0,
-    "sleep_length": random.choice([0.1, 0.2, 0.3, 0.4, 0.5]),
-    "sleep_counter": 0,
-    "wake_counter": 0
-}
-
-hard_lair_24 = {
-    "dragon": Actor("dragon-asleep", pos=(2000, 460)),
-    "eggs": Actor("three-eggs", pos=(450, 700)),
-    "egg_count": 0,
-    "egg_hidden": False,
-    "egg_hide_counter": 0,
-    "sleep_length": random.choice([0.1, 0.2, 0.3, 0.4, 0.5]),
-    "sleep_counter": 0,
-    "wake_counter": 0
-}
-
-hard_lair_25 = {
-    "dragon": Actor("dragon-asleep", pos=(2000, 560)),
-    "eggs": Actor("three-eggs", pos=(450, 700)),
-    "egg_count": 0,
-    "egg_hidden": False,
-    "egg_hide_counter": 0,
-    "sleep_length": random.choice([0.1, 0.2, 0.3, 0.4, 0.5]),
     "sleep_counter": 0,
     "wake_counter": 0
 }
 
 # list of dragon lairs
-lairs = [easy_lair, medium_lair, hard_lair, medium_lair_2, easy_lair_2, easy_lair_3, hard_lair_2, hard_lair_3, hard_lair_4, hard_lair_5, hard_lair_6, 
-        hard_lair_7, hard_lair_8, hard_lair_9, hard_lair_10, hard_lair_11, hard_lair_12, hard_lair_13, hard_lair_14, hard_lair_15, hard_lair_16,
-        hard_lair_17, hard_lair_18, hard_lair_19, hard_lair_20, hard_lair_21, hard_lair_22, hard_lair_23, hard_lair_24, hard_lair_25]
+lairs = [
+    create_lair("easy", (600, 60), (450, 100), 1, (7, 10)), create_lair("medium", (600, 260), (450, 300), 2, (4, 7)), 
+    create_lair("hard", (600, 460), (600, 460), 3, (1, 4)), medium_lair_2, 
+    easy_lair_2, easy_lair_3, 
+    hard_lair_2, hard_lair_3,
+    hard_lair_4, hard_lair_5, 
+    hard_lair_6, hard_lair_7,
+    hard_lair_8, hard_lair_9,
+    create_lair("hard-2", (1400, 260), (450, 700), 3, (1, 2)), create_lair("hard-2", (1400, 360), (450, 700), 3, (1, 2)),
+    create_lair("hard-2", (1400, 460), (450, 700), 3, (1, 2)), create_lair("hard-2", (1400, 560), (450, 700), 3, (1, 2)),
+    create_lair("hard-2", (1700, 60), (450, 700), 3, (1, 2)), create_lair("hard-2", (1700, 160), (450, 700), 3, (1, 2)),
+    create_lair("hard-2", (1700, 260), (450, 700), 3, (1, 2)), create_lair("hard-2", (1700, 360), (450, 700), 3, (1, 2)),
+    create_lair("hard-2", (1700, 460), (450, 700), 3, (1, 2)), create_lair("hard-2", (1700, 560), (450, 700), 3, (1, 2)),
+    create_lair("hard-3", (2000, 60), (450, 700), 3, (1, 2)), create_lair("hard-3", (2000, 160), (450, 700), 3, (1, 2)),
+    create_lair("hard-3", (2000, 260), (450, 700), 3, (1, 2)), create_lair("hard-3", (2000, 360), (450, 700), 3, (1, 2)),
+    create_lair("hard-3", (2000, 460), (450, 700), 3, (1, 2)), create_lair("hard-3", (2000, 560), (450, 700), 3, (1, 2))
+]
 
 hero = Actor("hero", pos= HERO_START)
 golden_egg = Actor("golden-egg", pos= (WIDTH - 100, HEIGHT / 2))

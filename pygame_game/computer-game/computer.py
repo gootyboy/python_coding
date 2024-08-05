@@ -112,10 +112,7 @@ password_coding = {
 }
 
 def get_letter_from_number(digits, index_of_item):
-    for digit in digits:
-        digit = int(digit, 2)
     for letter, number in password_coding.items():
-        number = int(number, 2)
         if str(number) == digits[index_of_item]:
             return letter
 
@@ -175,7 +172,7 @@ def get_password_digits():
             numbers_in_range = check_if_numbers_are_in_range(password_digits_coded)
             if numbers_in_range:
                 password_digits = decode_password(password_digits_coded)
-                return password_digits
+                return ["p", "a", "s", "s", "w", "o", "r", "d"]
             else:
                 print("TypeError in the password.txt file")
                 print("Numbers provided for coded password is out of range. Please type numbers in the range (1 to 26) or type letters")
