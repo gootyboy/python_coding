@@ -36,14 +36,8 @@ def create_chess_pieces():
     pieces["black_rook_2"] = create_piece(2, "black", "rook")
     return pieces
 
-def set_up_game():
-    global pieces
-    pieces = create_chess_pieces()
-
-def draw_chess_board():
+def set_up_board():
     screen.blit("chess_board", (0, 0))
-
-def draw_chess_pieces():
     for piece in pieces.values():
         piece.draw()
 
@@ -58,43 +52,50 @@ def draw():
     screen.draw.textbox("Random", black_random_rect, color="black")
     
     if game_started:
-        draw_chess_board()
-        draw_chess_pieces()
+        set_up_board()
+        set_up_board()
 
 def update():
     pass
 
-def check_blocking_piece(piece, new_y):
-    for piece in pieces.values():
-        if piece != piece and piece.y == new_y and piece.x == piece.x:
-            return True
-    return False
+def is_path_clear(piece, y):
+    for other_piece in pieces.values():
+        if other_piece != piece and other_piece.collidepoint((piece.x, y)):
+            return False
+    return True
 
-def on_mouse_down(pos):
-    global colors_reversed, game_started
+def check_for_box_collisions(pos):
+    global game_started, colors_reversed, pieces
+    if black_bottom_rect.collidepoint(pos):
+        game_started = True
+        colors_reversed = True
+        pieces = create_chess_pieces()
+    elif black_top_rect.collidepoint(pos):
+        game_started = True
+        colors_reversed = False
+        pieces = create_chess_pieces()
+    elif black_random_rect.collidepoint(pos):
+        game_started = True
+        colors_reversed = random.choice([True, False])
+        pieces = create_chess_pieces()
+
+def check_for_piece_collision(pos):
+    for name, piece in pieces.items():
+        if piece.collidepoint(pos):
+            moving_direction = -BOX_SIZE if (name.startswith("white") != colors_reversed) else BOX_SIZE
+            new_y = piece.y + moving_direction
+            if "pawn" in name and OUTER_EDGE + BOX_SIZE - 10 < piece.y < HEIGHT - OUTER_EDGE - BOX_SIZE + 10:
+                if is_path_clear(piece, new_y):
+                    piece.y = new_y
+            elif "rook" in name:
+                if is_path_clear(piece, new_y):
+                    piece.y = new_y
+
+def on_mouse_up(pos):
+    global colors_reversed, game_started, pieces
     if game_started:
-        for name, piece in pieces.items():
-            if piece.collidepoint(pos):
-                moving_direction = -BOX_SIZE if (name.startswith("white") != colors_reversed) else BOX_SIZE
-                new_y = piece.y + moving_direction
-                if "pawn" in name and OUTER_EDGE + BOX_SIZE - 10 < piece.y < HEIGHT - OUTER_EDGE - BOX_SIZE + 10:
-                    if not check_blocking_piece(piece, new_y):
-                        piece.y = new_y
-                elif "rook" in name:
-                    if not check_blocking_piece(piece, new_y):
-                        piece.y = new_y
+        check_for_piece_collision(pos)
     else:
-        if black_bottom_rect.collidepoint(pos):
-            game_started = True
-            colors_reversed = True
-            set_up_game()
-        elif black_top_rect.collidepoint(pos):
-            game_started = True
-            colors_reversed = False
-            set_up_game()
-        elif black_random_rect.collidepoint(pos):
-            game_started = True
-            colors_reversed = random.choice([True, False])
-            set_up_game()
+        check_for_box_collisions(pos)
 
 pgzrun.go()

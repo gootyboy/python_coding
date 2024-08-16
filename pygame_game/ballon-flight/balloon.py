@@ -25,7 +25,7 @@ tree.pos = randint(800, 1600), 450
 bird_up = True
 up = False
 game_over = False
-score = 0
+score = 70                                           
 number_of_updates = 0
 
 scores = []

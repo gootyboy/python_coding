@@ -3,9 +3,9 @@ import pygame
 from pgzero.actor import Actor
 from random import randint
 
-WIDTH = 10000
+WIDTH = 1000
 HEIGHT = 1000
-SECONDS = 60  # this is the amount of time (in seconds). Feel Free to change it how like
+SECONDS = 20000  # this is the amount of time (in seconds). Feel Free to change it how like
 NUM_OF_COINS = 2
 
 fox_score = 0
