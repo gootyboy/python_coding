@@ -1,0 +1,45 @@
+import pgzrun
+from pgzero.actor import Actor
+
+WIDTH = 800
+HEIGHT = 600
+
+ingredients = {
+    "rice": [Actor("rice", (Actor("rice").width / 2 + 10, Actor("rice").height / 2 + 10)), False],
+    "egg": [Actor("egg", (Actor("egg").width / 2 + 10, 150 + Actor("egg").height / 2 + 10)), False],
+    "jackfruit": [Actor("jackfruit", (Actor("jackfruit").width / 2 + 10, 250 + Actor("jackfruit").height / 2 + 10)), False]
+}
+
+bowl_name = "bowl"
+
+def draw():
+    global bowl, bowl_name
+    screen.fill("white")
+    bowl = Actor(bowl_name, (WIDTH / 2, HEIGHT / 2))
+    for name, ingredient in ingredients.items():
+        ingredient[0].draw()
+        screen.draw.text(name, topleft=(ingredient[0].x - ingredient[0].width / 2, ingredient[0].y + ingredient[0].height / 2), fontsize=40, color="black")
+        if ingredient[1]:
+            screen.draw.text("(added)", topleft=(ingredient[0].x - ingredient[0].width / 2, ingredient[0].y + ingredient[0].height + (10 if name == "egg" else -10)), fontsize=30, color="black")
+    bowl.draw()
+
+def update():
+    pass
+
+def on_mouse_down(pos):
+    global bowl_name
+    for name, ingredient in ingredients.items():
+        if ingredient[0].collidepoint(pos) and not ingredient[1]:
+            ingredient[1] = True
+            bowl_name += "_" + name
+
+    if ingredients["rice"][1] and ingredients["jackfruit"][1] and not ingredients["egg"][1]:
+        bowl_name = "bowl_rice_jackfruit"
+    elif ingredients["egg"][1] and ingredients["jackfruit"][1] and not ingredients["rice"][1]:
+        bowl_name = "bowl_egg_jackfruit"
+    elif ingredients["rice"][1] and ingredients["egg"][1] and not ingredients["jackfruit"][1]:
+        bowl_name = "bowl_rice_egg"
+    elif ingredients["rice"][1] and ingredients["egg"][1] and ingredients["jackfruit"][1]:
+        bowl_name = "bowl_rice_egg_jackfruit"
+
+pgzrun.go()
