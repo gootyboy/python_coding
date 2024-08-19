@@ -1,4 +1,7 @@
 import pgzrun
+import pygame
+import time
+from PIL import Image,ImageSequence
 from pgzero.actor import Actor
 
 WIDTH = 800
@@ -7,10 +10,18 @@ HEIGHT = 600
 ingredients = {
     "rice": [Actor("rice", (Actor("rice").width / 2 + 10, Actor("rice").height / 2 + 10)), False],
     "egg": [Actor("egg", (Actor("egg").width / 2 + 10, 150 + Actor("egg").height / 2 + 10)), False],
-    "jackfruit": [Actor("jackfruit", (Actor("jackfruit").width / 2 + 10, 250 + Actor("jackfruit").height / 2 + 10)), False]
+    "jackfruit": [Actor("jackfruit", (Actor("jackfruit").width / 2 + 10, 250 + Actor("jackfruit").height / 2 + 10)), False],
+    "pepper": [Actor("pepper", (Actor("pepper").width / 2 + 10, 375 + Actor("pepper").height / 2 + 10)), False],
+    "onion": [Actor("onion", (Actor("onion").width / 2 + 10, 475 + Actor("onion").height / 2 + 10)), False]
 }
 
 bowl_name = "bowl"
+gif = Image.open(r'boy/pygame_game/biranyi/images/fire.gif')
+frames = [frame.copy() for frame in ImageSequence.Iterator(gif)]
+
+current_frame = 0
+frame_delay = 0.01  # Delay in seconds between frames
+last_update_time = 0
 
 def draw():
     global bowl, bowl_name
@@ -20,11 +31,77 @@ def draw():
         ingredient[0].draw()
         screen.draw.text(name, topleft=(ingredient[0].x - ingredient[0].width / 2, ingredient[0].y + ingredient[0].height / 2), fontsize=40, color="black")
         if ingredient[1]:
-            screen.draw.text("(added)", topleft=(ingredient[0].x - ingredient[0].width / 2, ingredient[0].y + ingredient[0].height + (10 if name == "egg" else -10)), fontsize=30, color="black")
+            screen.draw.text("(added)", topleft=(ingredient[0].x - ingredient[0].width / 2, ingredient[0].y + ingredient[0].height + (10 if name != "rice" else -10)), fontsize=30, color="black")
     bowl.draw()
 
+    frame_image = frames[current_frame]
+    size = frame_image.size
+    data = frame_image.convert("RGBA").tobytes()  # Ensure the frame is in RGBA mode
+
+    # Create a Pygame surface from the frame
+    frame_surface = pygame.image.fromstring(data, size, "RGBA")
+    screen.blit(frame_surface, (175, 225))
+
 def update():
-    pass
+    global current_frame, last_update_time
+    if pygame.time.get_ticks() - last_update_time > frame_delay * 1000:
+        current_frame = (current_frame + 1) % len(frames)
+        last_update_time = pygame.time.get_ticks()
+
+def update_bowl_name():
+    if ingredients["rice"][1] and ingredients["jackfruit"][1] and not ingredients["egg"][1] and not ingredients["pepper"][1] and not ingredients["onion"][1]:
+        name = "bowl_rice_jackfruit"
+    elif ingredients["egg"][1] and ingredients["jackfruit"][1] and not ingredients["rice"][1] and not ingredients["pepper"][1] and not ingredients["onion"][1]:
+        name = "bowl_egg_jackfruit"
+    elif ingredients["rice"][1] and ingredients["egg"][1] and not ingredients["jackfruit"][1] and not ingredients["pepper"][1] and not ingredients["onion"][1]:
+        name = "bowl_rice_egg"
+    elif ingredients["rice"][1] and ingredients["egg"][1] and ingredients["jackfruit"][1] and not ingredients["pepper"][1] and not ingredients["onion"][1]:
+        name = "bowl_rice_egg_jackfruit"
+    elif ingredients["jackfruit"][1] and ingredients["onion"][1] and not ingredients["rice"][1] and not ingredients["pepper"][1] and not ingredients["egg"][1]:
+        name = "bowl_jackfruit_onion"
+    elif ingredients["jackfruit"][1] and ingredients["onion"][1] and ingredients["rice"][1] and not ingredients["pepper"][1] and not ingredients["egg"][1]:
+        name = "bowl_rice_jackfruit_onion"
+    elif ingredients["jackfruit"][1] and ingredients["onion"][1] and ingredients["rice"][1] and ingredients["egg"][1] and not ingredients["pepper"][1]:
+        name = "bowl_rice_egg_jackfruit_onion"
+    elif ingredients["jackfruit"][1] and ingredients["onion"][1] and ingredients["egg"][1] and not ingredients["rice"][1] and not ingredients["pepper"][1]:
+        name = "bowl_egg_jackfruit_onion"
+    elif ingredients["egg"][1] and ingredients["onion"][1] and not ingredients["jackfruit"][1] and not ingredients["rice"][1] and not ingredients["pepper"][1]:
+        name = "bowl_egg_onion"
+    elif ingredients["egg"][1] and ingredients["onion"][1] and ingredients["rice"][1] and not ingredients["jackfruit"][1] and not ingredients["pepper"][1]:
+        name = "bowl_rice_egg_onion"
+    elif ingredients["onion"][1] and ingredients["rice"][1] and not ingredients["egg"][1] and not ingredients["jackfruit"][1] and not ingredients["pepper"][1]:
+        name = "bowl_rice_onion"
+    elif ingredients["onion"][1] and ingredients["pepper"][1] and not ingredients["egg"][1] and not ingredients["jackfruit"][1] and not ingredients["rice"][1]:
+        name = "bowl_pepper_onion"
+    elif ingredients["onion"][1] and ingredients["pepper"][1] and ingredients["jackfruit"][1] and not ingredients["egg"][1] and not ingredients["rice"][1]:
+        name = "bowl_jackfruit_pepper_onion"
+    elif ingredients["onion"][1] and ingredients["pepper"][1] and ingredients["jackfruit"][1] and ingredients["egg"][1] and not ingredients["rice"][1]:
+        name = "bowl_egg_jackfruit_pepper_onion"
+    elif ingredients["onion"][1] and ingredients["pepper"][1] and ingredients["jackfruit"][1] and ingredients["egg"][1] and ingredients["rice"][1]:
+        name = "bowl_rice_egg_jackfruit_pepper_onion"
+    elif ingredients["onion"][1] and ingredients["pepper"][1] and ingredients["jackfruit"][1] and ingredients["rice"][1] and not ingredients["egg"][1]:
+        name = "bowl_rice_jackfruit_pepper_onion"
+    elif ingredients["onion"][1] and ingredients["pepper"][1] and ingredients["jackfruit"][1] and ingredients["rice"][1] and not ingredients["egg"][1]:
+        name = "bowl_egg_pepper_onion"
+    elif ingredients["onion"][1] and ingredients["pepper"][1] and ingredients["egg"][1] and not ingredients["rice"][1] and not ingredients["jackfruit"][1]:
+        name = "bowl_egg_pepper_onion"
+    elif ingredients["onion"][1] and ingredients["pepper"][1] and ingredients["egg"][1] and ingredients["rice"][1] and not ingredients["jackfruit"][1]:
+        name = "bowl_rice_egg_pepper_onion"
+    elif ingredients["egg"][1] and ingredients["pepper"][1] and not ingredients["onion"][1] and not ingredients["rice"][1] and not ingredients["jackfruit"][1]:
+        name = "bowl_egg_pepper"
+    elif ingredients["jackfruit"][1] and ingredients["pepper"][1] and not ingredients["onion"][1] and not ingredients["rice"][1] and not ingredients["egg"][1]:
+        name = "bowl_jackfruit_pepper"
+    elif ingredients["rice"][1] and ingredients["pepper"][1] and not ingredients["onion"][1] and not ingredients["egg"][1] and not ingredients["jackfruit"][1]:
+        name = "bowl_rice_pepper"
+    elif ingredients["egg"][1] and ingredients["pepper"][1] and ingredients["rice"][1] and not ingredients["onion"][1] and not ingredients["jackfruit"][1]:
+        name = "bowl_rice_egg_pepper"
+    elif ingredients["jackfruit"][1] and ingredients["pepper"][1] and ingredients["rice"][1] and not ingredients["onion"][1] and not ingredients["egg"][1]:
+        name = "bowl_rice_jackfruit_pepper"
+    elif ingredients["jackfruit"][1] and ingredients["pepper"][1] and ingredients["egg"][1] and not ingredients["onion"][1] and not ingredients["rice"][1]:
+        name = "bowl_egg_jackfruit_pepper"
+    elif ingredients["jackfruit"][1] and ingredients["pepper"][1] and ingredients["egg"][1] and ingredients["rice"][1] and not ingredients["onion"][1]:
+        name = "bowl_rice_egg_jackfruit_pepper"
+    return name
 
 def on_mouse_down(pos):
     global bowl_name
@@ -32,14 +109,6 @@ def on_mouse_down(pos):
         if ingredient[0].collidepoint(pos) and not ingredient[1]:
             ingredient[1] = True
             bowl_name += "_" + name
-
-    if ingredients["rice"][1] and ingredients["jackfruit"][1] and not ingredients["egg"][1]:
-        bowl_name = "bowl_rice_jackfruit"
-    elif ingredients["egg"][1] and ingredients["jackfruit"][1] and not ingredients["rice"][1]:
-        bowl_name = "bowl_egg_jackfruit"
-    elif ingredients["rice"][1] and ingredients["egg"][1] and not ingredients["jackfruit"][1]:
-        bowl_name = "bowl_rice_egg"
-    elif ingredients["rice"][1] and ingredients["egg"][1] and ingredients["jackfruit"][1]:
-        bowl_name = "bowl_rice_egg_jackfruit"
+    bowl_name == update_bowl_name()
 
 pgzrun.go()
