@@ -1,11 +1,13 @@
 import pgzrun
 import pygame
-import time
-from PIL import Image,ImageSequence
+from PIL import Image, ImageSequence
+from pgzero.clock import clock
 from pgzero.actor import Actor
+from pgzero.rect import Rect
 
 WIDTH = 800
 HEIGHT = 600
+TIME_TO_COOK = 5
 
 ingredients = {
     "rice": [Actor("rice", (Actor("rice").width / 2 + 10, Actor("rice").height / 2 + 10)), False],
@@ -16,35 +18,90 @@ ingredients = {
 }
 
 bowl_name = "bowl"
-gif = Image.open(r'boy/pygame_game/biranyi/images/fire.gif')
-frames = [frame.copy() for frame in ImageSequence.Iterator(gif)]
+frames = [frame.copy() for frame in ImageSequence.Iterator(Image.open(r'boy/pygame_game/biryani/images/fire.gif'))]
 
 current_frame = 0
 frame_delay = 0.01  # Delay in seconds between frames
 last_update_time = 0
+fire_timer = TIME_TO_COOK
+fire_on = False
+fire_on_rect = Rect(690, 10, 100, 100)
+
+play_agian = {
+    "yes": [Rect(WIDTH / 2 - 150, 200, 100, 100), "green"],
+    "no": [Rect(WIDTH / 2 + 50, 200, 100, 100), "red"]
+}
+
+clicked_ingredients = []
+
+def list_contains(contain, lst, only_contain):
+    return set(contain) == set(lst) if only_contain else all(item in lst for item in contain)
+
+def reset_or_end_game(reset):
+    global ingredients, bowl_name, frames, current_frame, frame_delay, last_update_time, fire_timer, fire_on, clicked_ingredients
+    if not reset:
+        pgzrun.sys.exit()
+    else:
+        ingredients = {
+            "rice": [Actor("rice", (Actor("rice").width / 2 + 10, Actor("rice").height / 2 + 10)), False],
+            "egg": [Actor("egg", (Actor("egg").width / 2 + 10, 150 + Actor("egg").height / 2 + 10)), False],
+            "jackfruit": [Actor("jackfruit", (Actor("jackfruit").width / 2 + 10, 250 + Actor("jackfruit").height / 2 + 10)), False],
+            "pepper": [Actor("pepper", (Actor("pepper").width / 2 + 10, 375 + Actor("pepper").height / 2 + 10)), False],
+            "onion": [Actor("onion", (Actor("onion").width / 2 + 10, 475 + Actor("onion").height / 2 + 10)), False]
+        }
+        bowl_name = "bowl"
+        frames = [frame.copy() for frame in ImageSequence.Iterator(Image.open(r'boy/pygame_game/biryani/images/fire.gif'))]
+        current_frame = 0
+        frame_delay = 0.01  # Delay in seconds between frames
+        last_update_time = 0
+        fire_timer = TIME_TO_COOK
+        fire_on = False
+        clicked_ingredients = []
 
 def draw():
-    global bowl, bowl_name
+    global bowl, bowl_name, fire_on, fire_on_rect
     screen.fill("white")
-    bowl = Actor(bowl_name, (WIDTH / 2, HEIGHT / 2))
+    bowl = Actor(bowl_name, (WIDTH / 2, HEIGHT / 2 + 100))
     for name, ingredient in ingredients.items():
         ingredient[0].draw()
         screen.draw.text(name, topleft=(ingredient[0].x - ingredient[0].width / 2, ingredient[0].y + ingredient[0].height / 2), fontsize=40, color="black")
         if ingredient[1]:
-            screen.draw.text("(added)", topleft=(ingredient[0].x - ingredient[0].width / 2, ingredient[0].y + ingredient[0].height + (10 if name != "rice" else -10)), fontsize=30, color="black")
+            screen.draw.text("(added)", topleft=(ingredient[0].x - ingredient[0].width / 2, ingredient[0].y + (ingredient[0].height * (2.5 if name != "rice" else 2) / 2)), fontsize=30, color="black")
     bowl.draw()
 
     frame_image = frames[current_frame]
     size = frame_image.size
-    data = frame_image.convert("RGBA").tobytes()  # Ensure the frame is in RGBA mode
+    data = frame_image.convert("RGBA").tobytes()
 
-    # Create a Pygame surface from the frame
     frame_surface = pygame.image.fromstring(data, size, "RGBA")
-    screen.blit(frame_surface, (175, 225))
+    if fire_on and fire_timer > 0:
+        screen.blit(frame_surface, (bowl.x - 225, bowl.y - 75))
+    screen.draw.filled_rect(fire_on_rect, "gray")
+    screen.draw.textbox("Start fire", fire_on_rect)
+    if fire_timer > 0 and fire_on:
+        screen.draw.text("time left to finish cooking: " + str(fire_timer), center=(bowl.x, 100), fontsize=30, color="black")
+    if fire_timer == 0:
+        if clicked_ingredients:
+            if list_contains(["rice", "egg", "pepper", "onion"], clicked_ingredients, False):
+                bowl_name = "biryani"
+            elif list_contains(["rice", "pepper"], clicked_ingredients, True):
+                bowl_name = "biryani_rice"
+            elif list_contains(["rice", "jackfruit", "pepper", "onion"], clicked_ingredients, True):
+                bowl_name = "biryani_jackfruit"
+        screen.draw.text("Cooking finished!", center=(bowl.x, 50), fontsize=50, color="black")
+        ingredients_text = "You added: "
+        for index, ingredient in enumerate(clicked_ingredients):
+            ingredients_text += ingredient + (", " if index != len(clicked_ingredients) - 1 else "")
+
+        screen.draw.text(ingredients_text, center=(bowl.x, 100), fontsize=50, color="black")
+        screen.draw.text("Would you like to play again?", center=(bowl.x, 150), fontsize=50, color="black")
+        for text, box in play_agian.items():
+            screen.draw.filled_rect(box[0], box[1])
+            screen.draw.textbox(text, box[0], color= "black")
 
 def update():
     global current_frame, last_update_time
-    if pygame.time.get_ticks() - last_update_time > frame_delay * 1000:
+    if pygame.time.get_ticks() - last_update_time > frame_delay * 1000 and fire_on:
         current_frame = (current_frame + 1) % len(frames)
         last_update_time = pygame.time.get_ticks()
 
@@ -101,14 +158,33 @@ def update_bowl_name():
         name = "bowl_egg_jackfruit_pepper"
     elif ingredients["jackfruit"][1] and ingredients["pepper"][1] and ingredients["egg"][1] and ingredients["rice"][1] and not ingredients["onion"][1]:
         name = "bowl_rice_egg_jackfruit_pepper"
+    elif ingredients["rice"][1] and ingredients["pepper"][1] and ingredients["onion"][1] and ingredients["jackfruit"][1] and not ingredients["egg"][1]:
+        name = "bowl_rice_jackfruit_pepper_onion"
+    elif ingredients["rice"][1] and ingredients["pepper"][1] and ingredients["onion"][1] and not ingredients["jackfruit"][1] and not ingredients["egg"][1]:
+        name = "bowl_rice_pepper_onion"
+    else:
+        name = bowl_name
     return name
 
 def on_mouse_down(pos):
-    global bowl_name
+    global fire_on, fire_on_rect, clicked_ingredients, bowl_name
     for name, ingredient in ingredients.items():
-        if ingredient[0].collidepoint(pos) and not ingredient[1]:
+        if ingredient[0].collidepoint(pos) and not ingredient[1] and fire_timer > 0:
             ingredient[1] = True
-            bowl_name += "_" + name
-    bowl_name == update_bowl_name()
+            clicked_ingredients.append(name)
+    bowl_name = update_bowl_name()
+    if fire_on_rect.collidepoint(pos):
+        fire_on = True
+    if play_agian["yes"][0].collidepoint(pos):
+        reset_or_end_game(True)
+    if play_agian["no"][0].collidepoint(pos):
+        reset_or_end_game(False)
+    
+def update_fire_timer():
+    global fire_timer, fire_on
+    if fire_on and fire_timer > 0:
+        fire_timer -= 1
+
+clock.schedule_interval(update_fire_timer, 1)
 
 pgzrun.go()
