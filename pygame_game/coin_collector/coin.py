@@ -1,12 +1,15 @@
 import pgzrun
 import pygame
 from pgzero.actor import Actor
+from pgzero.keyboard import keyboard
+from pgzero.clock import clock
+ 
 from random import randint
 
-WIDTH = 1000
+WIDTH = 5000
 HEIGHT = 1000
-SECONDS = 20000  # this is the amount of time (in seconds). Feel Free to change it how like
-NUM_OF_COINS = 2
+SECONDS = 20000000  # this is the amount of time (in seconds). Feel Free to change it how like
+NUM_OF_COINS = 100000
 
 fox_score = 0
 hedgehog_score = 0
@@ -29,7 +32,7 @@ play_agian_yes_box.move_ip(300, 500)
 end_box = pygame.Rect(0, 0, 60, 20)
 end_box.move_ip(300, 10)
 
-fox = Actor("fox")
+fox = Actor("pineapple")
 fox.pos = 100, 100
 hedgehog = Actor("pineapple")
 hedgehog.pos = 400, 400
@@ -37,6 +40,8 @@ coins = [Actor("coin", (200, 200)) for i in range(0, NUM_OF_COINS)]
 
 def on_mouse_down(pos):
     global start_game, multiplayer, game_over, time_left, high_score_run, coins
+    # global coinsddddddddddddddddddddddddddddddd
+    # coins = [Actor("coin", (200, 200)) for i in range(0, NUM_OF_COINS)]
 
     if start_game == False:
         if one_player_box.collidepoint(pos):
@@ -205,13 +210,13 @@ def update():
         if i < len(coins):
             if fox.colliderect(coins[i]):
                 fox_score += 1000000
-                # place_coin(coins[i])
+                place_coin(coins[i])
                 del coins[i]
 
         if i < len(coins):
             if hedgehog.colliderect(coins[i]):
                 fox_score += 1000000
-                # place_coin(coins[i])
+                place_coin(coins[i])
                 del coins[i]
 
 clock.schedule_interval(update_time_left, 1.0)

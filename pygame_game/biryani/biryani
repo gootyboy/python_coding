@@ -32,8 +32,12 @@ fire_timer = TIME_TO_COOK
 fire_on = False
 fire_on_rect = Rect(690, 10, 100, 100)
 
-rita = {"image": Actor("rita", (WIDTH - Actor("rita").height * 1.5 / 2, 150 + Actor("rita").height / 2 + 60)), 
-        "clicked": False}
+sides = {"raita": {"image": Actor("raita", (WIDTH - Actor("raita").height * 1.5 / 2, 150 + Actor("raita").height / 2 + 60)), 
+        "clicked": False,
+        "pos": (550, 320)},
+        "soda": {"image": Actor("soda", (WIDTH - Actor("soda").height * 1 / 2, 250+ Actor("soda").height / 2 + 110)), 
+        "clicked": False,
+        "pos": (250, 320)}}
 
 play_agian = {
     "yes": [Rect(WIDTH / 2 - 150, 200, 80, 80), "green"],
@@ -46,7 +50,7 @@ def list_contains(contain, lst, only_contain):
     return set(contain) == set(lst) if only_contain else all(item in lst for item in contain)
 
 def reset_or_end_game(reset):
-    global ingredients, bowl_name, frames, current_frame, frame_delay, last_update_time, fire_timer, fire_on, clicked_ingredients
+    global ingredients, bowl_name, frames, current_frame, frame_delay, last_update_time, fire_timer, fire_on, clicked_ingredients, sides
     if not reset:
         pgzrun.sys.exit()
     else:
@@ -63,10 +67,16 @@ def reset_or_end_game(reset):
               "clicked": False}
 }
 
+        sides = {"raita": {"image": Actor("raita", (WIDTH - Actor("raita").height * 1.5 / 2, 150 + Actor("raita").height / 2 + 60)), 
+        "clicked": False,
+        "pos": (550, 320)},
+        "soda": {"image": Actor("soda", (WIDTH - Actor("soda").height * 1 / 2, 250+ Actor("soda").height / 2 + 110)), 
+        "clicked": False,
+        "pos": (250, 320)}}
         bowl_name = "bowl"
         frames = [frame.copy() for frame in ImageSequence.Iterator(Image.open(r'boy/pygame_game/biryani/images/fire.gif'))]
         current_frame = 0
-        frame_delay = 0.01  # Delay in seconds between frames
+        frame_delay = 0.01
         last_update_time = 0
         fire_timer = TIME_TO_COOK
         fire_on = False
@@ -82,12 +92,13 @@ def draw_ingredients():
         if ingredient["clicked"]:
             screen.draw.text("(added)", topleft=(ingredient["image"].x - ingredient["image"].width / 2, ingredient["image"].y + (ingredient["image"].height * (2.5 if name != "rice" else 2) / 2)), fontsize=30, color="black")
     bowl.draw()
-    rita["image"].draw()
-    screen.draw.text("sides", center=(rita["image"].x, rita["image"].y + rita["image"].height / 2 - 150), fontsize=60, color="black")
-    screen.draw.text("rita", topleft=(rita["image"].x - rita["image"].width * 0.5 / 2, rita["image"].y + rita["image"].height / 2), fontsize=40, color="black")
-    if rita["clicked"]:
-        screen.draw.text("(added)", topleft=(rita["image"].x - rita["image"].width / 2, rita["image"].y + (rita["image"].height * 2 / 2)), fontsize=30, color="black")
-        Actor("rita", (550, 320)).draw()
+    screen.draw.text("sides", midleft=(680, 145), fontsize=60, color="black")
+    for side_name, side in sides.items():
+        side["image"].draw()
+        screen.draw.text(side_name, center=(side["image"].x - side["image"].width * 0.5 / 2 + (20 if side_name == "raita" else 10), side["image"].y + side["image"].height / 2 + 20), fontsize=40, color="black")
+        if side["clicked"]:
+            screen.draw.text("(added)", center=(side["image"].x, side["image"].y + (side["image"].height / 2 + 50)), fontsize=30, color="black")
+            Actor(side_name, side["pos"]).draw()
 
 def handle_end_of_game():
     global bowl, bowl_name
@@ -209,8 +220,9 @@ def on_mouse_down(pos):
     if fire_timer > 0:
         if fire_on_rect.collidepoint(pos):
             fire_on = True
-        if rita["image"].collidepoint(pos):
-            rita["clicked"] = True
+    for side in sides.values():
+        if side["image"].collidepoint(pos):
+            side["clicked"] = True
     if fire_timer == 0:
         if play_agian["yes"][0].collidepoint(pos):
             reset_or_end_game(True)
