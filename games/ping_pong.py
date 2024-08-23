@@ -16,7 +16,7 @@ start_timer.write("loading...", font= ("Comic Sans MS", 30, "bold"))
 platform = turtle.Turtle()
 platform.hideturtle()
 platform.shape("square")
-platform_stretch_len = 3
+platform_stretch_len = 10
 platform.shapesize(stretch_wid=1, stretch_len=platform_stretch_len)
 platform_len = platform_stretch_len * 20
 platform.color("green")
@@ -114,5 +114,55 @@ while True:
         pen.clear()
         pen.home()
         pen.write("Game Over", font= ("Comic Sans MS", 50, "bold"))
-        break
-wn.mainloop()
+        wn = turtle.Screen()
+        wn.bgcolor("white")
+
+        start_timer = turtle.Turtle()
+        start_timer.hideturtle()
+        start_timer.penup
+        start_timer.speed(10)
+        start_timer.penup()
+        start_timer.write("loading...", font= ("Comic Sans MS", 30, "bold"))
+
+        platform = turtle.Turtle()
+        platform.hideturtle()
+        platform.shape("square")
+        platform_stretch_len = 10
+        platform.shapesize(stretch_wid=1, stretch_len=platform_stretch_len)
+        platform_len = platform_stretch_len * 20
+        platform.color("green")
+        platform.penup()
+        platform.goto(0, -350)
+
+        start_timer.goto(-380, 0)
+
+        ball = turtle.Turtle()
+        ball.hideturtle()
+        ball.shape("circle")
+        ball.color("black")
+        ball.penup()
+        ball.goto(platform.xcor(), platform.ycor() +30)
+
+        pen = turtle.Turtle()
+        pen.hideturtle()
+        pen.speed(10)
+        pen.goto(-350, 350)
+        pen.color("black")
+
+        ball_dx = 100
+        ball_dy = 100
+        points = 2 ** 150
+        mf_x = 1
+        mf_y = 1
+        
+        ball.showturtle()
+        platform.showturtle()     
+        start_timer.color("black")
+        start_timer.clear()
+        start_timer.write("Make sure you wait for the ball to bounce off the platform", font= ("Comic Sans MS", 20, "normal"))
+        start_timer.goto(start_timer.xcor() - 35, start_timer.ycor() - 50)
+        start_timer.write("before moving the plaform, or else the screen will say game over", font= ("Comic Sans MS", 20, "normal"))
+
+        time.sleep(5)
+        start_timer.clear()
+        start_timer.home()

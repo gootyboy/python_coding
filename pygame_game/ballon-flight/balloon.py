@@ -8,7 +8,7 @@ WIDTH = 800
 HEIGHT = 600
 speed_1 = 1
 speed_2 = 3
-speed_3 = 7            
+speed_3 = 100 
 
 balloon = Actor("balloon")
 balloon.pos = 400, 300
@@ -25,7 +25,7 @@ tree.pos = randint(800, 1600), 450
 bird_up = True
 up = False
 game_over = False
-score = 70                                           
+score = 700
 number_of_updates = 0
 
 scores = []
@@ -105,9 +105,6 @@ def update():
             tree.x = randint(800, 1600)
             score += 1
         if balloon.top < 0 or balloon.bottom > 560:
-            game_over = True
-            update_high_scores()
-        if balloon.collidepoint(bird.x, bird.y) or balloon.collidepoint(house.x, house.y) or balloon.collidepoint(tree.x, tree.y):
             game_over = True
             update_high_scores()
 pgzrun.go()

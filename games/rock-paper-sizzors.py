@@ -3,7 +3,7 @@ import sys
 
 message_add = False
 
-def get_and_clear_input(text: str, correct_inputs = ["rock", "paper", "scissors"]) -> str:
+def get_and_clear_input(text: str, correct_inputs: list = ["rock", "paper", "scissors"]) -> str:
     global message_add
     while True:
         if not message_add:
@@ -11,20 +11,17 @@ def get_and_clear_input(text: str, correct_inputs = ["rock", "paper", "scissors"
         else:
             user_input = input(f"{message}. {text}")
             message_add = False
-        if correct_inputs != None:
-            if check_if_correct_input(user_input, correct_inputs):
-                break
-            else:
-                sys.stdout.write('\033[F')
-                sys.stdout.write('\033[K')
-                sys.stdout.flush()
-                message = 'You didn\'t enter '
-                for correct_input in correct_inputs:
-                    message += f'"{correct_input}" '
-                message_add = True
-                continue
-        else:
+        if check_if_correct_input(user_input, correct_inputs):
             break
+        else:
+            sys.stdout.write('\033[F')
+            sys.stdout.write('\033[K')
+            sys.stdout.flush()
+            message = 'You didn\'t enter '
+            for correct_input in correct_inputs:
+                message += f'"{correct_input}" '
+            message_add = True
+            continue
     sys.stdout.write('\033[F')
     sys.stdout.write('\033[K')
     sys.stdout.flush()

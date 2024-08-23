@@ -6,10 +6,10 @@ from pgzero.clock import clock
  
 from random import randint
 
-WIDTH = 5000
+WIDTH = 10000
 HEIGHT = 1000
 SECONDS = 20000000  # this is the amount of time (in seconds). Feel Free to change it how like
-NUM_OF_COINS = 100000
+NUM_OF_COINS = 190000
 
 fox_score = 0
 hedgehog_score = 0
@@ -40,8 +40,9 @@ coins = [Actor("coin", (200, 200)) for i in range(0, NUM_OF_COINS)]
 
 def on_mouse_down(pos):
     global start_game, multiplayer, game_over, time_left, high_score_run, coins
-    # global coinsddddddddddddddddddddddddddddddd
-    # coins = [Actor("coin", (200, 200)) for i in range(0, NUM_OF_COINS)]
+    # global coins
+    if fox.collidepoint(pos):
+        coins = [Actor("coin", (200, 200)) for i in range(0, NUM_OF_COINS)]
 
     if start_game == False:
         if one_player_box.collidepoint(pos):
