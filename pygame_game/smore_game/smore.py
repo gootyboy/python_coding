@@ -4,29 +4,7 @@ from PIL import Image, ImageSequence
 from pgzero.actor import Actor
 from pgzero.rect import Rect
 from pgzero.clock import clock
-from pygame.rect import Rect
 
-# image = Image.open('path_to_your_image.jpg')
-
-# # Resize the image
-# new_size = (250, 250)  # Specify the new size
-# resized_image = image.resize(new_size, Image.LANCZOS)
-
-# # Convert the resized image to a Pygame surface
-# image_bytes = resized_image.tobytes()
-# mode = resized_image.mode
-# size = resized_image.size
-
-# # Initialize Pygame
-# pygame.init()
-
-# # Create a Pygame surface from the image bytes
-# actor_image = pygame.image.fromstring(image_bytes, size, mode)
-
-# # Create an actor (sprite) with the image
-# actor = pygame.sprite.Sprite()
-# actor.image = actor_image
-# actor.rect = actor_image.get_rect()
 WIDTH = 800
 HEIGHT = 600
 
@@ -53,7 +31,7 @@ smore_items = {
     }
 
 rects = {
-    "marshmellow_stick_rect": Rect(items["stick"]["image"].x - 40, items["stick"]["image"].y - 170, 75, 100),
+    "marshmellow_stick_rect": Rect(550, 175, 75, 100),
     "fire_rect": Rect(300, 80, 200, 350),
     "arrow_rect": Rect(WIDTH / 2 + 300, 0, 80, 80)
 }
@@ -66,6 +44,17 @@ current_frame = 0
 frame_delay = 0.1
 last_update_time = 0
 
+def text(text, fontsize, topleft, color):
+    screen.draw.text(str(text), fontsize=fontsize, topleft=topleft, color=color)
+
+def resize_actor(actor_path, increase_pixels, angle, pos):
+    actor_image = Image.open(actor_path)
+    resized_image = actor_image.rotate(angle).resize((actor_image.width + increase_pixels, actor_image.height + increase_pixels), Image.LANCZOS)
+    actor = Actor(actor_path)
+    actor.image = pygame.image.fromstring(resized_image.tobytes(), resized_image.size, resized_image.mode)
+    actor.pos = pos
+    return actor
+
 def draw_fire_gif(pos):
     frame_image = frames[current_frame]
     size = frame_image.size
@@ -73,10 +62,8 @@ def draw_fire_gif(pos):
     frame_surface = pygame.image.fromstring(data, size, "RGBA")
     screen.blit(frame_surface, pos)
 
-def update_marshmellow(stick_image, marshmellow_image):
-    marshmellow_image.image = "marshmellow" if stick_image.image == "stick" else stick_image.image.removeprefix("stick_")
-    marshmellow_image.pos = WIDTH / 2, HEIGHT / 2
-    marshmellow_image.angle = 90
+def update_marshmellow(stick_image, marshmellow_dict):
+    marshmellow_dict["image"] = resize_actor(rf"C:\Projects\boy\pygame_game\smore_game\images\{"marshmellow" if stick_image.image == "stick" else stick_image.image.removeprefix("stick_")}.png", 20, 35, (WIDTH / 2, HEIGHT / 2))
 
 def draw():
     global time_roasted, current_frame, last_update_time
@@ -84,8 +71,8 @@ def draw():
         screen.fill("black")
         draw_fire_gif((WIDTH / 2 - Actor("fire").width / 2, 50))
         items["stick"]["image"].angle = 55
-        screen.draw.text("Press the arrow to continue", fontsize=60, topleft=(WIDTH / 2 - 300, 10), color=(255, 255, 255))
-        screen.draw.text("->", fontsize=80, topleft=(WIDTH / 2 + 300, 0), color="purple")
+        text("Press the arrow to continue", fontsize=60, topleft=(WIDTH / 2 - 300, 10), color=(255, 255, 255))
+        text("->", fontsize=80, topleft=(WIDTH / 2 + 300, 0), color="purple")
         for item in items.values():
             if not item["disappear"]:
                 item["image"].draw()
@@ -93,14 +80,13 @@ def draw():
             items["stick"]["image"].image = "stick_roasted_marshmellow"
         elif time_roasted == TIME_TO_BURN:
             items["stick"]["image"].image = "stick_burnt_marshmellow"
-        screen.draw.rect(rects["marshmellow_stick_rect"], "white")
     else:
         screen.fill("white")
-        update_marshmellow(items["stick"]["image"], items["marshmellow"]["image"])
         for item in smore_items.values():
             item["image"].draw()
+        update_marshmellow(items["stick"]["image"], items["marshmellow"]["image"])
         items["marshmellow"]["image"].draw()
-        
+
 def update():
     global current_frame, last_update_time
     if pygame.time.get_ticks() - last_update_time > frame_delay * 1000 and not arrow_clicked:
@@ -116,8 +102,6 @@ def on_mouse_down(pos):
             items["stick"]["is_clicked"] = True
         if rects["arrow_rect"].collidepoint(pos):
             arrow_clicked = True
-    else:
-        pass
 
 def on_mouse_up():
     if not arrow_clicked:

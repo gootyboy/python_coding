@@ -64,8 +64,8 @@ def on_mouse_down(pos):
 def draw():
     global game_over, high_score_run, yes_circle_x, yes_circle_y, multiplayer, start_game
 
+    screen.fill("green")
     if not game_over:
-        screen.fill("green")
         screen.draw.text("Select the amount of players", color= "black", center = (WIDTH / 2, HEIGHT / 2), fontsize = 35)
         screen.draw.filled_rect(one_player_box, "sky blue")
         screen.draw.textbox("1", one_player_box, color= "black")
@@ -73,7 +73,6 @@ def draw():
         screen.draw.textbox("2", two_player_box, color= "black")
 
     if not game_over and start_game == True:
-        screen.fill("green")
         fox.draw()
         for coin in coins:
             coin.draw()
@@ -86,7 +85,6 @@ def draw():
         screen.draw.text(str(time_left), color=("Black"), topright =(700, 0), fontsize= 50)
 
     if game_over:
-        screen.fill("green")
         screen.draw.text("Fox Score: " + str(fox_score), color= "black", topleft = (10, 10), fontsize = 30)
         screen.draw.text("Hedgehog Score: " + str(hedgehog_score), color= "black", topleft = (10, 30), fontsize = 30)
         if high_score_run == True:
