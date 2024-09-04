@@ -4,14 +4,14 @@ import random
 
 WIDTH = 1280
 HEIGHT = 720
+NUM_OF_QUESTIONS = 20
 
 lower_range_answer = 20
 higher_range_answer = 20
 
 q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, q11, q12, q13, q14, q15, q16, q17, q18, q19, q20 = [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []
 
-questions = [q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, q11, q12, q13, q14, q15, q16, q17, q18, q19, q20]
-amount_of_questions = len(questions)
+questions = [[] for i in range(0, NUM_OF_QUESTIONS)]
 question_number = 1
 
 def generate_math_equation():
@@ -75,7 +75,7 @@ def draw():
 
 def game_over():
     global question, time_left, question_number
-    message = f"Game Over. you got {str(score)} out of {amount_of_questions} questions correct"
+    message = f"Game Over. you got {str(score)} out of {NUM_OF_QUESTIONS} questions correct"
     question = [message, "-", "-", "-", "-", 5]
     time_left = 0
     question_number = 20
