@@ -40,6 +40,7 @@ while True:
     try:
         trig = input("Would you like to do trigonometry? Enter 'no' or 'yes': ")
         if trig not in ["yes", "no"]:
+            
             print("You didn't enter 'yes' or 'no'")
             continue
         if trig == "no":

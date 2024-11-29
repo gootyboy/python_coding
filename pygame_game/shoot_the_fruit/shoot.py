@@ -6,28 +6,34 @@ actor = randint(1, 3)
 
 amount_of_hits = 0
 apple = Actor("apple")
+actor = randint(1, 3)
+if actor == 1:
+    apple = Actor("apple")
+elif actor == 2:
+    apple = Actor("orange")
+else:
+    apple = Actor("pineapple")
+apple.x = randint(0, 700)
+apple.y = randint(0, 700)
 
 def draw():
-    actor = randint(1, 3)
-    if actor == 1:
-        apple = Actor("apple")
-    elif actor == 2:
-        apple = Actor("orange")
-    else:
-        apple = Actor("pineapple")
+    screen.clear()
+    screen.draw.text(f"Score: {amount_of_hits}", color= "white", bottomleft= (10, 600))
     apple.draw()
 
-def place_actor():
-    apple.x = randint(10, 100)
-    apple.y = randint(10, 400)
-
 def on_mouse_down(pos):
-    global amount_of_hits
+    global amount_of_hits, apple
 
     if apple.collidepoint(pos):
-        place_actor()
         amount_of_hits += 1
-        print(amount_of_hits)
+        actor = randint(1, 3)
+        if actor == 1:
+            apple = Actor("apple")
+        elif actor == 2:
+            apple = Actor("orange")
+        else:
+            apple = Actor("pineapple")
+        apple.x = randint(10, 100)
+        apple.y = randint(10, 400)
 
-place_actor()
 pgzrun.go()

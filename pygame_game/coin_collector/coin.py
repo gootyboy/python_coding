@@ -3,7 +3,6 @@ import pygame
 from pgzero.actor import Actor
 from pgzero.keyboard import keyboard
 from pgzero.clock import clock
- 
 from random import randint
 
 WIDTH = 10000

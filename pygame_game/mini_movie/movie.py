@@ -6,7 +6,6 @@ from pgzero.clock import clock
 from pgzero.builtins import mouse
 from pgzero.rect import Rect
 from pgzero.keyboard import keys
-from pgzero.spellcheck import spellcheck
 
 TITLE = "Gautam's mini movie"
 WIDTH = 800
@@ -15,6 +14,7 @@ HEIGHT = 600
 bg_color = (255, 255, 255)
 mouse_hover = False
 paused = False
+time_shown = 0
 
 def filled_triangle(color, point_1, point_2, point_3):
     pygame.draw.polygon(screen.surface, color, [point_1, point_2, point_3], 0)
@@ -30,7 +30,9 @@ def draw():
             screen.draw.filled_rect(Rect(450, 250, 10, 75), (200, 200, 200))
 
 def update():
-    pass
+    global time_shown, paused
+    if time_shown == 5:
+        paused = paused == False
 
 def on_key_down(key):
     global paused, mouse_hover
@@ -49,5 +51,12 @@ def on_mouse_move(pos):
         mouse_hover = True
     else:
         mouse_hover = False
+
+def update_time_shown():
+    global time_shown
+    if time_shown < 5:
+        time_shown += 1
+
+clock.schedule_interval(update_time_shown, 1)
 
 pgzrun.go()
