@@ -85,7 +85,7 @@ def correct_answer():
     score += 1
     if questions:
         question = questions.pop(0)
-        time_left += 10
+        time_left += 30
     else:
         game_over()
 

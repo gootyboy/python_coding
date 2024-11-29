@@ -9,6 +9,19 @@ WIDTH = 800
 HEIGHT = 600
 TIME_TO_COOK = 5
 
+clicked_ingredients = []
+
+bowl_name = "bowl"
+frames = [frame.copy() for frame in ImageSequence.Iterator(Image.open(r'boy/pygame_game/biryani/images/fire.gif'))]
+
+current_frame = 0
+frame_delay = 0.01  # Delay in seconds between frames
+last_update_time = 0
+fire_timer = TIME_TO_COOK
+fire_on = False
+fire_on_rect = Rect(690, 10, 100, 100)
+baby = Actor("baby", (WIDTH - 200, 50))
+
 ingredients = {
     "rice": {"image": Actor("rice", (Actor("rice").width / 2 + 10, Actor("rice").height / 2 + 10)), 
              "clicked": False},
@@ -22,16 +35,6 @@ ingredients = {
               "clicked": False}
 }
 
-bowl_name = "bowl"
-frames = [frame.copy() for frame in ImageSequence.Iterator(Image.open(r'boy/pygame_game/biryani/images/fire.gif'))]
-
-current_frame = 0
-frame_delay = 0.01  # Delay in seconds between frames
-last_update_time = 0
-fire_timer = TIME_TO_COOK
-fire_on = False
-fire_on_rect = Rect(690, 10, 100, 100)
-
 sides = {"raita": {"image": Actor("raita", (WIDTH - Actor("raita").height * 1.5 / 2, 150 + Actor("raita").height / 2 + 60)), 
         "clicked": False,
         "pos": (550, 320)},
@@ -43,8 +46,6 @@ play_agian = {
     "yes": [Rect(WIDTH / 2 - 150, 200, 80, 80), "green"],
     "no": [Rect(WIDTH / 2 + 50, 200, 80, 80), "red"]
 }
-
-clicked_ingredients = []
 
 def list_contains(contain, lst, only_contain):
     return set(contain) == set(lst) if only_contain else all(item in lst for item in contain)
@@ -83,9 +84,11 @@ def reset_or_end_game(reset):
         clicked_ingredients = []
 
 def draw_ingredients():
-    global bowl, bowl_name
+    global bowl, bowl_name, baby
     screen.fill("white")
+    screen.draw.text("Baby's Biryani", center=(WIDTH / 2 - 50, 50), fontsize=75, color="black")
     bowl = Actor(bowl_name, (WIDTH / 2, HEIGHT / 2 + 100))
+    baby.draw()
     for name, ingredient in ingredients.items():
         ingredient["image"].draw()
         screen.draw.text(name, topleft=(ingredient["image"].x - ingredient["image"].width / 2, ingredient["image"].y + ingredient["image"].height / 2), fontsize=40, color="black")

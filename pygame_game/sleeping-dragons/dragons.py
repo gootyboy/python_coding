@@ -6,8 +6,8 @@ from pgzero.animation import animate
 from pgzero.actor import Actor
 from pgzero.keyboard import keyboard
 
-WIDTH = 9000
-HEIGHT = 600
+WIDTH = 1700
+HEIGHT = 700
 
 EGG_TARGET = 1000
 ATTACK_DISTANCE = 200
