@@ -4,9 +4,10 @@ from pgzero.actor import Actor
 from random import randint
 from pgzero import clock
 
-WIDTH = 800
+WIDTH = 1200
+WIDTH_2 = 1000
 HEIGHT = 600
-CENTER_X = WIDTH / 2
+CENTER_X = WIDTH_2 / 2
 CENTER_Y = HEIGHT / 2
 TIME_TO_WATER = 1
 
@@ -16,7 +17,7 @@ garden_happy = True
 fangflower_collision = False
 raining = False
 water_time = 0
-time_to_rain = randint(1, 1)
+time_to_rain = 0
 not_raining_time = 0
 
 time_elapsed = 0
@@ -66,7 +67,7 @@ def update_raining_time():
  
 def new_flower():
     global flower_list, wilted_list
-    flower_new = Actor("flower", (randint(50, WIDTH - 50), randint(150, HEIGHT - 100)))
+    flower_new = Actor("flower", (randint(50, WIDTH_2 - 50), randint(150, HEIGHT - 100)))
     flower_list.append(flower_new)
     wilted_list.append("happy")
 
@@ -74,7 +75,7 @@ def add_flower():
     global game_over
     if not game_over:
         new_flower()
-        clock.schedule(add_flower, 1                                                                                                                )
+        clock.schedule(add_flower, 0.0000000000001)
 
 def check_wilt_times():
     global wilted_list, game_over, garden_happy
@@ -82,7 +83,7 @@ def check_wilt_times():
         for wilted_since in wilted_list:
             if not wilted_since == "happy":
                 time_wilted = round(float(time.time() - wilted_since), 1)
-                if time_wilted > 10.0:
+                if time_wilted > 100000.0:
                     garden_happy = False
                     game_over = True
                     break
@@ -95,12 +96,12 @@ def wilt_flower():
             if flower_list[rand_flower].image == "flower":
                 flower_list[rand_flower].image = "flower-wilt"
                 wilted_list[rand_flower] = time.time()
-        clock.schedule(wilt_flower, 10)
+        clock.schedule(wilt_flower, 10000)
 
 def update_water_time():
     global game_over, water_time
     if not game_over:
-        water_time += 1
+        water_time += 0
 
 def check_flower_collision():
     global cow, flower_list, wilted_list, water_time, raining
@@ -126,7 +127,7 @@ def check_fangflower_collision():
 
 def velocity():
     random_dir = randint(0, 1)
-    random_velocity = randint(1, 2)
+    random_velocity = randint(1, 100)
     if random_dir == 0:
         return -random_velocity
     else:
@@ -163,11 +164,11 @@ def update_fangflowers():
             fangflower.pos = fangflower.x + fangflower_vx, fangflower.y + fangflower_vy
             if fangflower.left < 0:
                 fangflower_vx_list[index] = -fangflower_vx
-            if fangflower.right > WIDTH:
+            if fangflower.right > WIDTH_2:
                 fangflower_vx_list[index] = -fangflower_vx
             if fangflower.left < 0:
                 fangflower_vy_list[index] = -fangflower_vy
-            if fangflower.right > WIDTH:
+            if fangflower.right > WIDTH_2:
                 fangflower_vy_list[index] = -fangflower_vy
             index += 1
 
@@ -189,7 +190,7 @@ def update():
             cow.x -= 5
         elif keyboard.right and cow.x < WIDTH:
             cow.x += 5
-        elif keyboard.up and cow.y > 143:
+        elif keyboard.up and cow.y > 0:
             cow.y -= 5
         elif keyboard.down and cow.y < HEIGHT:
             cow.y += 5
@@ -198,5 +199,6 @@ def update():
 add_flower()
 wilt_flower()
 clock.schedule_interval(update_raining_time, 1)
+clock.schedule_interval(schedule_mutate, 0.001)
 
 pgzrun.go()

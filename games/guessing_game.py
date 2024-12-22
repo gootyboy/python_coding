@@ -119,7 +119,6 @@ while game_loop:
             guess_check("player", player_count, player_number, -200, 200)
         for i in range(0, player_number - 1):
             print(f"{player_names[i]} ---> {player_guesses[i]}")
-
         winner = min(player_guesses)
         counter = 0
         winner_index = []

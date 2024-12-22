@@ -27,7 +27,7 @@ HERO_START = (200, 300)
 eggs_collected = 0
 golden_egg_hide_timer = 0
 freeze = 0
-lives = 3
+lives = 30
 
 game_over = False
 game_complete = False

@@ -1,8 +1,8 @@
 import random
 import pgzrun
 import pygame
-import time
 from pgzero.actor import Actor
+from pgzero.animation import animate
 
 FONT_COLOR = (255, 255, 255)
 WIDTH = 800
@@ -45,7 +45,6 @@ def draw():
     screen.clear()
     screen.blit("space", (0, 0))
     if game_start == False:
-        # display_message("Press the red star before stars fall down", " ")
         screen.draw.text("Press the red star", color= FONT_COLOR, center = (CENTER_X, CENTER_Y - 25), fontsize = 67)
         screen.draw.text("before it falls down", color= FONT_COLOR, center = (CENTER_X, CENTER_Y + 25), fontsize = 67)
         screen.draw.filled_rect(start_game_button, color= FONT_COLOR)
@@ -102,11 +101,6 @@ def split_array_to_subarrays(list_to_split, stars_on_each_row):
     return subarrays
 
 def layout_stars(stars_to_layout):
-    # if len(stars_to_layout) > NUMBER_STARS_ON_ROW:
-    #     star_placment_array = split_array_to_subarrays(stars_to_layout, NUMBER_STARS_ON_ROW)
-    #     random.shuffle(star_placment_array)
-    #     first_row_stars_to_layout = star_placment_array[0]
-    # else:
     first_row_stars_to_layout = stars_to_layout
     first_row_number_of_gaps = len(first_row_stars_to_layout) + 1
     first_row_gap_size = WIDTH / first_row_number_of_gaps
@@ -114,14 +108,6 @@ def layout_stars(stars_to_layout):
     for index, star in enumerate(first_row_stars_to_layout):
         first_new_x_pos = (index + 1) * first_row_gap_size
         star.x = first_new_x_pos
-    # if one_row == False:
-    #     two_row_number_of_gaps = len(secound_row_stars_to_layout)
-    #     two_row_gap_size = WIDTH / two_row_number_of_gaps
-    #     for two_row_index, two_row_stars in enumerate(secound_row_stars_to_layout):
-    #         secound_new_x_pos = (two_row_index + 1) * two_row_gap_size
-    #         two_row_stars.y = 200
-    #         two_row_stars.x = secound_new_x_pos
-    #bug in code
 
 def animate_stars(stars_to_animate):
     for star in stars_to_animate:
@@ -189,5 +175,4 @@ def play_agian_q():
     screen.draw.filled_rect(play_agian_yes_box, FONT_COLOR)
     screen.draw.textbox("Yes", play_agian_yes_box, color="black")
 
-# clock.schedule_interval(start_game, 1.0)
 pgzrun.go()

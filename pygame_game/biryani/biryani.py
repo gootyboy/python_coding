@@ -21,6 +21,7 @@ fire_timer = TIME_TO_COOK
 fire_on = False
 fire_on_rect = Rect(690, 10, 100, 100)
 baby = Actor("baby", (WIDTH - 200, 50))
+baby_2 = None
 
 ingredients = {
     "rice": {"image": Actor("rice", (Actor("rice").width / 2 + 10, Actor("rice").height / 2 + 10)), 
@@ -51,7 +52,7 @@ def list_contains(contain, lst, only_contain):
     return set(contain) == set(lst) if only_contain else all(item in lst for item in contain)
 
 def reset_or_end_game(reset):
-    global ingredients, bowl_name, frames, current_frame, frame_delay, last_update_time, fire_timer, fire_on, clicked_ingredients, sides
+    global ingredients, bowl_name, frames, current_frame, frame_delay, last_update_time, fire_timer, fire_on, clicked_ingredients, sides, baby_2
     if not reset:
         pgzrun.sys.exit()
     else:
@@ -82,6 +83,7 @@ def reset_or_end_game(reset):
         fire_timer = TIME_TO_COOK
         fire_on = False
         clicked_ingredients = []
+        baby_2 = None
 
 def draw_ingredients():
     global bowl, bowl_name, baby
@@ -128,7 +130,8 @@ def handle_end_of_game():
             screen.draw.textbox(text, box[0], color= "black")
 
 def draw():
-    global bowl, bowl_name, fire_on, fire_on_rect
+    global bowl, bowl_name, fire_on, fire_on_rect, baby_2
+    
     draw_ingredients()
 
     frame_image = frames[current_frame]
@@ -144,6 +147,9 @@ def draw():
         screen.draw.text("time left to finish cooking: " + str(fire_timer), center=(bowl.x, 100), fontsize=30, color="black")
     if fire_timer == 0:
         handle_end_of_game()
+    if baby_2 != None:
+        baby_2.draw()
+        screen.draw.text("(Added)", midbottom = (WIDTH - 200, 125), fontsize = 30, color= "black")
 
 def update():
     global current_frame, last_update_time
@@ -213,7 +219,7 @@ def update_bowl_name(bowl_name):
     return name
 
 def on_mouse_down(pos):
-    global fire_on, fire_on_rect, clicked_ingredients, bowl_name, fire_timer
+    global fire_on, fire_on_rect, clicked_ingredients, bowl_name, fire_timer, baby, baby_2
     for name, ingredient in ingredients.items():
         if ingredient["image"].collidepoint(pos) and not ingredient["clicked"] and fire_timer > 0:
             ingredient["clicked"] = True
@@ -231,7 +237,9 @@ def on_mouse_down(pos):
             reset_or_end_game(True)
         if play_agian["no"][0].collidepoint(pos):
             reset_or_end_game(False)
-    
+    if baby.distance_to(pos) < 75:
+        baby_2 = Actor("baby", (WIDTH / 2, HEIGHT / 2 + 50))
+
 def update_fire_timer():
     global fire_timer, fire_on
     if fire_on and fire_timer > 0:

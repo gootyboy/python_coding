@@ -12,7 +12,6 @@ def resize_gif(input_path, output_path, scale):
 
     frames[0].save(output_path, save_all=True, append_images=frames[1:], loop=0, optimize=True)
 
-
 input_path = r"C:\Projects\boy\pygame_game\smore_game\images\fire_ORG.gif"
 output_path = r"C:\Projects\boy\pygame_game\smore_game\images\fire_scaled.gif"
 scale = 0.75  # Scale down to 75%

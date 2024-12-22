@@ -2,7 +2,7 @@ import random
 
 letters = ["a", "b", "c", "d", "e", "f", "g", "h"]
 pieces = ["pawn", "rook", "queen", "king", "bishop", "knight (horse)"]
-places_letters = [letters[random.randint(0, 7)], letters[random.choice[0, 7]], letters[3]]
+places_letters = [letters[random.randint(0, 7)], letters[random.randint(0, 7)], letters[3]]
 random_piece = random.choice(pieces)
 if random_piece == pieces[0]:
     letter_of_piece = letters[random.randint(0, 7)]
