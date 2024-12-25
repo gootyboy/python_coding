@@ -1,6 +1,6 @@
 import pgzrun
 import random
-from pgzero.keyboard import keyboard
+from pgzero.builtins import keys
 
 WIDTH = 800
 HEIGHT = 600
