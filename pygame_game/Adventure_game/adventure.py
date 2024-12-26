@@ -1,5 +1,6 @@
 import pgzrun
 import random
+from pgzero.rect import Rect
 from pgzero.actor import Actor
 from pgzero.keyboard import keyboard
 
@@ -26,6 +27,7 @@ stones_dict = {}
 stones_level = 0
 counter = 0
 current_level = 0
+player = None
 fall_timer = (STONE_HEIGHT / 5) / PLAYER_SPEED_MF
 
 def make_stones():
@@ -48,11 +50,13 @@ def make_spikes():
     global spikes
     spikes = []
     random_xs = []
+    times_ran = 0
     for i in range(NUMBER_OF_SPIKES):
         if i == 0:
             random_x = random.randint(starts_x[0] + int(Actor("spikes").width / 2), starts_x[1] - int(Actor("spikes").width / 2))
         else:
             while True:
+                # if times_ran >= 100:
                 spike_overlap = False
                 for x in random_xs: 
                     if abs(x - random_x) <= Actor("spikes").width:
@@ -65,6 +69,7 @@ def make_spikes():
                     random_x = random.randint(starts_x[0] + int(Actor("spikes").width / 2), starts_x[1] - int(Actor("spikes").width / 2))
                 else:
                     break
+                times_ran += 1
         random_xs.append(random_x)
         spikes.append(Actor("spikes", (random_x, PLAYER_Y_START - STONE_HEIGHT)))
 
@@ -72,26 +77,35 @@ make_stones()
 make_spikes()
 
 def draw():
-    global spikes, game_started, player, players
+    global spikes, game_started, player, players, yes_rect, no_rect
     screen.blit("sky.png", (0, 0))
     screen.blit("sky.png", (800, 0))
-    if game_started:
-        for stone in stones:
-            stone.draw()
-        for spike in spikes:
-            spike.draw()
-        player.draw()
-    else:
-        screen.draw.text("Choose Your Character", center=(WIDTH / 2, 50), fontsize=50, color="black")
-        for i in range(len(players)):
-            players[i].pos = 170 + 150 * i, 125
-            players[i].draw()
-            screen.draw.text(str(players[i].image), midbottom=(170 + 150 * i, players[i].y + 50), fontsize=30, color="black")
+    if not game_over:
+        if game_started:
+            for stone in stones:
+                stone.draw()
+            for spike in spikes:
+                spike.draw()
+            player.draw()
+        else:
+            screen.draw.text("Choose Your Character", center=(WIDTH / 2, 50), fontsize=50, color=(0, 0, 0))
+            for i in range(len(players)):
+                players[i].pos = 170 + 150 * i, 125
+                players[i].draw()
+                screen.draw.text(str(players[i].image), midbottom=(170 + 150 * i, players[i].y + 50), fontsize=30, color=(0, 0, 0))
 
     if game_over:
-        screen.draw.text("Game Over", center=(WIDTH / 2, HEIGHT / 2), fontsize=50, color="red")
+        rect_color = (100, 100, 150)
+        yes_rect = Rect(WIDTH / 2 - 215, HEIGHT / 2, 75, 75)
+        no_rect = Rect(WIDTH / 2 + 125, HEIGHT / 2, 75, 75)
+        screen.draw.text("Game Over", center=(WIDTH / 2, HEIGHT / 2 - 100), fontsize=100, color=(255, 0, 0))
+        screen.draw.text("Do you want to play agian?", center=(WIDTH / 2, HEIGHT / 2 - 50), fontsize=50, color=(0, 0, 0))
+        screen.draw.filled_rect(yes_rect, color=rect_color)
+        screen.draw.textbox("Yes", yes_rect, color=(0, 0, 0))
+        screen.draw.filled_rect(no_rect, color = rect_color)
+        screen.draw.textbox("No", no_rect, color=(0, 0, 0))
     if win:
-        screen.draw.text("You Win!", center=(WIDTH / 2, HEIGHT / 2), fontsize=50, color="green")
+        screen.draw.text("You Win!", center=(WIDTH / 2, HEIGHT / 2), fontsize=100, color=(0, 255, 0))
 
 def handle_jumping():
     global jumped, jump_timer, win, game_over, starts_x, fall_timer
@@ -128,9 +142,9 @@ def update_player_level():
             current_level = key - 1
 
 def update():
-    global jumped, jump_timer, win, game_over, starts_x, fall_timer, current_level, stones_dict, game_started
+    global jumped, jump_timer, win, game_over, starts_x, fall_timer, current_level, stones_dict, game_started, spikes, player
 
-    if game_started:
+    if game_started and not game_over:
         for i in range(len(starts_x)):
             if player.y == PLAYER_Y_START - (STONE_HEIGHT * (i + 1)):
                 fall_timer = (STONE_HEIGHT / PLAYER_SPEED_MF) / 5
@@ -157,9 +171,36 @@ def update():
             player.y += 10
             if player.x < WIDTH - PLAYER_X_START:
                 player.x += PLAYER_SPEED_MF * 5
+        
+        for spike in spikes:
+            if spike.colliderect(player):
+                game_over = True
 
         handle_jumping()
         update_player_level()
+    # print(stones_dict)
+
+def restart_game():
+    global players, game_over, win, jumped, jump_timer, game_started, starts_x, ends_x, spikes, stones_dict, stones_level, counter, current_level, fall_timer, stones, player
+    players = [Actor('hero'), Actor("fox"), Actor("hedgehog"), Actor("weasel")]
+    game_over = False
+    win = False
+    jumped = False
+    game_started = False
+    jump_timer = 0
+    starts_x = [2 * STONE_HEIGHT, WIDTH - (STONE_HEIGHT * 4), WIDTH - (STONE_HEIGHT * 2), WIDTH - STONE_HEIGHT, 0]
+    ends_x = [WIDTH, WIDTH, WIDTH, WIDTH, WIDTH - (STONE_HEIGHT * 3)]
+    spikes = []
+    stones = []
+    stones_dict = {}
+    stones_level = 0
+    counter = 0
+    current_level = 0
+    fall_timer = (STONE_HEIGHT / 5) / PLAYER_SPEED_MF
+    player = None
+    make_stones()
+    make_spikes()
+    pgzrun.go()
 
 def on_mouse_down(pos):
     global game_started, players, player
@@ -173,5 +214,11 @@ def on_mouse_down(pos):
                 character.pos = PLAYER_X_START, PLAYER_Y_START
                 player = character
                 game_started = True
+    else:
+        if game_over or win:
+            if yes_rect.collidepoint(pos):
+                restart_game()
+            elif no_rect.collidepoint(pos):
+                pgzrun.sys.exit()
 
 pgzrun.go()
