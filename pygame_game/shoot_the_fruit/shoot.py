@@ -1,20 +1,14 @@
 from pgzero.actor import Actor
 import pgzrun
-from random import randint
+import random 
 
-actor = randint(1, 3)
+WIDTH = 800
+HEIGHT = 600
 
 amount_of_hits = 0
-apple = Actor("apple")
-actor = randint(1, 3)
-if actor == 1:
-    apple = Actor("apple")
-elif actor == 2:
-    apple = Actor("orange")
-else:
-    apple = Actor("pineapple")
-apple.x = randint(0, 700)
-apple.y = randint(0, 700)
+apple = Actor(random.choice(["apple", "orange", "pineapple"]))
+apple.x = random.randint(100, WIDTH - 100)
+apple.y = random.randint(100, HEIGHT - 100)
 
 def draw():
     screen.clear()
@@ -25,15 +19,19 @@ def on_mouse_down(pos):
     global amount_of_hits, apple
 
     if apple.collidepoint(pos):
-        amount_of_hits += 1
-        actor = randint(1, 3)
-        if actor == 1:
-            apple = Actor("apple")
-        elif actor == 2:
-            apple = Actor("orange")
+        if (amount_of_hits + 1) % 100 == 0 and amount_of_hits >= 100:
+            apple = Actor("pineapple_2", (WIDTH / 2, HEIGHT / 2))
+            amount_of_hits += 100
+        elif (amount_of_hits + 1) % 50 == 0 and amount_of_hits >= 50:
+            apple = Actor("orange_2", (WIDTH / 2, HEIGHT / 2))
+            amount_of_hits += 50
+        elif amount_of_hits % 10 == 0 and amount_of_hits >= 10:
+            apple = Actor("apple_2", (WIDTH / 2, HEIGHT / 2))
+            amount_of_hits += 9999999999999999999999999999999999999999999999999999999999999999999999
         else:
-            apple = Actor("pineapple")
-        apple.x = randint(10, 100)
-        apple.y = randint(10, 400)
+            apple = Actor(random.choice(["apple", "orange", "pineapple"]))
+            apple.x = random.randint(100, WIDTH - 100)
+            apple.y = random.randint(100, HEIGHT - 100)
+            amount_of_hits += 1
 
 pgzrun.go()

@@ -8,7 +8,7 @@ NUMBER_OF_PETALS = 100 # petals will overlap
 FLOWER_END_COLOR = (255, 0, 0)
 FLOWER_POS = (0, 0)
 NUM_OF_PETAL_DRAWERS = 100
-SPEED_2 = 0
+SPEED_2 = 10
 
 time = 0
 

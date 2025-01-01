@@ -1,6 +1,5 @@
-import pgzrun
-import pygame
 from pgzero.actor import Actor
+import pgzrun
 from random import randint
 import balloon
 
@@ -107,4 +106,5 @@ def update():
         if balloon.top < 0 or balloon.bottom > 560:
             game_over = True
             update_high_scores()
+
 pgzrun.go()
