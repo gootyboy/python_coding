@@ -11,28 +11,38 @@ TITLE = "Gautam's mini movie"
 WIDTH = 800
 HEIGHT = 600
 
+MOVIE_TIME = 10 # seconds
+
 bg_color = (255, 255, 255)
 mouse_hover = False
 paused = False
-time_shown = 0
+milliseconds_shown = 0
 
 def filled_triangle(color, point_1, point_2, point_3):
     pygame.draw.polygon(screen.surface, color, [point_1, point_2, point_3], 0)
 
+def get_tens_and_ones(number):
+    ones_digit = number % 10
+    tens_digit = (number // 10) % 10
+    return f"{tens_digit}{ones_digit}"
+
 def draw():
-    global bg_color
-    screen.fill(bg_color)
-    if mouse_hover:
-        if paused:
-            filled_triangle((200, 200, 200), (400, 250), (400, 325), (475, (250 + 325) / 2))
-        else:
-            screen.draw.filled_rect(Rect(400, 250, 10, 75), (200, 200, 200))
-            screen.draw.filled_rect(Rect(450, 250, 10, 75), (200, 200, 200))
+    global bg_color, milliseconds_shown
+    if milliseconds_shown <= MOVIE_TIME * 100:
+        screen.fill(bg_color)
+        if mouse_hover:
+            if paused:
+                filled_triangle((200, 200, 200), (400, 250), (400, 325), (475, (250 + 325) / 2))
+            else:
+                screen.draw.filled_rect(Rect(400, 250, 10, 75), (200, 200, 200))
+                screen.draw.filled_rect(Rect(450, 250, 10, 75), (200, 200, 200))
+            screen.draw.text(f"{milliseconds_shown // 100}:{get_tens_and_ones(milliseconds_shown)}", bottomleft=(20, HEIGHT - 20), color=(0, 0, 0))
+            
+            remaining_time = (MOVIE_TIME * 100) - milliseconds_shown
+            screen.draw.text(f"{remaining_time // 100}:{get_tens_and_ones(remaining_time)}", bottomleft=(WIDTH - 50, HEIGHT - 20), color=(0, 0, 0))
 
 def update():
-    global time_shown, paused
-    if time_shown == 5:
-        paused = paused == False
+    pass
 
 def on_key_down(key):
     global paused, mouse_hover
@@ -52,11 +62,11 @@ def on_mouse_move(pos):
     else:
         mouse_hover = False
 
-def update_time_shown():
-    global time_shown
-    if time_shown < 5:
-        time_shown += 1
+def update_milliseconds_shown():
+    global milliseconds_shown
+    if not paused:
+        milliseconds_shown += 1
 
-clock.schedule_interval(update_time_shown, 1)
+clock.schedule_interval(update_milliseconds_shown, 0.01)
 
 pgzrun.go()
