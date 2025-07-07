@@ -1,12 +1,17 @@
+import os
 import pgzrun
 import time
 import pygame
 from pgzero.actor import Actor
 from pgzero.keyboard import keyboard
 from pgzero.builtins import mouse
-from pgzero.builtins import mouse
+from pgzero.rect import Rect
+
+os.environ['SDL_VIDEO_CENTERED'] = '1'
+
 WIDTH = 800
 HEIGHT = 600
+TITLE = "Computer"
 
 box_index = 0
 settings_width = 451
@@ -22,27 +27,23 @@ password_done = False
 digit_correct_list = [False, False, False, False, False, False, False, False]
 on_home_page = False
 setting_rect_open = False
-windows_rect_open = False
+apple_rect_open = False
 backround_icon_open = False
 settings_rect_full_screen = False
 
-windows_rect = pygame.Rect(70, 200, 351, 312)
+apple_rect = pygame.Rect(5, 25, 93, 119)
 
 setting_icon = Actor("setting-icon", pos=(450, 570))
 
-windows_icon = Actor("windows-icon", pos=(400, 572))
-
-power_off = Actor("power-button", pos=(405, 500))
+apple_icon = Actor("apple_symbol", pos=(10, 10))
 
 backround_icon = Actor("backround-setting", pos=(270, 150))
 
 x_button_1 = Actor("x-button", pos=(500, 93))
 
-x_button_2 = Actor("x-button", pos=(405, 210))
+x_button_2 = Actor("x-button", pos=(75, 30))
 
 full_screen_icon_1 = Actor("full-screen-icon", pos=(465, 93))
-
-full_screen_icon_2 = Actor("full-screen-icon", pos=(365, 210))
 
 garden_icon = Actor("garden-background-icon", pos=(400, 250))
 
@@ -51,6 +52,14 @@ sky_icon = Actor("sky-background-icon", pos=(200, 250))
 dungeon_icon = Actor("dungeon-background-icon", pos=(200, 400))
 
 stage_icon = Actor("stage-background-icon", pos=(400, 400))
+
+restart_rect = pygame.Rect(5, 75, 90, 20)
+shutdown_rect = pygame.Rect(5, 100, 90, 20)
+position = (0, 0)
+index = 0
+settings_rect = pygame.Rect(settings_x, settings_x, settings_width, settings_height)
+mouse_down = False
+right_button = False
 
 def create_password_coding_digits():
     global a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, q, w, x, y, z
@@ -119,7 +128,6 @@ def get_letter_from_number(digits, index_of_item):
 
 def decode_password(digits):
     one_to_4 = [get_letter_from_number(digits, 0), get_letter_from_number(digits, 1), get_letter_from_number(digits, 2), get_letter_from_number(digits, 3)]
-    print(one_to_4 + [get_letter_from_number(digits, 4), get_letter_from_number(digits, 5), get_letter_from_number(digits, 6), get_letter_from_number(digits, 7)])
     return one_to_4 + [get_letter_from_number(digits, 4), get_letter_from_number(digits, 5), get_letter_from_number(digits, 6), get_letter_from_number(digits, 7)]
 
 def check_if_digits_are_letters(digits):
@@ -231,16 +239,15 @@ def get_x_of_circles():
 def draw_home_screen():
     screen.draw.filled_rect(pygame.Rect(0, 550, WIDTH, 50), (212,226,249))
     setting_icon.draw()
-    windows_icon.draw()
+    apple_icon.draw()
 
 def start_home_page():
-    global settings_rect_full_screen
+    global settings_rect_full_screen, full_screen_icon_1
     draw_home_screen()
     if setting_rect_open:
         screen.draw.filled_rect(settings_rect, (239,244,249))
         x_button_1.draw()
-        if not settings_rect_full_screen:
-            full_screen_icon_1.draw()
+        full_screen_icon_1.draw()
         if backround_icon_open:
             backround_icon.draw()
         elif not backround_icon_open and icon_clicked == "background":
@@ -249,14 +256,14 @@ def start_home_page():
             garden_icon.draw()
             dungeon_icon.draw()
             stage_icon.draw()
-    if windows_rect_open:
-        screen.draw.filled_rect(windows_rect, "gray")
+    if apple_rect_open:
+        screen.draw.filled_rect(apple_rect, "gray")
         x_button_2.draw()
-        power_off.draw()
-        full_screen_icon_2.draw()
+        screen.draw.textbox("restart", restart_rect, color="blue")
+        screen.draw.textbox("shut down", shutdown_rect, color="red")
 
 def rect_full_screen(rect):
-    global settings_width, settings_height, settings_x, settings_y
+    global settings_width, settings_height, settings_x, settings_y, settings_rect
     if rect == "settings":
         settings_width = WIDTH
         settings_height = HEIGHT - 50
@@ -264,9 +271,8 @@ def rect_full_screen(rect):
         settings_y = 0
 
 def draw():
-    global screen_clicked, box_index, key_pressed, password_boxes_x,digit_correct_list, on_home_page, password_done, setting_rect_open, backround_icon_open
+    global screen_clicked, box_index, key_pressed, password_boxes_x, digit_correct_list, on_home_page, password_done, setting_rect_open, backround_icon_open
     global settings_rect, settings_x, settings_y, settings_width, settings_height
-    settings_rect = pygame.Rect(settings_x, settings_x, settings_width, settings_height)    
     get_backround()
     password_digits = get_password_digits()
     time_now = time.localtime()
@@ -326,27 +332,40 @@ def check_for_background_pressed(pos):
         update_background("stage")
         icon_clicked = None
 
-def check_for_other_icons_pressed(pos):
-    global on_home_page, setting_rect_open, backround_icon_open, backround_image, icon_clicked, windows_rect_open, settings_rect_full_screen
-    if setting_icon.collidepoint(pos):
-        setting_rect_open = True
-    if windows_icon.collidepoint(pos):
-        windows_rect_open = True
-    if x_button_1.collidepoint(pos):
-        setting_rect_open = False
-        backround_icon_open = False
-    if x_button_2.collidepoint(pos):
-        windows_rect_open = False
-    if power_off.collidepoint(pos) and windows_rect_open:
-        pgzrun.sys.exit()
-    if full_screen_icon_1.collidepoint(pos) and setting_rect_open:
-        rect_full_screen("settings")
-        settings_rect_full_screen = True
-    if full_screen_icon_1.collidepoint(pos) and windows_rect_open:
-        pass
+def check_for_other_icons_pressed(pos, button):
+    global on_home_page, setting_rect_open, backround_icon_open, backround_image, icon_clicked, apple_rect_open, settings_rect_full_screen, x_button_1, x_button_2, full_screen_icon_1, settings_height, settings_x, settings_y, settings_width
+    if button == mouse.LEFT:
+        if setting_icon.collidepoint(pos):
+            setting_rect_open = True
+        if apple_icon.collidepoint(pos):
+            apple_rect_open = True
+        if x_button_1.collidepoint(pos):
+            setting_rect_open = False
+            backround_icon_open = False
+            settings_rect_full_screen = False
+        if x_button_2.collidepoint(pos):
+            apple_rect_open = False
+        if not settings_rect_full_screen:
+            if full_screen_icon_1.collidepoint(pos) and setting_rect_open:
+                    rect_full_screen("settings")
+                    settings_rect_full_screen = True
+                    x_button_1 = Actor("x-button", pos=(WIDTH - 10, 10))
+                    full_screen_icon_1 = Actor("full-screen-icon", pos=(settings_x + settings_width - 35, settings_y + 10))
+        else:
+            if full_screen_icon_1.collidepoint(pos) and setting_rect_open:
+                settings_width = 451
+                settings_height = 451
+                settings_x = 70
+                settings_y = 76
+                x_button_1 = Actor("x-button", pos=(500, 93))
+                full_screen_icon_1 = Actor("full-screen-icon", pos=(465, 93))
+
+        if shutdown_rect.collidepoint(pos) and apple_rect_open:
+            pgzrun.sys.exit()
     
 def on_mouse_down(pos, button):
-    global screen_clicked, on_home_page, setting_rect_open, backround_icon_open, backround_image, icon_clicked, windows_rect_open
+    global screen_clicked, on_home_page, setting_rect_open, backround_icon_open, backround_image, icon_clicked, apple_rect_open, WIDTH, HEIGHT, position, settings_rect_full_screen, apple_rect, right_button, mouse_down
+    position = pos
     if on_home_page == False:
         screen_clicked = True
     elif on_home_page and button == mouse.LEFT:
@@ -355,8 +374,26 @@ def on_mouse_down(pos, button):
             icon_clicked = "background"
         else:
             backround_icon_open = True
-        check_for_background_pressed(pos)
-        check_for_other_icons_pressed(pos)
+    if button == mouse.RIGHT:
+        right_button = True
+    mouse_down = True
+    check_for_background_pressed(pos)
+    check_for_other_icons_pressed(pos, button)
+
+def on_mouse_up():
+    global right_button, mouse_down
+    right_button = False
+    mouse_down = False
+
+def on_mouse_move(pos):
+    global right_button, mouse_down, settings_rect, settings_x, settings_y, x_button_1, full_screen_icon_1
+    if right_button and mouse_down:
+        settings_rect.midtop = pos
+        settings_x = settings_rect.x
+        settings_y = settings_rect.y
+        x_button_1.topright = (settings_x + settings_width, settings_y + 10)
+        full_screen_icon_1.topright = (settings_x + settings_width - x_button_1.width, settings_y + 10)
+        backround_icon.topleft = (settings_x, settings_y + 50)
 
 def get_letter_pressed():
     keys = {
@@ -391,9 +428,68 @@ def get_letter_pressed():
         if key:
             return letter
 
+def restart():
+    global TITLE, box_index, settings_width, settings_height, settings_x, settings_y, key_pressed, icon_clicked, screen_clicked, password_done, digit_correct_list, on_home_page, setting_rect_open, apple_rect_open, backround_icon_open
+    global x_button_1, x_button_2, full_screen_icon_1, garden_icon, sky_icon, dungeon_icon, stage_icon, restart_rect, shutdown_rect, position, index, apple_rect, setting_icon, apple_icon, backround_icon, settings_rect_full_screen
+    os.environ['SDL_VIDEO_CENTERED'] = '1'
+    TITLE = "Computer"
+    box_index = 0
+    settings_width = 451
+    settings_height = 451
+    settings_x = 70
+    settings_y = 76
+
+    key_pressed = None
+    icon_clicked = None
+
+    screen_clicked = False
+    password_done = False
+    digit_correct_list = [False, False, False, False, False, False, False, False]
+    on_home_page = False
+    setting_rect_open = False
+    apple_rect_open = False
+    backround_icon_open = False
+    settings_rect_full_screen = False
+
+    apple_rect = pygame.Rect(5, 25, 93, 119)
+
+    setting_icon = Actor("setting-icon", pos=(450, 570))
+
+    apple_icon = Actor("apple_symbol", pos=(10, 10))
+
+    backround_icon = Actor("backround-setting", pos=(270, 150))
+
+    x_button_1 = Actor("x-button", pos=(500, 93))
+
+    x_button_2 = Actor("x-button", pos=(75, 30))
+
+    full_screen_icon_1 = Actor("full-screen-icon", pos=(465, 93))
+
+    garden_icon = Actor("garden-background-icon", pos=(400, 250))
+
+    sky_icon = Actor("sky-background-icon", pos=(200, 250))
+
+    dungeon_icon = Actor("dungeon-background-icon", pos=(200, 400))
+
+    stage_icon = Actor("stage-background-icon", pos=(400, 400))
+
+    restart_rect = pygame.Rect(5, 75, 90, 20)
+    shutdown_rect = pygame.Rect(5, 100, 90, 20)
+    position = (0, 0)
+    index = 0
+
 def update():
-    global key_pressed, change_password_key_pressed
+    global key_pressed, restart_rect, apple_rect_open, position, WIDTH, HEIGHT, index
     if not password_done and screen_clicked:
         key_pressed = get_letter_pressed()
+    if restart_rect.collidepoint(position) and apple_rect_open:
+        if index == 0:
+            WIDTH -= 799
+            HEIGHT -= 599
+        if index >= 180:
+            WIDTH = 800
+            HEIGHT = 600
+            restart()
+        index += 1
 
 pgzrun.go()

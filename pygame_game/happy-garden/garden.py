@@ -75,7 +75,6 @@ def add_flower():
     global game_over
     if not game_over:
         new_flower()
-        clock.schedule(add_flower, 0.0000000000001)
 
 def check_wilt_times():
     global wilted_list, game_over, garden_happy
@@ -195,6 +194,9 @@ def update():
         elif keyboard.down and cow.y < HEIGHT:
             cow.y += 5
         update_fangflowers()
+
+def update():
+    add_flower()
 
 add_flower()
 wilt_flower()

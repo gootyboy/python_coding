@@ -3,12 +3,11 @@ import math
 from pgzero import clock
 import pygame
 
-WIDTH = 800
-HEIGHT = WIDTH - 200
-speed_of_animation = 50
-MULTIPLYING_FACTOR = 200 #150 is the best value (zoom in level)
-X_VALUE_STEP = MULTIPLYING_FACTOR / 2
-Y_VALUE_STEP = X_VALUE_STEP / MULTIPLYING_FACTOR
+WIDTH = 2000
+HEIGHT = 1000
+speed_of_animation = 10
+X_VALUE_STEP = 150 / 2
+Y_VALUE_STEP = X_VALUE_STEP / 150
 
 x = 0.1
 left_key = False
@@ -17,53 +16,50 @@ down_key = False
 up_key = False
 
 options_open = False
-points = [[(0, 0, 255), "sin"], [(255, 0, 0), "cos"], [(0, 255, 0)], [(255, 0, 255), "sec"], [(255, 165, 0), "csc"]]
+points = [[(0, 0, 255), "sin^2"], [(255, 0, 0), "cos^2"], [(0, 0, 0), "tan^2"]]
 
 def append_x_y_cor_for_graphs():
     global x, points, speed_of_animation
 
     if x < WIDTH:
-        sin_val = math.sin(math.radians(x))
-        cos_val = math.cos(math.radians(x))
-        sin_2_cos_2_val = sin_val ** 2 + cos_val ** 2
-        sec_val = 1 / cos_val
-        csc_val = 1 / sin_val
+        sin_val = math.cos(math.sin(math.radians(x)))
+        cos_val = math.sin(math.cos(math.radians(x)))
+        if sin_val % 90 == 0:
+            sin_val = math.tan(sin_val)
+        if cos_val != 90:
+            cos_val = math.tan(cos_val)
+        tan_val = math.tan(math.radians(x)) ** 3
+        if x % 90 == 0:
+            tan_val = math.tan(math.radians(x)) ** 3
+        else:
+            tan_val = math.tan(math.radians(x))
 
-        points[0].append((X_VALUE_STEP + x, HEIGHT / 2 - sin_val * MULTIPLYING_FACTOR))
-        points[1].append((X_VALUE_STEP + x, HEIGHT / 2 + cos_val * MULTIPLYING_FACTOR))
-        points[2].append((X_VALUE_STEP + x, HEIGHT / 2 - sin_2_cos_2_val * MULTIPLYING_FACTOR))
-        points[2].append((X_VALUE_STEP + x, HEIGHT / 2 + sin_2_cos_2_val * MULTIPLYING_FACTOR))
-
-        if cos_val != 0:
-            sec_y = HEIGHT / 2 + sec_val * MULTIPLYING_FACTOR
-            if -HEIGHT < sec_y < HEIGHT * 2:
-                points[3].append((X_VALUE_STEP + x, sec_y))
-
-        if sin_val != 0:
-            csc_y = HEIGHT / 2 + csc_val * MULTIPLYING_FACTOR
-            if -HEIGHT < csc_y < HEIGHT * 2:
-                points[4].append((X_VALUE_STEP + x, csc_y))
+        points[0].append((X_VALUE_STEP + x, HEIGHT / 2 + sin_val * 150))
+        points[1].append((X_VALUE_STEP + x, HEIGHT / 2 + cos_val * 150))
+        if tan_val < HEIGHT:
+            points[2].append((X_VALUE_STEP + x, HEIGHT / 2 + tan_val * 150))
+        
         x += 0.1
 
 def draw_grid_and_values():
-    # Horz x-axis line
     screen.draw.line((0, HEIGHT / 2), (WIDTH, HEIGHT / 2), (0, 0, 0))
-    screen.draw.line((0, HEIGHT / 2 + 1), (WIDTH, HEIGHT / 2 + 1), (0, 0, 0))
-    
-    # Vertical y-axis line
-    screen.draw.line((X_VALUE_STEP + 1, 0), (X_VALUE_STEP + 1, HEIGHT), (0, 0, 0))
+    screen.draw.line((X_VALUE_STEP, 0), (X_VALUE_STEP, HEIGHT), (0, 0, 0))
 
     x_step_with_mf = int(X_VALUE_STEP)
-    y_step_with_mf = int(Y_VALUE_STEP * MULTIPLYING_FACTOR)
+    y_step_with_mf = int(Y_VALUE_STEP * 150)
+
+    # Draw vertical grid lines
     for i in range(0, WIDTH + 1, x_step_with_mf):
+        screen.draw.line((i + X_VALUE_STEP, 0), (i + X_VALUE_STEP, HEIGHT), (150, 150, 150))
         screen.draw.text(str(i), color="black", bottomleft=(i + X_VALUE_STEP, HEIGHT / 2), fontsize=20)
-        screen.draw.line((i, HEIGHT), (i, 0), (150, 150, 150))
+
+    # Draw horizontal grid lines
     for i in range(0, HEIGHT // 2 + 1, y_step_with_mf):
         if i != 0:
-            screen.draw.text(str(-(i / MULTIPLYING_FACTOR)), color="black", bottomright=(X_VALUE_STEP, i + HEIGHT / 2), fontsize=30)
-            screen.draw.text(str(i / MULTIPLYING_FACTOR), color="black", bottomright=(X_VALUE_STEP, HEIGHT / 2 - i), fontsize=30)
-            screen.draw.line((WIDTH, HEIGHT - i), (0, HEIGHT - i), (150, 150, 150))
-            screen.draw.line((WIDTH, i), (0, i), (150, 150, 150))
+            screen.draw.line((0, HEIGHT / 2 - i), (WIDTH, HEIGHT / 2 - i), (150, 150, 150))
+            screen.draw.line((0, HEIGHT / 2 + i), (WIDTH, HEIGHT / 2 + i), (150, 150, 150))
+            screen.draw.text(str(-(i / 150)), color="black", bottomright=(X_VALUE_STEP - 10, i + HEIGHT / 2), fontsize=30)
+            screen.draw.text(str(i / 150), color="black", bottomright=(X_VALUE_STEP - 10, HEIGHT / 2 - i+25), fontsize=30)
 
 def draw_legend_and_options_rect():
     global points, resart_animation_1, resart_animation_2, options_open, options_rect

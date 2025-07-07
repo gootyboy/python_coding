@@ -92,14 +92,17 @@ def text(text, fontsize, topleft, color):
 
 def resize_image(actor_path, increase_pixels, angle):
     actor_image = Image.open(actor_path)
-    actor_image.rotate(angle).resize((actor_image.width + increase_pixels, actor_image.height + increase_pixels), Image.LANCZOS).save(f"{actor_path.removesuffix(".png")}_resized.png")
+    resized_image = actor_image.rotate(angle).resize(
+        (actor_image.width + increase_pixels, actor_image.height + increase_pixels), Image.LANCZOS
+    )
+    resized_image.save(f"{actor_path.removesuffix('.png')}_resized.png")
 
 def draw_fire_gif(pos):
     frame_image = frames[current_frame]
     screen.blit(pygame.image.fromstring(frame_image.convert("RGBA").tobytes(), frame_image.size, "RGBA"), pos)
 
 def update_marshmellow_image(marshmellow_image):
-    org_image = os.path.join(BASE_PATH,f"{marshmellow_image.image.removesuffix(".png")}") + ".png"
+    org_image = os.path.join(BASE_PATH,f"{marshmellow_image.image.removesuffix({".png"})}") + ".png"
     remove_image = os.path.join(BASE_PATH,f"{marshmellow_image.image.removesuffix(".png")}_resized.png")
 
     resize_image(org_image, 20, 31.5)

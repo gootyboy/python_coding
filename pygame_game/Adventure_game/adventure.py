@@ -19,7 +19,7 @@ STAR_SPEED = 0.05 #less is faster
 
 players = [Actor('hero_right'), Actor("fox_right"), Actor("hedgehog_right")] #, Actor("weasel")]
 game_over = False
-win = False
+round_complete = False
 jumped = False
 game_started = False
 jump_timer = 0
@@ -33,9 +33,10 @@ counter = 0
 current_level = 0
 player = None
 fall_timer = (STONE_HEIGHT / 5) / PLAYER_SPEED_MF
-frames = [frame.copy() for frame in ImageSequence.Iterator(Image.open(r'C:\Projects\boy\pygame_game\adventure_game\images\star.gif'))]
+frames = [frame.copy() for frame in ImageSequence.Iterator(Image.open(r'/Users/gootyboy/Desktop/myrepos/python_coding/pygame_game/Adventure_game/images/star.gif'))]
 current_frame = 0
 last_update_time = 0
+round = 0
 
 def make_stones():
     global starts_x, stones_dict, stones_level, stones
@@ -94,7 +95,7 @@ def draw_star_gif(pos):
     screen.blit(pygame.image.fromstring(frame_image.convert("RGBA").tobytes(), frame_image.size, "RGBA"), pos)
 
 def draw():
-    global spikes, game_started, player, players, yes_rect, no_rect, starts_x
+    global spikes, game_started, player, players, yes_rect, no_rect, starts_x, round
     screen.blit("sky.png", (0, 0))
     screen.blit("sky.png", (800, 0))
     if not game_over:
@@ -105,6 +106,7 @@ def draw():
             for spike in spikes:
                 spike.draw()
             player.draw()
+            round = 1
         else:
             screen.draw.text("Choose Your Character", center=(WIDTH / 2, 50), fontsize=50, color=(0, 0, 0))
             for i in range(len(players)):
@@ -116,22 +118,26 @@ def draw():
         rect_color = (100, 100, 150)
         yes_rect = Rect(WIDTH / 2 - 215, HEIGHT / 2, 75, 75)
         no_rect = Rect(WIDTH / 2 + 125, HEIGHT / 2, 75, 75)
-        screen.draw.text("Game Over", center=(WIDTH / 2, HEIGHT / 2 - 100), fontsize=100, color=(255, 0, 0))
-        screen.draw.text("Do you want to play agian?", center=(WIDTH / 2, HEIGHT / 2 - 50), fontsize=50, color=(0, 0, 0))
+        screen.draw.text("Game Over", center=(WIDTH / 2, HEIGHT
+                                               / 2 - 100), fontsize=100, color=(255, 0, 0))
+        screen.draw.text("Do you want to play again?", center=(WIDTH / 2, HEIGHT / 2 - 50), fontsize=50, color=(0, 0, 0))
         screen.draw.filled_rect(yes_rect, color=rect_color)
         screen.draw.textbox("Yes", yes_rect, color=(0, 0, 0))
         screen.draw.filled_rect(no_rect, color = rect_color)
         screen.draw.textbox("No", no_rect, color=(0, 0, 0))
-    if win:
-        screen.draw.text("You Win!", center=(WIDTH / 2, HEIGHT / 2), fontsize=100, color=(0, 255, 0))
-        screen.draw.text("Do you want to play agian?", center=(WIDTH / 2, HEIGHT / 2 - 50), fontsize=50, color=(0, 0, 0))
+    if round_complete:
+        yes_rect = Rect(WIDTH / 2 - 215, HEIGHT / 2, 75, 75)
+        rect_color = (100, 100, 150)
+        no_rect = Rect(WIDTH / 2 + 125, HEIGHT / 2, 75, 75)
+        screen.draw.text("Round 1 Complete!", center=(WIDTH / 2, HEIGHT / 2), fontsize=100, color=(0, 255, 0))
+        screen.draw.text("Do you want to continue?", center=(WIDTH / 2, HEIGHT / 2 - 50), fontsize=50, color=(0, 0, 0))
         screen.draw.filled_rect(yes_rect, color=rect_color)
         screen.draw.textbox("Yes", yes_rect, color=(0, 0, 0))
         screen.draw.filled_rect(no_rect, color = rect_color)
         screen.draw.textbox("No", no_rect, color=(0, 0, 0))
 
 def handle_jumping():
-    global jumped, jump_timer, win, game_over, starts_x, fall_timer
+    global jumped, jump_timer, round_complete, game_over, starts_x, fall_timer
     if keyboard.up and not jumped:
         jumped = True
         jump_timer = JUMP_HEIGHT / PLAYER_SPEED_MF
@@ -182,10 +188,10 @@ def handle_falling():
                 fall_timer = 0
 
 def update():
-    global win, game_over, current_level, stones_dict, game_started, spikes, player
+    global round_complete, game_over, current_level, stones_dict, game_started, spikes, player, round
     
     if game_started:
-        if not game_over and not win:
+        if not game_over and not round_complete:
             handle_falling()
 
             if keyboard.left:
@@ -212,21 +218,22 @@ def update():
                     game_over = True
             
             if Actor("star", STAR_POS).colliderect(player):
-                win = True
+                round_complete = True
 
             handle_jumping()
             update_player_level()
 
 def restart_game():
-    global players, game_over, win, jumped, jump_timer, game_started, starts_x, ends_x, spikes, stones_dict, stones_level, counter, current_level, fall_timer, stones, player, frames, current_frame, last_update_time
+    global players, round, game_over, round_complete, jumped, jump_timer, game_started, starts_x, ends_x, spikes, stones_dict, stones_level, counter, current_level, fall_timer, stones, player, frames, current_frame, last_update_time
     players = [Actor('hero_right'), Actor("fox_right"), Actor("hedgehog_right")]
     game_over = False
-    win = False
+    round_complete = False
     jumped = False
     game_started = False
     jump_timer = 0
-    starts_x = [2 * STONE_HEIGHT, WIDTH - (STONE_HEIGHT * 4), WIDTH - (STONE_HEIGHT * 2), WIDTH - STONE_HEIGHT, 0]
-    ends_x = [WIDTH, WIDTH, WIDTH, WIDTH, WIDTH - (STONE_HEIGHT * 3)]
+    if round == 1:
+        starts_x = [2 * STONE_HEIGHT, WIDTH - (STONE_HEIGHT * 4), WIDTH - (STONE_HEIGHT * 2), WIDTH - STONE_HEIGHT, 0]
+        ends_x = [WIDTH, WIDTH, WIDTH, WIDTH, WIDTH - (STONE_HEIGHT * 3)]
     spikes = []
     stones = []
     stones_dict = {}
@@ -235,7 +242,33 @@ def restart_game():
     current_level = 0
     fall_timer = (STONE_HEIGHT / 5) / PLAYER_SPEED_MF
     player = None
-    frames = [frame.copy() for frame in ImageSequence.Iterator(Image.open(r'C:\Projects\boy\pygame_game\adventure_game\images\star.gif'))]
+    frames = [frame.copy() for frame in ImageSequence.Iterator(Image.open(r'/Users/gootyboy/Desktop/myrepos/python_coding/pygame_game/Adventure_game/images/star.gif'))]
+    current_frame = 0
+    last_update_time = 0
+    make_stones()
+    make_spikes()
+    pgzrun.go()
+
+def new_round(round):
+    global players, player, game_over, frames, current_frame, round_complete, last_update_time, jumped, jump_timer, game_started, starts_x, ends_x, spikes, stones_dict, stones_level, counter, current_level, fall_timer, stones
+    players = [Actor('hero_right'), Actor("fox_right"), Actor("hedgehog_right")]
+    game_over = False
+    round_complete = False
+    jumped = False
+    game_started = False
+    jump_timer = 0
+    if round == 2:
+        starts_x = [1 * STONE_HEIGHT, WIDTH - (STONE_HEIGHT * 5), WIDTH - (STONE_HEIGHT * 1), WIDTH - STONE_HEIGHT, 0]
+        ends_x = [WIDTH, WIDTH-(STONE_HEIGHT*6), WIDTH, WIDTH, WIDTH - (STONE_HEIGHT * 3)]
+    spikes = []
+    stones = []
+    stones_dict = {}
+    stones_level = 0
+    counter = 0
+    current_level = 0
+    fall_timer = (STONE_HEIGHT / 5) / PLAYER_SPEED_MF
+    player = None
+    frames = [frame.copy() for frame in ImageSequence.Iterator(Image.open(r'/Users/gootyboy/Desktop/myrepos/python_coding/pygame_game/Adventure_game/images/star.gif'))]
     current_frame = 0
     last_update_time = 0
     make_stones()
@@ -243,7 +276,7 @@ def restart_game():
     pgzrun.go()
 
 def on_mouse_down(pos):
-    global game_started, players, player
+    global game_started, players, player, round
     if not game_started:
         for character in players:
             if character.collidepoint(pos):
@@ -253,10 +286,17 @@ def on_mouse_down(pos):
                 player = character
                 game_started = True
     else:
-        if game_over or win:
+        if game_over:
             if yes_rect.collidepoint(pos):
                 restart_game()
             elif no_rect.collidepoint(pos):
+                pgzrun.sys.exit()
+        if round_complete:
+            round += 1
+            if yes_rect.collidepoint(pos):
+                round += 1
+                new_round(round)
+            if no_rect.collidepoint(pos):
                 pgzrun.sys.exit()
 
 pgzrun.go()
