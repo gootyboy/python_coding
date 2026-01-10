@@ -12,7 +12,7 @@ TIME_TO_COOK = 5
 clicked_ingredients = []
 
 bowl_name = "bowl"
-frames = [frame.copy() for frame in ImageSequence.Iterator(Image.open(r'boy/pygame_game/biryani/images/fire.gif'))]
+frames = [frame.copy() for frame in ImageSequence.Iterator(Image.open(r'/Users/gootyboy/projects/python_coding/pygame_game/biryani/images/fire.gif'))]
 
 current_frame = 0
 frame_delay = 0.01  # Delay in seconds between frames
@@ -76,7 +76,7 @@ def reset_or_end_game(reset):
         "clicked": False,
         "pos": (250, 320)}}
         bowl_name = "bowl"
-        frames = [frame.copy() for frame in ImageSequence.Iterator(Image.open(r'boy/pygame_game/biryani/images/fire.gif'))]
+        frames = [frame.copy() for frame in ImageSequence.Iterator(Image.open(r'/Users/gootyboy/projects/python_coding/pygame_game/biryani/images/fire.gif'))]
         current_frame = 0
         frame_delay = 0.01
         last_update_time = 0
